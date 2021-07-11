@@ -1,0 +1,118 @@
+[33m556affd[m[33m ([m[1;36mHEAD -> [m[1;32msearchFunction[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{0}: pull origin main: Fast-forward
+[33m68c46f7[m[33m ([m[1;31morigin/searchFunction[m[33m)[m HEAD@{1}: reset: moving to HEAD
+[33m68c46f7[m[33m ([m[1;31morigin/searchFunction[m[33m)[m HEAD@{2}: commit: searchSubject
+[33md75ae2b[m[33m ([m[1;32mmain[m[33m)[m HEAD@{3}: checkout: moving from main to searchFunction
+[33md75ae2b[m[33m ([m[1;32mmain[m[33m)[m HEAD@{4}: pull origin main: Fast-forward
+[33m4bfbae7[m HEAD@{5}: pull origin main: Fast-forward
+[33m6362fa3[m HEAD@{6}: checkout: moving from fixbug to main
+[33mfc6eae3[m[33m ([m[1;31morigin/fixbug[m[33m)[m HEAD@{7}: commit: fix bug
+[33m6362fa3[m HEAD@{8}: checkout: moving from main to fixbug
+[33m6362fa3[m HEAD@{9}: pull origin main: Fast-forward
+[33m978ecd9[m HEAD@{10}: checkout: moving from fix-api to main
+[33m978ecd9[m HEAD@{11}: checkout: moving from main to fix-api
+[33m978ecd9[m HEAD@{12}: merge dev-0407: Merge made by the 'recursive' strategy.
+[33me8f255d[m HEAD@{13}: checkout: moving from dev-04072 to main
+[33m2e7968b[m[33m ([m[1;31morigin/get-quiztest[m[33m, [m[1;31morigin/dev-0407[m[33m)[m HEAD@{14}: checkout: moving from dev-0407 to dev-04072
+[33m2e7968b[m[33m ([m[1;31morigin/get-quiztest[m[33m, [m[1;31morigin/dev-0407[m[33m)[m HEAD@{15}: checkout: moving from get-quiztest to dev-0407
+[33m2e7968b[m[33m ([m[1;31morigin/get-quiztest[m[33m, [m[1;31morigin/dev-0407[m[33m)[m HEAD@{16}: checkout: moving from dev-0407 to get-quiztest
+[33m2e7968b[m[33m ([m[1;31morigin/get-quiztest[m[33m, [m[1;31morigin/dev-0407[m[33m)[m HEAD@{17}: commit: fix file location of topic, subject, add contants, get created test by subject
+[33mfcc2182[m HEAD@{18}: commit: fix bug
+[33m651a57b[m HEAD@{19}: commit: fix bug
+[33mee1fcdb[m HEAD@{20}: commit: question by lession
+[33mba09226[m HEAD@{21}: commit: dev
+[33m10641e0[m HEAD@{22}: commit: 50 record perpage
+[33ma15f882[m HEAD@{23}: commit: create quiztest change api
+[33me8f255d[m HEAD@{24}: checkout: moving from main to dev-0407
+[33me8f255d[m HEAD@{25}: commit: get question by array of lession
+[33m93848e9[m HEAD@{26}: pull origin main: Fast-forward
+[33m6fefadb[m HEAD@{27}: commit: change status
+[33mc3c21c3[m HEAD@{28}: commit: change status
+[33mf55c40a[m HEAD@{29}: checkout: moving from dev-0207 to main
+[33m2cf25f1[m[33m ([m[1;31morigin/dev-0207[m[33m)[m HEAD@{30}: checkout: moving from main to dev-0207
+[33mf55c40a[m HEAD@{31}: pull origin main: Fast-forward
+[33mf660240[m HEAD@{32}: reset: moving to HEAD
+[33mf660240[m HEAD@{33}: reset: moving to HEAD
+[33mf660240[m HEAD@{34}: checkout: moving from dev-0207 to main
+[33m2cf25f1[m[33m ([m[1;31morigin/dev-0207[m[33m)[m HEAD@{35}: checkout: moving from main to dev-0207
+[33mf660240[m HEAD@{36}: checkout: moving from dev-0207 to main
+[33m2cf25f1[m[33m ([m[1;31morigin/dev-0207[m[33m)[m HEAD@{37}: commit: add quuiztest and show question
+[33m66965ed[m HEAD@{38}: commit: test
+[33maa7c8d9[m HEAD@{39}: commit: order
+[33m8d2fe8d[m HEAD@{40}: commit: fix add question, remove status from FE
+[33mdec6a67[m HEAD@{41}: commit: fix status
+[33m3cdbd88[m HEAD@{42}: commit: fix- question
+[33m45271b7[m HEAD@{43}: commit: fix flashcard
+[33m762a8ba[m HEAD@{44}: commit: fix lession
+[33m41aefae[m HEAD@{45}: commit: fix status
+[33m042f7f4[m HEAD@{46}: commit: fix message and status
+[33m7d9d0ef[m HEAD@{47}: checkout: moving from main to dev-0207
+[33m7d9d0ef[m HEAD@{48}: checkout: moving from delete-question to main
+[33m840c175[m HEAD@{49}: checkout: moving from main to delete-question
+[33m7d9d0ef[m HEAD@{50}: commit: fix flashcard create
+[33m6778c39[m HEAD@{51}: pull origin main: Fast-forward
+[33m9a23be3[m HEAD@{52}: checkout: moving from delete-question to main
+[33m840c175[m HEAD@{53}: commit: delete question by id and flashcardID , fix lession create
+[33m9a23be3[m HEAD@{54}: checkout: moving from main to delete-question
+[33m9a23be3[m HEAD@{55}: commit: fix duplicate in topic
+[33m71f0c5b[m HEAD@{56}: pull origin main: Fast-forward
+[33m1e49e0c[m HEAD@{57}: checkout: moving from coding-3060 to main
+[33m853c6b0[m HEAD@{58}: commit: add quiztest, fix delete topic
+[33m823b3ab[m HEAD@{59}: commit: ban account
+[33m1e49e0c[m HEAD@{60}: checkout: moving from main to coding-3060
+[33m1e49e0c[m HEAD@{61}: commit: remove check duplicate topic
+[33m95ce9dc[m HEAD@{62}: pull origin main: Fast-forward
+[33m73c0e8f[m HEAD@{63}: pull origin main: Fast-forward
+[33m625ffe7[m HEAD@{64}: pull origin main: Fast-forward
+[33mb2c0bc2[m HEAD@{65}: checkout: moving from coding-2706 to main
+[33m0c49872[m HEAD@{66}: commit: delete topic,subject and change status public private status
+[33mb2c0bc2[m HEAD@{67}: checkout: moving from main to coding-2706
+[33mb2c0bc2[m HEAD@{68}: pull origin main: Fast-forward
+[33m6370813[m HEAD@{69}: checkout: moving from coding-2606 to main
+[33mbdf3efe[m HEAD@{70}: commit: add get subject by author, get question by flashcardID
+[33m0a7b536[m HEAD@{71}: commit: fix crash again
+[33md3304e5[m HEAD@{72}: commit: fix crash
+[33m6370813[m HEAD@{73}: checkout: moving from main to coding-2606
+[33m6370813[m HEAD@{74}: pull origin main: Fast-forward
+[33m0916c90[m HEAD@{75}: checkout: moving from coding2606 to main
+[33mcdf5883[m HEAD@{76}: commit: fixxxxx
+[33m0916c90[m HEAD@{77}: checkout: moving from main to coding2606
+[33m0916c90[m HEAD@{78}: pull origin main: Fast-forward
+[33mc8fd345[m HEAD@{79}: checkout: moving from fix to main
+[33mc8fd345[m HEAD@{80}: checkout: moving from main to fix
+[33mc8fd345[m HEAD@{81}: commit: 26-06 add topic, subject api for management
+[33m438d2e1[m HEAD@{82}: pull origin main: Fast-forward
+[33mc3d1ece[m HEAD@{83}: checkout: moving from create-new-topic to main
+[33m477e435[m HEAD@{84}: commit: fix add new topic, change to check duplicate subject in topic to check name and creator
+[33mc3d1ece[m HEAD@{85}: checkout: moving from main to create-new-topic
+[33mc3d1ece[m HEAD@{86}: pull origin main: Fast-forward
+[33m89bb2c0[m HEAD@{87}: checkout: moving from add-closeConntion to main
+[33ma465dde[m HEAD@{88}: commit: add close connection
+[33m89bb2c0[m HEAD@{89}: checkout: moving from main to add-closeConntion
+[33m89bb2c0[m HEAD@{90}: pull origin main: Fast-forward
+[33m0ec5d2e[m HEAD@{91}: checkout: moving from fix-helper to main
+[33m41701b6[m HEAD@{92}: commit: fix helper
+[33m0ec5d2e[m HEAD@{93}: checkout: moving from main to fix-helper
+[33m0ec5d2e[m HEAD@{94}: pull origin main: Fast-forward
+[33m561ca2e[m HEAD@{95}: checkout: moving from subject-continue to main
+[33m7e0299b[m HEAD@{96}: commit: add interest subject for home
+[33mcb0fdf1[m HEAD@{97}: commit: add get top 5 subject by topic id
+[33m561ca2e[m HEAD@{98}: checkout: moving from main to subject-continue
+[33m561ca2e[m HEAD@{99}: pull origin main: Fast-forward
+[33m5ae3dbe[m HEAD@{100}: checkout: moving from luan-fixbug to main
+[33m5ae3dbe[m HEAD@{101}: checkout: moving from main to luan-fixbug
+[33m5ae3dbe[m HEAD@{102}: pull origin main: Fast-forward
+[33meda03b7[m HEAD@{103}: checkout: moving from luan-dev to main
+[33m1e9ca29[m HEAD@{104}: commit: fix getMe remove interestTopic list
+[33meda03b7[m HEAD@{105}: checkout: moving from main to luan-dev
+[33meda03b7[m HEAD@{106}: checkout: moving from subject-dev to main
+[33ma56b66b[m HEAD@{107}: commit: fix change password
+[33m66124d1[m HEAD@{108}: commit: fix add question , add flashcard ID after
+[33m50b98ca[m HEAD@{109}: commit: add update interest API
+[33meda03b7[m HEAD@{110}: checkout: moving from main to subject-dev
+[33meda03b7[m HEAD@{111}: pull origin main: Fast-forward
+[33mffc672c[m HEAD@{112}: checkout: moving from topic-dev to main
+[33m47c34a3[m HEAD@{113}: commit: remove authen for topic
+[33m208a889[m HEAD@{114}: commit: add get subject by list topic id
+[33m9e0eb6b[m HEAD@{115}: commit: add get all topic
+[33mffc672c[m HEAD@{116}: checkout: moving from main to topic-dev
+

@@ -1,0 +1,110 @@
+GET http://localhost:9195/account
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjBAZnB0LmVkdS52biIsImZ1bGxOYW1lIjoiVm8gTmh1dCBMdWFuIiwicm9sZUlkIjoxLCJzdGF0dXNJZCI6MiwicGhvbmUiOiIxMjMxMjMxMjMxIiwiYWRkcmVzcyI6ImFhYWFhIiwiRE9CIjoiMjAyMS0wNi0yMlQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyMzg5Nzk0MSwiZXhwIjoxNjIzOTAxNTQxfQ.XlmVtAD5HKhIrn5f68RqwRxnUJsLyeIFhXl3yiRyMK4
+###
+
+POST http://localhost:9195/account/login
+Content-Type: application/json
+
+{
+    "email":"luanvnse63360@fpt.edu.vn",
+    "password":"password"
+}
+
+###
+
+POST http://localhost:9195/account/login
+Content-Type: application/json
+
+{
+    "params":{
+    "email":"luanvnse63360@fpt.edu.vn",
+    "password":"password"
+}
+}
+
+###
+
+POST http://localhost:9195/account/token
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjBAZ21haWwuY29tIiwiZnVsbE5hbWUiOiJWTyBOSFVUIExVQU4iLCJyb2xlSWQiOjIsInN0YXR1c0lkIjoyLCJwaG9uZSI6IjA4MzMzMDcwMDMiLCJhZGRyZXNzIjoiUS5USFUgRFVDIC0gSENNIiwiRE9CIjoiMTk5OC0wMy0yMVQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyNDAwODExMiwiZXhwIjoxNjI0MDExNzEyfQ.tvF-B1ZQyGe_1B1D-0kSz85qLSBErpYxnPhxlO3kiUg
+Content-Type: application/json
+
+{
+    "refreshToken":"eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjBAZ21haWwuY29tIiwiZnVsbE5hbWUiOiJWTyBOSFVUIExVQU4iLCJyb2xlSWQiOjIsInN0YXR1c0lkIjoyLCJwaG9uZSI6IjA4MzMzMDcwMDMiLCJhZGRyZXNzIjoiUS5USFUgRFVDIC0gSENNIiwiRE9CIjoiMTk5OC0wMy0yMVQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyNDAwODExMiwiZXhwIjoxNjI0MDExNzEyfQ.2P1NVBwLZOwpob7QdTnAhDYCF1aHKEw37zey0fqP80U"
+}
+
+###
+
+DELETE  http://localhost:9195/account/logout
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjAzQGZwdC5lZHUudm4iLCJmdWxsTmFtZSI6IlZPIE5IVVQgTFVBTiIsInJvbGVJZCI6MSwic3RhdHVzSWQiOjIsInBob25lIjoiMDEyMzEyMzEyMyIsImFkZHJlc3MiOiJhZGRyZXNzIiwiRE9CIjoiMjAyMC0wMi0wMVQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyMzA5MTA5MiwiZXhwIjoxNjIzMDkyODkyfQ.G5p4fx9sFqpOuYP6du9OyMup0Er508j7Mu3CSb10FFg
+
+###
+GET  http://localhost:9195/account/me
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6InR1b25nbnRzZTYzMzUyMkBmcHQuZWR1LnZuIiwiZnVsbE5hbWUiOiJWTyBOSFVUIExVQU4iLCJyb2xlSWQiOjEsInN0YXR1c0lkIjoyLCJwaG9uZSI6IjAxMjMxMjMxMjMiLCJhZGRyZXNzIjoiYWRkcmVzcyIsIkRPQiI6IjIwMjAtMDItMDFUMTc6MDA6MDAuMDAwWiIsImdlbmRlciI6Im1hbGUiLCJpYXQiOjE2MjMxNjgxNTAsImV4cCI6MTYyMzE3MTc1MH0.my-My4KgeGY8zQH3pF5dgxqfNgMwJdOIwlG_wOaBwak
+
+###
+
+PUT http://localhost:9195/account/update
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjBAZnB0LmVkdS52biIsImZ1bGxOYW1lIjoiVm8gTmh1dCBMdWFuIiwicm9sZUlkIjoxLCJzdGF0dXNJZCI6MiwicGhvbmUiOiIxMjMxMjMxMjMxIiwiYWRkcmVzcyI6ImFhYWFhIiwiRE9CIjoiMjAyMS0wNi0yMlQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyMzkzMzg4NSwiZXhwIjoxNjIzOTM3NDg1fQ._Me1QvmPoI0PvwFbammtqiKk3NpBN-Ho3ZzYy53W9yE
+
+{
+   
+}
+
+
+###
+
+PUT http://localhost:9195/account/change-password
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjAzQGZwdC5lZHUudm4iLCJmdWxsTmFtZSI6IlZPIE5IVVQgTFVBTiIsInJvbGVJZCI6MSwic3RhdHVzSWQiOjIsInBob25lIjoiMDEyMzEyMzEyMyIsImFkZHJlc3MiOiJhZGRyZXNzIiwiRE9CIjoiMjAyMC0wMi0wMVQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyMzA5MTA5MiwiZXhwIjoxNjIzMDkyODkyfQ.G5p4fx9sFqpOuYP6du9OyMup0Er508j7Mu3CSb10FFg
+
+{
+    "oldPassword":"passwword",
+    "newPassword":"newPassword"
+}
+
+###
+
+POST http://localhost:9195/account/register
+Content-Type: application/json
+
+{
+    "email":"tuongntse633522@fpt.edu.vn",
+    "password":"password",
+    "fullName":"VO NHUT LUAN",
+    "roleId":1,
+    "phone":"0123123123",
+    "address":"address",
+    "DOB":"2020-02-02",
+    "gender":"male"
+}
+
+###
+
+GET http://localhost:9191/topic/id
+Content-Type: application/json
+
+{
+    "id" : "1"
+}
+
+###
+GET http://localhost:9195/role
+Content-Type: application/json
+
+
+###
+
+POST http://localhost:9195/account/email-search
+Content-Type: application/json
+Authorization: Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6Imx1YW52bnNlNjMzNjBAZnB0LmVkdS52biIsImZ1bGxOYW1lIjoiVm8gTmh1dCBMdWFuIiwicm9sZUlkIjoxLCJzdGF0dXNJZCI6MiwicGhvbmUiOiIxMjMxMjMxMjMxIiwiYWRkcmVzcyI6ImFhYWFhIiwiRE9CIjoiMjAyMS0wNi0yMlQxNzowMDowMC4wMDBaIiwiZ2VuZGVyIjoibWFsZSIsImlhdCI6MTYyMzg5ODEzNSwiZXhwIjoxNjIzOTAxNzM1fQ.RJLgSK8rvItnHquL-7VRfWUPghPj2HCfjDtexm9QANk
+
+{
+    "params":{
+        "searchValue": "luanvnseaa6sss33sawaaadwda6s0ss5233sw@fpt.edu.vn"
+    }
+}
+
+
+###
+GET http://localhost:9195/account-status
+Content-Type: application/json
