@@ -248,7 +248,8 @@ async function findSubjectByNameAndDes(searchValue) {
         a.fullName as author
             FROM tbl_subject s, tbl_account a WHERE s.accountId = a.email and 
             MATCH (subjectName,subjectDescription) AGAINST (? WITH QUERY EXPANSION) 
-            and s.statusId = 1 limit 20`;
+            and s.statusId != 3`;
+        //searhc thi phai co public lan private de request
         const params = [
             `${searchValue}`
         ];
@@ -271,7 +272,7 @@ async function findSubjectByLessionNameAndDes(searchValue) {
                   s.statusId,
                    a.fullName as author
         from tbl_subject s, tbl_account a where s.accountId = a.email and subjectId in (SELECT distinct subjectId FROM tbl_lession 
-        WHERE MATCH (lessionName,lessionDescription) AGAINST (? WITH QUERY EXPANSION ) and statusId = 1)`;
+        WHERE MATCH (lessionName,lessionDescription) AGAINST (? WITH QUERY EXPANSION ) and s.statusId != 3)`;
         const params = [
             `${searchValue}`
         ];
@@ -296,7 +297,7 @@ async function findSubjectByftFlashcardName(searchValue) {
         from tbl_subject s, tbl_account a where s.accountId = a.email and subjectId 
         in (select distinct subjectId from tbl_lession where lessionId in 
         (select distinct lessionId from tbl_flashcards where MATCH (flashcardName) 
-        AGAINST (? WITH QUERY EXPANSION) and statusId = 1))`;
+        AGAINST (? WITH QUERY EXPANSION) and s.statusId != 3))`;
         const params = [
             `${searchValue}`
         ];
@@ -322,7 +323,7 @@ async function findSubjectByftQuestionContent(searchValue) {
         in (select distinct subjectId from tbl_lession where lessionId 
         in (select distinct lessionId from tbl_flashcards where flashcardId 
         in (select distinct flashcardId from tbl_question where 
-        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and statusId = 1)))`;
+        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and s.statusId != 3)))`;
         const params = [
             `${searchValue}`
         ];

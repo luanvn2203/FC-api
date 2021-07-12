@@ -16,9 +16,9 @@ module.exports = {
     saveQuizHistory: async function (req, res, next) {
         try {
             const userEmail = req.userEmail;
-            const quizTestId = req.body.quizTestId;
-            const numOfQuestion = req.body.numOfQuestion;
-            const userChoice = req.body.userChoice
+            const quizTestId = req.body.params.quizTestId;
+            const numOfQuestion = req.body.params.numOfQuestion;
+            const userChoice = req.body.params.userChoice
             let resDataUserChoice = userChoice;
             let numOfCorrect = 0
             let totalCore = 0
