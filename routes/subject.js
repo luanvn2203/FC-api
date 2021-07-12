@@ -3,6 +3,7 @@ const verifyToken = require('../middleware/auth')
 
 const router = express.Router();
 const subjectController = require('../Controller/SubjectController/SubjectController');
+const { route } = require('./quizTest');
 
 router.post('/create', verifyToken, subjectController.createNewSubject)
 
@@ -33,6 +34,8 @@ router.post('/find-name-des-lession', verifyToken, subjectController.findSubject
 router.post('/find-name-flashcard', verifyToken, subjectController.findSubjectByFlashcardName)
 
 router.post('/find-by-question', verifyToken, subjectController.findSubjectByQuestionContent)
+
+router.put('/increase-view', verifyToken, subjectController.increaseViewByUserClick)
 
 
 module.exports = router;

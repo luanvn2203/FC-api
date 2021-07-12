@@ -415,5 +415,45 @@ module.exports = {
 		} catch (error) {
 			console.log(error)
 		}
+	},
+
+	increaseViewByUserClick: async function (req, res, next) {
+		try {
+			const subjectToIncrease = req.body.params.subjectId;
+			const userEmail = req.userEmail;
+			const subjectFound = await subjectService.getSubjecDetailById(subjectToIncrease)
+			//check 
+			if (subjectFound.length > 0) {
+				if (subjectFound[0].accountId !== userEmail) {
+					const isIncrease = await subjectService.increaseViewByClickBySubjectId(subjectToIncrease)
+					if (isIncrease === true) {
+						res.status(200).json({
+							status: "Success",
+							message: "Increase view successfully"
+						})
+					} else {
+						res.status(202).json({
+							status: "Failed",
+							message: "Increase view failed"
+						})
+					}
+				} else {
+					//chu nhan cua subject
+					res.status(202).json({
+						status: "Failed",
+						message: "Author cannot increase view of their subject"
+					})
+				}
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found subject id"
+				})
+			}
+
+		} catch (error) {
+			console.log(error)
+		}
 	}
+
 };

@@ -6,7 +6,9 @@ async function createNewSubject(subjectParams, student) {
     try {
         // console.log(subjectParams);
         // console.log(student);
-        const sql = `insert into tbl_subject(subjectName, accountId, topicId, subjectDescription, createdDate, statusId) value(?,?,?,?,?,?)`;
+        const sql = `insert into 
+        tbl_subject(subjectName, accountId, topicId, subjectDescription, createdDate, statusId, numOfView)
+         value(?,?,?,?,?,?,?)`;
 
         const subject = subjectParams.params;
         console.log(subject)
@@ -22,6 +24,7 @@ async function createNewSubject(subjectParams, student) {
             `${subject.subjectDescription.trim()}`,
             `${dateTime}`,
             `${subject.statusId}`,
+            `${0}`
         ]
 
         const result = await db.query(sql, params);
@@ -331,15 +334,37 @@ async function findSubjectByftQuestionContent(searchValue) {
     }
 }
 async function getSubjecDetailById(subjectId) {
-    const sql = `SELECT subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId  
+    try {
+        const sql = `SELECT subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId  
     from tbl_subject
     where subjectId = ?`;
-    const params = [
-        `${subjectId}`
-    ]
-    const result = await db.query(sql, params);
-    const data = helper.emptyOrRows(result)
-    return data;
+        const params = [
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function increaseViewByClickBySubjectId(subjectId) {
+    try {
+        const sql = `update tbl_subject set numOfview = (numOfview + 1) where subjectId = ?`;
+        const params = [
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true;
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
 }
 
 module.exports = {
@@ -347,6 +372,7 @@ module.exports = {
     getAllSubjectByTopicId,
     getAllSubjectInListTopicId,
     updateSubject,
+    increaseViewByClickBySubjectId,
 
     getTop5SubjectByTopicId,
     findSubjectBySubjectNameAndUserAccount,
@@ -363,4 +389,6 @@ module.exports = {
     findSubjectByLessionNameAndDes,
     findSubjectByftFlashcardName,
     findSubjectByftQuestionContent
+
+
 }
