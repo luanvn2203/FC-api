@@ -121,12 +121,31 @@ async function getOptionsByQuestionIdAndFilteredInfoWithRandomIndex(question) {
     }
 }
 
+async function getTrueOptionByQuestionId(questionId) {
+    try {
+        const sql = `SELECT optionId from tbl_optiondetail where isCorrect = 1 and questionId  = ?`
+        const params = [
+            `${questionId}`
+        ]
+        const result = await db.query(sql, params)
+        for (let i = 0; i < result.length; i++) {
+            result[i] = result[i].optionId
+        }
+        const data = helper.emptyOrRows(result)
+
+        return data
+    } catch (error) {
+
+    }
+}
+
 module.exports = {
     addOptionForAnswer,
     getOptionsByQuestionId,
     updateOptionsByQuestionId,
     getOptionsByQuestionIdAndFilteredInfo,
-    getOptionsByQuestionIdAndFilteredInfoWithRandomIndex
+    getOptionsByQuestionIdAndFilteredInfoWithRandomIndex,
+    getTrueOptionByQuestionId
 }
 
 // let strArray = [ "q", "w", "w", "w", "e", "i", "u", "r"];
