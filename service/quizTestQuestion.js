@@ -41,9 +41,25 @@ async function getQuestionsByQuizTestId(quiztestId) {
         console.log(error)
     }
 }
+async function getTotalQuestionInTest(testId) {
+    try {
+        const sql = `SELECT count(questionId) as total   
+        FROM  tbl_quiztest_question 
+        where quiztestId = ?`
+        const params = [
+            `${testId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+        return data;
 
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     addRecordToQuizTestQuestionByQuizTestIdAndQuestionArray,
-    getQuestionsByQuizTestId
+    getQuestionsByQuizTestId,
+    getTotalQuestionInTest
 }
