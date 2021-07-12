@@ -86,9 +86,11 @@ async function getQuizTestsBySubjectId(subjectId) {
     }
 }
 
+
+
 module.exports = {
     createQuizTest,
     getCurrentInsertId,
     checkDuplicateName,
-    getQuizTestsBySubjectId
+    getQuizTestsBySubjectId,
 }

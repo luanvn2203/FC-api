@@ -41,38 +41,23 @@ module.exports = {
             console.log(error)
         }
     },
+
     getQuizTestBySubjectId: async function (req, res, next) {
         try {
-            const resData = [];
+            // const resData = [];
             const subjectId = req.body.params.subjectId;
             const listQuizTestFound = await quizTestService.getQuizTestsBySubjectId(subjectId);
             if (listQuizTestFound.length > 0) {
                 for (let i = 0; i < listQuizTestFound.length; i++) {
-                    const listQuestionFoundEachTest = await quizTestQuestionService.getQuestionsByQuizTestId(listQuizTestFound[i].id)
-                    if (listQuestionFoundEachTest.length > 0) {
-                        console.log(listQuestionFoundEachTest)
-                        for (let j = 0; j < listQuestionFoundEachTest.length; j++) {
-                            const listOptionFoundEachQuestion = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(listQuestionFoundEachTest[j])
-                            if (listOptionFoundEachQuestion.length > 0) {
-                                listQuestionFoundEachTest[j].options = listOptionFoundEachQuestion
-                            }
-                        }
-                        const data = {
-                            testInfo: listQuizTestFound[i],
-                            questions: listQuestionFoundEachTest
-                        }
-                        resData.push(data)
-                    } else {
-                        const data = {
-                            testInfo: listQuizTestFound[i],
-                            question: []
-                        }
-                        resData.push(data)
+                    // goi api get tong so cau hoi       
+                    const totalQuestion = await quizTestQuestionService.getTotalQuestionInTest(listQuizTestFound[i].id)
+                    if (totalQuestion.length > 0) {
+                        listQuizTestFound[i].total_question = totalQuestion[0].total
                     }
                 }
                 res.status(200).json({
                     status: 'Success',
-                    data: resData,
+                    testFound: listQuizTestFound,
                     total_test: listQuizTestFound.length
                 })
             } else {
@@ -84,6 +69,46 @@ module.exports = {
             }
         } catch (error) {
             console.log(error);
+        }
+    },
+    getQuestionByQuizTestId: async function (req, res, next) {
+        try {
+            const quizTestId = req.body.params.quizTestId;
+            const listQuestionFound = await quizTestQuestionService.getQuestionsByQuizTestId(quizTestId)
+            if (listQuestionFound.length > 0) {
+                for (let i = 0; i < listQuestionFound.length; i++) {
+                    const listOptionFoundEachQuestion = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(listQuestionFound[i])
+                    if (listOptionFoundEachQuestion.length > 0) {
+                        for (let j = 0; j < listOptionFoundEachQuestion.length; j++) {
+                            const isCorrectA = JSON.parse(JSON.stringify(listOptionFoundEachQuestion[j].isCorrect))
+                            if (isCorrectA.data[0] === 1) {
+                                listOptionFoundEachQuestion[j].isCorrect = true
+                            } else {
+                                listOptionFoundEachQuestion[j].isCorrect = false
+                            }
+                        }
+                        listQuestionFound[i].options = listOptionFoundEachQuestion
+                    } else {
+                        listQuestionFound[i].options = []
+                    }
+                    delete listQuestionFound[i].flashcardId
+                    delete listQuestionFound[i].createdDate
+                    delete listQuestionFound[i].statusId
+                }
+                res.status(200).json({
+                    status: 'Success',
+                    listQuestion: listQuestionFound,
+                    total_question: listQuestionFound.length
+                })
+            } else {
+                res.status(202).json({
+                    status: 'Faield',
+                    listQuestion: [],
+                    total_question: 0
+                })
+            }
+        } catch (error) {
+            console.log(error)
         }
     }
 

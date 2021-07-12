@@ -257,7 +257,7 @@ module.exports = {
                     const isUpdateOption = await optionDetailService.updateOptionsByQuestionId(options)
                     if (isUpdateOption === true) {
                         res.status(200).json({
-                            Status: "Success",
+                            status: "Success",
                             message: "Update question successfully"
                         })
                     }

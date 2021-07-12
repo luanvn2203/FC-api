@@ -26,13 +26,13 @@ router.put('/change-status', verifyToken, subjectController.changeStatusToPublic
 
 router.post('/find-by-topicid', verifyToken, subjectController.getSubjectByTopicIdForMe)
 
-router.post('/find-name-des', subjectController.findSubjectByNameAndDescription)
+router.post('/find-name-des', verifyToken, subjectController.findSubjectByNameAndDescription)
 
-router.post('/find-name-des-lession', subjectController.findSubjectByLessionNameAndDescription)
+router.post('/find-name-des-lession', verifyToken, subjectController.findSubjectByLessionNameAndDescription)
 
-router.post('/find-name-flashcard', subjectController.findSubjectByFlashcardName)
+router.post('/find-name-flashcard', verifyToken, subjectController.findSubjectByFlashcardName)
 
-router.post('/find-by-question', subjectController.findSubjectByQuestionContent)
+router.post('/find-by-question', verifyToken, subjectController.findSubjectByQuestionContent)
 
 
 module.exports = router;
