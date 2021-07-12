@@ -9,6 +9,7 @@ const lessionRouter = require('./routes/lession');
 const flashcardRouter = require('./routes/flashcard');
 const questionRouter = require('./routes/question');
 const quizTestRoutes = require('./routes/quizTest')
+const quizHistory = require('./routes/quizHistory')
 // const accountRoutes = require('./routes/account');
 
 
@@ -47,7 +48,7 @@ app.use('/lession', lessionRouter);
 app.use('/flashcard', flashcardRouter);
 app.use('/question', questionRouter);
 app.use('/quiz-test', quizTestRoutes)
-
+app.use('/test', quizHistory)
 /* Error handler middleware */
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
