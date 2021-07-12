@@ -330,6 +330,17 @@ async function findSubjectByftQuestionContent(searchValue) {
         console.log(error)
     }
 }
+async function getSubjecDetailById(subjectId) {
+    const sql = `SELECT subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId  
+    from tbl_subject
+    where subjectId = ?`;
+    const params = [
+        `${subjectId}`
+    ]
+    const result = await db.query(sql, params);
+    const data = helper.emptyOrRows(result)
+    return data;
+}
 
 module.exports = {
     createNewSubject,
@@ -341,6 +352,7 @@ module.exports = {
     findSubjectBySubjectNameAndUserAccount,
     getSubjectBySignedInEmail,
     getSubjectByEmail,
+    getSubjecDetailById,
 
     updateSubjectStatus,
     getSubjectByTopicId,
