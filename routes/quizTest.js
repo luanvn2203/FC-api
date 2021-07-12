@@ -9,4 +9,6 @@ router.post('/get-by-subjectId', verifyToken, quizTestController.getQuizTestBySu
 
 router.post('/questions-by-quiztestid', verifyToken, quizTestController.getQuestionByQuizTestId)
 
+router.post('/take-quiz-questions', verifyToken, quizTestController.getQuestionForUserQuizByTestId)
+
 module.exports = router;

@@ -110,6 +110,41 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+    getQuestionForUserQuizByTestId: async function (req, res, next) {
+        try {
+            const quizTestId = req.body.params.quizTestId;
+            const listQuestionFound = await quizTestQuestionService.getQuestionsForForUserQuizByQuizTestId(quizTestId)
+            if (listQuestionFound.length > 0) {
+                for (let i = 0; i < listQuestionFound.length; i++) {
+                    const listOptionFoundEachQuestion = await optionDetailService.getOptionsByQuestionIdAndFilteredInfoWithRandomIndex(listQuestionFound[i])
+                    if (listOptionFoundEachQuestion.length > 0) {
+                        for (let j = 0; j < listOptionFoundEachQuestion.length; j++) {
+                            delete listOptionFoundEachQuestion[j].isCorrect
+                        }
+                        listQuestionFound[i].options = listOptionFoundEachQuestion
+                    } else {
+                        listQuestionFound[i].options = []
+                    }
+                    delete listQuestionFound[i].flashcardId
+                    delete listQuestionFound[i].createdDate
+                    delete listQuestionFound[i].statusId
+                }
+                res.status(200).json({
+                    status: 'Success',
+                    listQuestion: listQuestionFound,
+                    total_question: listQuestionFound.length
+                })
+            } else {
+                res.status(202).json({
+                    status: 'Faield',
+                    listQuestion: [],
+                    total_question: 0
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }

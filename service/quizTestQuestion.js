@@ -41,6 +41,22 @@ async function getQuestionsByQuizTestId(quiztestId) {
         console.log(error)
     }
 }
+async function getQuestionsForForUserQuizByQuizTestId(quiztestId) {
+    try {
+        const deleteStatus = 3;
+        const sql = `select questionId, questionContent, createdDate, flashcardId, statusId from tbl_question
+        where questionId in (select questionId from tbl_quiztest_question where quiztestId = ? ) and statusId != ? ORDER BY RAND()`
+        const params = [
+            `${quiztestId}`,
+            `${deleteStatus}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
 async function getTotalQuestionInTest(testId) {
     try {
         const sql = `SELECT count(questionId) as total   
@@ -61,5 +77,6 @@ async function getTotalQuestionInTest(testId) {
 module.exports = {
     addRecordToQuizTestQuestionByQuizTestIdAndQuestionArray,
     getQuestionsByQuizTestId,
-    getTotalQuestionInTest
+    getTotalQuestionInTest,
+    getQuestionsForForUserQuizByQuizTestId
 }

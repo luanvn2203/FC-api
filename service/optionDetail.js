@@ -101,12 +101,32 @@ async function getOptionsByQuestionIdAndFilteredInfo(question) {
         console.log(error)
     }
 }
+async function getOptionsByQuestionIdAndFilteredInfoWithRandomIndex(question) {
+    try {
+        const questionId = question.questionId;
+        const sql = `SELECT optionId,
+        optionContent, 
+        questionId, 
+        isCorrect  
+        from tbl_optiondetail where questionId = ? ORDER BY RAND()`;
+        const params = [
+            `${questionId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result);
+        return data
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     addOptionForAnswer,
     getOptionsByQuestionId,
     updateOptionsByQuestionId,
-    getOptionsByQuestionIdAndFilteredInfo
+    getOptionsByQuestionIdAndFilteredInfo,
+    getOptionsByQuestionIdAndFilteredInfoWithRandomIndex
 }
 
 // let strArray = [ "q", "w", "w", "w", "e", "i", "u", "r"];
