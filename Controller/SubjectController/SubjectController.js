@@ -164,7 +164,6 @@ module.exports = {
 			const listTopicFound = await topicService.getAllTopicInArrayOfId(
 				req.body.params.listTopicId
 			);
-			console.log(listTopicFound)
 			if (listTopicFound.length > 0) {
 				let resData = [];
 				for (let i = 0; i < listTopicFound.length; i++) {

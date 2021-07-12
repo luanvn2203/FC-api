@@ -10,6 +10,7 @@ const flashcardRouter = require('./routes/flashcard');
 const questionRouter = require('./routes/question');
 const quizTestRoutes = require('./routes/quizTest')
 const quizHistory = require('./routes/quizHistory')
+const subjectRequestRoutes = require('./routes/subjectRequest')
 // const accountRoutes = require('./routes/account');
 
 
@@ -49,6 +50,10 @@ app.use('/flashcard', flashcardRouter);
 app.use('/question', questionRouter);
 app.use('/quiz-test', quizTestRoutes)
 app.use('/test', quizHistory)
+app.use('/request-view', subjectRequestRoutes)
+
+
+
 /* Error handler middleware */
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
