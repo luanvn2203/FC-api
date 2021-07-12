@@ -86,6 +86,21 @@ async function getQuizTestsBySubjectId(subjectId) {
     }
 }
 
+async function getQuizTestInfomationById(quiztestId) {
+    try {
+        const sql = `SELECT id, testName, createdDate, isFinalQuiz, accountId, subjectId, lessionId_arr 
+        from tbl_quiztest where id = ?`;
+        const params = [
+            `${quiztestId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 
 module.exports = {
@@ -93,4 +108,5 @@ module.exports = {
     getCurrentInsertId,
     checkDuplicateName,
     getQuizTestsBySubjectId,
+    getQuizTestInfomationById
 }
