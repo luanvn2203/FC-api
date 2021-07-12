@@ -98,39 +98,44 @@ module.exports = {
     getQuestionByQuizTestId: async function (req, res, next) {
         try {
             const quizTestId = req.body.params.quizTestId;
-            const listQuestionFound = await quizTestQuestionService.getQuestionsByQuizTestId(quizTestId)
-            if (listQuestionFound.length > 0) {
-                for (let i = 0; i < listQuestionFound.length; i++) {
-                    const listOptionFoundEachQuestion = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(listQuestionFound[i])
-                    if (listOptionFoundEachQuestion.length > 0) {
-                        for (let j = 0; j < listOptionFoundEachQuestion.length; j++) {
-                            const isCorrectA = JSON.parse(JSON.stringify(listOptionFoundEachQuestion[j].isCorrect))
-                            if (isCorrectA.data[0] === 1) {
-                                listOptionFoundEachQuestion[j].isCorrect = true
-                            } else {
-                                listOptionFoundEachQuestion[j].isCorrect = false
+            const quiztestInfo = await quizTestService.getQuizTestInfomationById(quizTestId)
+            if (quiztestInfo.length > 0) {
+                const listQuestionFound = await quizTestQuestionService.getQuestionsByQuizTestId(quizTestId)
+                if (listQuestionFound.length > 0) {
+                    for (let i = 0; i < listQuestionFound.length; i++) {
+                        const listOptionFoundEachQuestion = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(listQuestionFound[i])
+                        if (listOptionFoundEachQuestion.length > 0) {
+                            for (let j = 0; j < listOptionFoundEachQuestion.length; j++) {
+                                const isCorrectA = JSON.parse(JSON.stringify(listOptionFoundEachQuestion[j].isCorrect))
+                                if (isCorrectA.data[0] === 1) {
+                                    listOptionFoundEachQuestion[j].isCorrect = true
+                                } else {
+                                    listOptionFoundEachQuestion[j].isCorrect = false
+                                }
                             }
+                            listQuestionFound[i].options = listOptionFoundEachQuestion
+                        } else {
+                            listQuestionFound[i].options = []
                         }
-                        listQuestionFound[i].options = listOptionFoundEachQuestion
-                    } else {
-                        listQuestionFound[i].options = []
+                        delete listQuestionFound[i].flashcardId
+                        delete listQuestionFound[i].createdDate
+                        delete listQuestionFound[i].statusId
                     }
-                    delete listQuestionFound[i].flashcardId
-                    delete listQuestionFound[i].createdDate
-                    delete listQuestionFound[i].statusId
+                    res.status(200).json({
+                        status: 'Success',
+                        quiztestInfo: quiztestInfo[0],
+                        listQuestion: listQuestionFound,
+                        total_question: listQuestionFound.length,
+                    })
+                } else {
+                    res.status(202).json({
+                        status: 'Faield',
+                        listQuestion: [],
+                        total_question: 0
+                    })
                 }
-                res.status(200).json({
-                    status: 'Success',
-                    listQuestion: listQuestionFound,
-                    total_question: listQuestionFound.length
-                })
-            } else {
-                res.status(202).json({
-                    status: 'Faield',
-                    listQuestion: [],
-                    total_question: 0
-                })
             }
+
         } catch (error) {
             console.log(error)
         }
