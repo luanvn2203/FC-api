@@ -5,7 +5,7 @@ const questionService = require('../../service/question')
 const optionDetailService = require('../../service/optionDetail')
 const quizTestQuestionService = require('../../service/quizTestQuestion')
 const lessionService = require('../../service/lession')
-
+const subjectService = require('../../service/subject')
 module.exports = {
     createNewQuizTest: async function (req, res, next) {
         try {
@@ -56,41 +56,54 @@ module.exports = {
         try {
             // const resData = [];
             const subjectId = req.body.params.subjectId;
-            const listQuizTestFound = await quizTestService.getQuizTestsBySubjectId(subjectId);
-            if (listQuizTestFound.length > 0) {
-                for (let i = 0; i < listQuizTestFound.length; i++) {
-                    let listLession = [];
-                    const lessionIdArray = JSON.parse(listQuizTestFound[i].lessionId_arr)
-                    for (let index = 0; index < lessionIdArray.length; index++) {
-                        const lessionFound = await lessionService.getLessionByLessionId(lessionIdArray[index])
-                        delete lessionFound[0].accountId
-                        delete lessionFound[0].subjectId
-                        delete lessionFound[0].createdDate
-                        delete lessionFound[0].statusId
+            const subjectDetail = await subjectService.getSubjecDetailById(subjectId);
+            if (subjectDetail.length > 0) {
 
-                        listLession.push(lessionFound[0])
-                    }
-                    listQuizTestFound[i].lessions = listLession
-                    // goi api get tong so cau hoi       
-                    const totalQuestion = await quizTestQuestionService.getTotalQuestionInTest(listQuizTestFound[i].id)
-                    if (totalQuestion.length > 0) {
-                        listQuizTestFound[i].total_question = totalQuestion[0].total
-                    }
-                    delete listQuizTestFound[i].lessionId_arr
+                const listQuizTestFound = await quizTestService.getQuizTestsBySubjectId(subjectId);
+                if (listQuizTestFound.length > 0) {
+                    for (let i = 0; i < listQuizTestFound.length; i++) {
+                        let listLession = [];
+                        const lessionIdArray = JSON.parse(listQuizTestFound[i].lessionId_arr)
+                        for (let index = 0; index < lessionIdArray.length; index++) {
+                            const lessionFound = await lessionService.getLessionByLessionId(lessionIdArray[index])
+                            delete lessionFound[0].accountId
+                            delete lessionFound[0].subjectId
+                            delete lessionFound[0].createdDate
+                            delete lessionFound[0].statusId
 
+                            listLession.push(lessionFound[0])
+                        }
+                        listQuizTestFound[i].lessions = listLession
+                        // goi api get tong so cau hoi       
+                        const totalQuestion = await quizTestQuestionService.getTotalQuestionInTest(listQuizTestFound[i].id)
+                        if (totalQuestion.length > 0) {
+                            listQuizTestFound[i].total_question = totalQuestion[0].total
+                        }
+                        delete listQuizTestFound[i].lessionId_arr
+
+                    }
+                    res.status(200).json({
+                        status: 'Success',
+                        subjectName: subjectDetail[0].subjectName,
+                        testFound: listQuizTestFound,
+                        total_test: listQuizTestFound.length
+                    })
+                } else {
+                    res.status(202).json({
+                        status: 'Failed',
+                        message: 'No Test Found in this subject',
+                        listQuizTestFound: []
+                    })
                 }
-                res.status(200).json({
-                    status: 'Success',
-                    testFound: listQuizTestFound,
-                    total_test: listQuizTestFound.length
-                })
             } else {
                 res.status(202).json({
                     status: 'Failed',
-                    message: 'No Test Found in this subject',
+                    message: 'Not found subject id',
                     listQuizTestFound: []
                 })
             }
+
+
         } catch (error) {
             console.log(error);
         }
