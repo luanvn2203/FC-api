@@ -9,32 +9,40 @@ module.exports = {
         try {
             let isFinalQuiz = 0;
             const questionArr = req.body.params.questionArr;
-            const lessionArr = req.body.params.lessionArr;
-            if (lessionArr.length > 1) {
-                isFinalQuiz = 1
-            }
-            const userEmail = req.userEmail
-            const resultId = await quizTestService.createQuizTest(req.body, userEmail, isFinalQuiz)
-            if (resultId !== -1) {
-                const isInsertQuizTestLession_table = await quizTestLessionService.addRecordToQuizTestLessionByQuizTestIdAndLessionArray(req.body, resultId)
-                if (isInsertQuizTestLession_table === true) {
-                    const isInsertQuizTestQuestion_table = await quizTestQuestionService.addRecordToQuizTestQuestionByQuizTestIdAndQuestionArray(questionArr, resultId)
-                    if (isInsertQuizTestQuestion_table === true) {
-                        res.status(200).json({
-                            status: "Success",
-                            message: "Create a quiz test success"
-                        })
-                    } else {
-                        res.status(202).json({
-                            status: "Failed",
-                            message: "Create a quiz test failed"
-                        })
+
+            if (questionArr.length > 10) {
+                const lessionArr = req.body.params.lessionArr;
+                if (lessionArr.length > 1) {
+                    isFinalQuiz = 1
+                }
+                const userEmail = req.userEmail
+                const resultId = await quizTestService.createQuizTest(req.body, userEmail, isFinalQuiz)
+                if (resultId !== -1) {
+                    const isInsertQuizTestLession_table = await quizTestLessionService.addRecordToQuizTestLessionByQuizTestIdAndLessionArray(req.body, resultId)
+                    if (isInsertQuizTestLession_table === true) {
+                        const isInsertQuizTestQuestion_table = await quizTestQuestionService.addRecordToQuizTestQuestionByQuizTestIdAndQuestionArray(questionArr, resultId)
+                        if (isInsertQuizTestQuestion_table === true) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Create a quiz test success"
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Create a quiz test failed"
+                            })
+                        }
                     }
+                } else {
+                    res.status(202).json({
+                        status: 'Failed',
+                        message: 'Create test failed'
+                    })
                 }
             } else {
                 res.status(202).json({
                     status: 'Failed',
-                    message: 'Create test failed'
+                    message: 'A test must have at least 10 question to create'
                 })
             }
         } catch (error) {

@@ -58,6 +58,7 @@ module.exports = {
                     status: "Success",
                     totalCore: totalCore,
                     numOfCorrect: numOfCorrect,
+                    totalQuestion: numOfQuestion,
                     checkCorrectObj: resDataUserChoice
                 })
             } else {
