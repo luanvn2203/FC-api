@@ -1,5 +1,5 @@
 const lessionService = require("../../service/lession");
-
+const flashcardService = require('../../service/flashcard')
 module.exports = {
 	getAllLession: async function (req, res, next) {
 		try {
@@ -256,4 +256,74 @@ module.exports = {
 			console.log(error);
 		}
 	},
+	findLessionByFullTextFlashcard: async function (req, res, next) {
+		try {
+			const searchValue = req.body.params.searchValue
+			const flashcardFound = await flashcardService.findFlashcardByFullTextFlashcard(searchValue)
+			const resData = []
+			const listLessionId = []
+			if (flashcardFound.length > 0) {
+				for (let i = 0; i < flashcardFound.length; i++) {
+					//get array of lession id
+					listLessionId.push(flashcardFound[i].lessionId)
+				}
+				const uniqueIdList = Array.from(new Set(listLessionId))
+				if (listLessionId.length > 0) {
+					for (let index = 0; index < uniqueIdList.length; index++) {
+						const lessionFound = await lessionService.getLessionByLessionId(uniqueIdList[index])
+						if (lessionFound.length > 0) {
+							// co lession
+							for (let le_index = 0; le_index < lessionFound.length; le_index++) {
+								// tao flashcard inside
+								const flashcard_inside = [];
+								for (let fc_index = 0; fc_index < flashcardFound.length; fc_index++) {
+									// console.log(flashcardFound[fc_index].lessionId, lessionFound[le_index].lessionId)
+									console.log(flashcardFound[fc_index].lessionId, lessionFound[le_index].lessionId)
+									if (flashcardFound[fc_index].lessionId === lessionFound[le_index].lessionId) {
+										flashcard_inside.push(flashcardFound[fc_index])
+									}
+								}
+								const resObject = {
+									lession: lessionFound[le_index],
+									flashcard_inside: flashcard_inside,
+									total_flashcard: flashcard_inside.length
+								}
+								resData.push(resObject)
+							}
+						}
+					}
+				}
+				res.status(200).json({
+					status: "Success",
+					total: resData.length,
+					data: resData,
+				})
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found result with keyword: " + searchValue
+				})
+			}
+
+
+
+
+			// if (result.length > 0) {
+			// 	res.status(200).json({
+			// 		status: responseStatus.SUCCESS,
+			// 		searchResult: result,
+			// 		total_subject: result.length
+			// 	})
+			// } else {
+			// 	res.status(200).json({
+			// 		status: responseStatus.FAILED,
+			// 		searchResult: [],
+			// 		total_subject: result.length
+			// 	})
+			// }
+
+		} catch (error) {
+			console.log(error)
+		}
+	}
 };

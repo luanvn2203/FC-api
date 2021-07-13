@@ -311,19 +311,8 @@ async function findSubjectByftFlashcardName(searchValue) {
 
 async function findSubjectByftQuestionContent(searchValue) {
     try {
-        const sql = `select  s.subjectId,
-          s.subjectName,
-            s.accountId,
-              s.topicId,
-                s.subjectDescription,
-                  s.createdDate,
-                    s.statusId,
-                     a.fullName as author
-        from tbl_subject s, tbl_account a where s.accountId = a.email and s.subjectId 
-        in (select distinct subjectId from tbl_lession where lessionId 
-        in (select distinct lessionId from tbl_flashcards where flashcardId 
-        in (select distinct flashcardId from tbl_question where 
-        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and s.statusId != 3)))`;
+        const sql = `select distinct flashcardId from tbl_question where 
+        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and statusId != 3`;
         const params = [
             `${searchValue}`
         ];

@@ -144,6 +144,41 @@ async function getQuestionsByFlashcardIdAndFilteredInfor(flashcardIdParam) {
         console.log(error)
     }
 }
+async function findFlashCardByQuestionByFullTextSearch(searchValue) {
+    try {
+        const sql = ` select flashcardId, flashcardName,
+        statusId, dateOfCreate, accountId,
+        lessionId, flashcardContent from tbl_flashcards where flashcardId 
+        in (select distinct flashcardId from tbl_question where 
+        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and statusId != 3)`;
+        const params = [
+            `${searchValue}`
+        ];
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function get3QuestionByFlashcardIdWithinFullTextSearch(searchValue, flashcardId) {
+    try {
+        const sql = `select questionId, questionContent, createdDate, flashcardId,
+         statusId from tbl_question where flashcardId = ? and
+        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and statusId != 3 limit 3`;
+        const params = [
+            `${flashcardId}`,
+            `${searchValue}`
+        ];
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     addNewQuestionToFlashCard,
@@ -152,5 +187,7 @@ module.exports = {
     getQuestionsByFlashcardId,
     updateQuestionStatus,
     updateQuestionOption,
-    getQuestionsByFlashcardIdAndFilteredInfor
+    getQuestionsByFlashcardIdAndFilteredInfor,
+    findFlashCardByQuestionByFullTextSearch,
+    get3QuestionByFlashcardIdWithinFullTextSearch,
 }

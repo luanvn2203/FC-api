@@ -20,7 +20,6 @@ async function getLessionByLessionId(lessionId) {
         const params = [`${lessionId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
-        console.log(result);
         return result;
     } catch (error) {
         console.log(error);
@@ -192,7 +191,27 @@ async function updateLessionStatus(lessionId, status, userEmail) {
         console.log(error)
     }
 }
-
+// async function findFlashcardByFullTextFlashcard(searchValue) {
+//     try {
+//         const sql = `select flashcardId,
+//              flashcardName,
+//               statusId,
+//                dateOfCreate,
+//                 accountId,
+//                  lessionId,
+//                   flashcardContent
+//                    from tbl_flashcards where MATCH (flashcardName,flashcardContent) 
+//         AGAINST ('test' WITH QUERY EXPANSION) and statusId != 3`;
+//         const params = [
+//             `${searchValue}`
+//         ];
+//         const result = await db.query(sql, params)
+//         const data = helper.emptyOrRows(result)
+//         return data;
+//     } catch (error) {
+//         console.log(error)
+//     }
+// }
 
 module.exports = {
     getAllLession,
@@ -204,5 +223,6 @@ module.exports = {
     UpdateLessionByID,
     getLessionByMe,
     updateLessionStatus,
-    getLessionBySubjectIdByPublicStatus
+    getLessionBySubjectIdByPublicStatus,
+    // findByFullTextFlashcard,
 }
