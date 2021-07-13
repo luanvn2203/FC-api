@@ -257,7 +257,7 @@ module.exports = {
 					email: req.userEmail,
 				});
 			} else {
-				return res.status(205).json({
+				return res.status(202).json({
 					status: "Failed",
 					message: result.error,
 					email: req.userEmail,
