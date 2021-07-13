@@ -83,29 +83,29 @@ module.exports = {
 		}
 	},
 
-	getFlashcardByAcountId: async function (req, res, next) {
-		try {
-			const accountId = req.accountId;
-			const result = await flashcardService.getFlashcardByAcountId(accountId);
-			if (result.length > 0) {
-				res.status(200).json({
-					status: "Success",
-					message: "Find flashcard successfully",
-					flashcard: result,
-					total: result.length,
-				});
-			} else {
-				res.status(201).json({
-					status: "Failed",
-					message: "No record Found",
-					flashcard: [],
-					total: 0,
-				});
-			}
-		} catch (error) {
-			console.log(error);
-		}
-	},
+	// getFlashcardByAcountId: async function (req, res, next) {
+	// 	try {
+	// 		const accountId = req.body.params.accountId;
+	// 		const result = await flashcardService.getFlashcardByAcountId(accountId);
+	// 		if (result.length > 0) {
+	// 			res.status(200).json({
+	// 				status: "Success",
+	// 				message: "Find flashcard successfully",
+	// 				flashcard: result,
+	// 				total: result.length,
+	// 			});
+	// 		} else {
+	// 			res.status(202).json({
+	// 				status: "Failed",
+	// 				message: "No record Found",
+	// 				flashcard: [],
+	// 				total: 0,
+	// 			});
+	// 		}
+	// 	} catch (error) {
+	// 		console.log(error);
+	// 	}
+	// },
 
 	getFlashcardByMe: async function (req, res, next) {
 		try {

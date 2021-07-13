@@ -67,72 +67,6 @@ module.exports = {
         }
     },
 
-    getQuestionByFlashcardId: async function (req, res, next) {
-        try {
-            const flashcardId = req.body.params.flashcardId;
-            const result = await questionService.getQuestionByFlashcardId(
-                flashcardId
-            );
-            if (result.length > 0) {
-                res.status(200).json({
-                    status: "Success",
-                    question: result,
-                    total: result.length,
-                });
-            } else {
-                res.status(201).json({
-                    status: "Failed",
-                    question: [],
-                    total: 0,
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    },
-    getAllQuestionByFlashcardId: async function (req, res, next) {
-        try {
-            let resData = [];
-            const listQuestion = await questionService.getQuestionsByFlashcardId(
-                req.body
-            );
-            if (listQuestion.length > 0) {
-                for (let i = 0; i < listQuestion.length; i++) {
-                    const listOptionInQuestion =
-                        await optionDetailService.getOptionsByQuestionId(listQuestion[i]);
-                    if (listOptionInQuestion.length > 0) {
-                        const resObj = {
-                            question: listQuestion[i],
-                            option: listOptionInQuestion,
-                            total_option: listOptionInQuestion.length,
-                        };
-                        resData.push(resObj);
-                    } else {
-                        const resObj = {
-                            question: listQuestion[i],
-                            option: [],
-                            total_option: 0,
-                        };
-                        resData.push(resObj);
-                    }
-                }
-                res.status(200).json({
-                    status: "Success",
-                    data: resData,
-                    total_question: resData.length,
-                });
-            } else {
-                res.status(202).json({
-                    status: "Failed",
-                    listData: [],
-                    total: 0,
-                });
-            }
-        } catch (error) {
-            console.log(error);
-        }
-    },
-
     deleteQuestion: async function (req, res, next) {
         try {
             const result = await questionService.updateQuestionStatus(req.body, 3);
@@ -192,39 +126,52 @@ module.exports = {
     },
     getAllQuestionByFlashcardId: async function (req, res, next) {
         try {
-            let resData = [];
-            const listQuestion = await questionService.getQuestionsByFlashcardId(req.body.params.flashcardId)
-            if (listQuestion.length > 0) {
-                for (let i = 0; i < listQuestion.length; i++) {
-                    const listOptionInQuestion = await optionDetailService.getOptionsByQuestionId(listQuestion[i]);
-                    if (listOptionInQuestion.length > 0) {
-                        const resObj = {
-                            question: listQuestion[i],
-                            option: listOptionInQuestion,
-                            total_option: listOptionInQuestion.length
+
+            const flashcardId = req.body.params.flashcardId;
+            const flashcardFound = await flashcardService.getFlashcardByFlashcardId(flashcardId)
+            if (flashcardFound.length > 0) {
+                let resData = [];
+                const listQuestion = await questionService.getQuestionsByFlashcardId(req.body.params.flashcardId)
+                if (listQuestion.length > 0) {
+                    for (let i = 0; i < listQuestion.length; i++) {
+                        const listOptionInQuestion = await optionDetailService.getOptionsByQuestionId(listQuestion[i]);
+                        if (listOptionInQuestion.length > 0) {
+                            const resObj = {
+                                question: listQuestion[i],
+                                option: listOptionInQuestion,
+                                total_option: listOptionInQuestion.length
+                            }
+                            resData.push(resObj)
+                        } else {
+                            const resObj = {
+                                question: listQuestion[i],
+                                option: [],
+                                total_option: 0
+                            }
+                            resData.push(resObj)
                         }
-                        resData.push(resObj)
-                    } else {
-                        const resObj = {
-                            question: listQuestion[i],
-                            option: [],
-                            total_option: 0
-                        }
-                        resData.push(resObj)
                     }
+                    res.status(200).json({
+                        status: "Success",
+                        flashcardDetail: flashcardFound,
+                        data: resData,
+                        total_question: resData.length
+                    })
+                } else {
+                    res.status(202).json({
+                        status: 'Failed',
+                        listData: [],
+                        total: 0
+                    })
                 }
-                res.status(200).json({
-                    status: "Success",
-                    data: resData,
-                    total_question: resData.length
-                })
             } else {
                 res.status(202).json({
-                    status: 'Failed',
-                    listData: [],
-                    total: 0
-                })
+                    status: "Failed",
+                    message: "Not found flashcard by id: " + flashcardId
+                });
             }
+
+
         } catch (error) {
             console.log(error)
         }

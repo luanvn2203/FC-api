@@ -5,21 +5,23 @@ const config = require('../config');
 async function createFlashcard(flashcardParams, student) {
     try {
         const sql = `Insert into 
-        tbl_flashcards(flashcardName, statusId, dateOfCreate, accountId, lessionId) 
-        values(?,?,?,?,?)`;
+        tbl_flashcards(flashcardName, statusId, dateOfCreate, accountId, lessionId, flashcardContent) 
+        values(?,?,?,?,?,?)`;
         const flashcard = flashcardParams.params;
 
         let current = new Date();
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
-
+        console.log(flashcard)
         const params = [
             `${flashcard.flashcardName.trim()}`,
             `${flashcard.statusId}`,
             `${dateTime}`,
             `${student}`,
             `${flashcard.lessionId}`,
+            `${flashcard.flashcardContent.trim()}`,
+
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
@@ -36,7 +38,7 @@ async function createFlashcard(flashcardParams, student) {
 async function findFlashcardByName(flashcardsParams) {
     const flashcard = flashcardsParams.params
     const sql = `SELECT flashcardId,
-     flashcardName, statusId, dateOfCreate,
+     flashcardName,  flashcardContent, statusId, dateOfCreate,
       accountId, lessionId FROM tbl_flashcards 
       where flashcardName = ? and lessionId = ?`;
 
@@ -48,7 +50,7 @@ async function findFlashcardByName(flashcardsParams) {
 
 async function getAllFlashcard() {
     try {
-        const sql = `SELECT flashcardId, flashcardName, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards`;
+        const sql = `SELECT flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards`;
         const rows = await db.query(sql);
         const data = helper.emptyOrRows(rows);
         return data;
@@ -60,7 +62,7 @@ async function getAllFlashcard() {
 
 async function getFlashcardByFlashcardId(flashcardId) {
     try {
-        const sql = 'select flashcardId, flashcardName, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where flashcardId = ?';
+        const sql = 'select flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where flashcardId = ?';
         const params = [`${flashcardId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
@@ -71,25 +73,25 @@ async function getFlashcardByFlashcardId(flashcardId) {
     }
 }
 
-async function getFlashcardByAcountId(accountId) {
-    try {
-        const sql = 'select flashcardId, flashcardName, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where accountId = ?';
-        const params = [`${accountId}`];
-        const result = await db.query(sql, params);
-        if (result.affectedRows) {
-            return true;
-        } else {
-            return false;
-        }
+// async function getFlashcardByAcountId(accountId) {
+//     try {
+//         const sql = 'select flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where accountId = ?';
+//         const params = [`${accountId}`];
+//         const result = await db.query(sql, params);
+//         if (result.affectedRows) {
+//             return true;
+//         } else {
+//             return false;
+//         }
 
-    } catch (error) {
-        console.log(error);
-    }
-}
+//     } catch (error) {
+//         console.log(error);
+//     }
+// }
 
 async function getFlashcardByMe(email) {
     try {
-        const sql = `SELECT flashcardId, flashcardName ,statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where accountId = ? and statusId != 3 order by dateOfCreate desc`;
+        const sql = `SELECT flashcardId, flashcardName ,  flashcardContent,statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where accountId = ? and statusId != 3 order by dateOfCreate desc`;
         const params = [
             `${email}`
         ]
@@ -104,7 +106,7 @@ async function getFlashcardByMe(email) {
 
 async function getFlashcardByLessionId(lessionId) {
     try {
-        const sql = 'select flashcardId, flashcardName, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where lessionId = ? and statusId != 3 order by dateOfCreate desc';
+        const sql = 'select flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where lessionId = ? and statusId != 3 order by dateOfCreate desc';
         const params = [`${lessionId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
@@ -117,7 +119,7 @@ async function getFlashcardByLessionId(lessionId) {
 
 async function getPublicFlashcardByLessionId(lessionId) {
     try {
-        const sql = `select f.flashcardId, f.flashcardName, 
+        const sql = `select f.flashcardId, f.flashcardName,   f.flashcardContent,
         f.statusId, f.dateOfCreate,
          f.accountId, f.lessionId, a.fullName as author 
          from tbl_flashcards f, tbl_account a 
@@ -136,9 +138,10 @@ async function UpdateFlashcardByID(flashcardParams) {
     const flashcard = flashcardParams.params;
     console.log(flashcard)
     try {
-        const sql = `UPDATE tbl_flashcards set flashcardName = ?, statusId = ? where flashcardId = ?`;
+        const sql = `UPDATE tbl_flashcards set flashcardName = ?, flashcardContent = ?, statusId = ? where flashcardId = ?`;
         const params = [
             `${flashcard.flashcardName}`,
+            `${flashcard.flashcardContent}`,
             flashcard.statusId,
             flashcard.flashcardId,
         ]
@@ -182,6 +185,7 @@ async function getFlashcardByArrayLessionId(arrayLessionId) {
     try {
         const sql = `select flashcardId,
          flashcardName, 
+         flashcardContent,
          statusId, 
          dateOfCreate, 
          accountId, 
@@ -201,6 +205,7 @@ async function getFlashcardByArrayLessionIdAndFilteredInfo(arrayLessionId) {
     try {
         const sql = `select flashcardId,
          flashcardName, 
+         flashcardContent,
          lessionId 
         from tbl_flashcards where lessionId in (${arrayLessionId})`;
         const result = await db.query(sql);
@@ -216,7 +221,7 @@ module.exports = {
     findFlashcardByName,
     getAllFlashcard,
     getFlashcardByFlashcardId,
-    getFlashcardByAcountId,
+    // getFlashcardByAcountId,
     getFlashcardByLessionId,
     UpdateFlashcardByID,
     getFlashcardByMe,
