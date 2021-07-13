@@ -12,7 +12,7 @@ router.get('/get-all-flashcard', flashcardController.getAllFlashcard)
 
 router.post('/get-flashcard-by-flashcardid', flashcardController.getFlashcardByFlashcardId)
 
-router.post('/get-flashcard-by-accountid', verifyToken, flashcardController.getFlashcardByAcountId)
+// router.post('/get-flashcard-by-accountid', verifyToken, flashcardController.getFlashcardByAcountId)
 
 router.post('/get-flashcard-by-lessionid', flashcardController.getFlashcardByLessionId)
 
