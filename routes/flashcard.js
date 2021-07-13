@@ -26,6 +26,7 @@ router.put('/change-status', verifyToken, flashcardController.updateFlashcardSta
 
 router.post('/public-flashcard-by-lessionid', verifyToken, flashcardController.getPublicFlashcardByLessionId)
 
+router.post('/find-by-ft-question', verifyToken, flashcardController.findFlashcardByFtQuestion)
 
 
 module.exports = router;

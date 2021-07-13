@@ -408,9 +408,6 @@ module.exports = {
 					total_subject: result.length
 				})
 			}
-
-
-
 		} catch (error) {
 			console.log(error)
 		}

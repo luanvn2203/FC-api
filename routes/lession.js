@@ -26,5 +26,7 @@ router.put('/change-status', verifyToken, lessionController.updateLessionStatusT
 
 router.post('/public-lession-by-subjectid', verifyToken, lessionController.getPublicLessionBySubjectId)
 
+router.post('/find-by-ft-flashacrd', verifyToken, lessionController.findLessionByFullTextFlashcard)
+
 
 module.exports = router;

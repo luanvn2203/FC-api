@@ -1,6 +1,6 @@
 const flashcardService = require("../../service/flashcard");
 const questionService = require("../../service/question");
-
+const optionDetailService = require('../../service/optionDetail')
 module.exports = {
 	createFlashcard: async function (req, res, next) {
 		try {
@@ -303,4 +303,58 @@ module.exports = {
 			console.log(error);
 		}
 	},
+	findFlashcardByFtQuestion: async function (req, res, next) {
+		try {
+			const searchValue = req.body.params.searchValue
+			const flashcardFound = await questionService.findFlashCardByQuestionByFullTextSearch(searchValue)
+			if (flashcardFound.length > 0) {
+				resData = [];
+				for (let index = 0; index < flashcardFound.length; index++) {
+					//get question by flashcard id with in full text
+					const questionFound = await questionService.get3QuestionByFlashcardIdWithinFullTextSearch(searchValue, flashcardFound[index].flashcardId)
+					if (questionFound.length > 0) {
+						const questions = [];
+						for (let i = 0; i < questionFound.length; i++) {
+							const optionFound = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(questionFound[i])
+							if (optionFound.length > 0) {
+								const questionObj = {
+									questionDetail: questionFound[i],
+									options: optionFound,
+									total_option: optionFound.length
+								}
+								questions.push(questionObj)
+							}
+						}
+						const resObject = {
+							flashcard: flashcardFound[index],
+							question_inside: questions,
+							limit_question: 3
+						}
+						resData.push(resObject)
+					} else {
+						const resObject = {
+							flashcard: flashcardFound[index],
+							question_inside: [],
+							limit_question: 0
+						}
+						resData.push(resObject)
+					}
+				}
+				res.status(202).json({
+					status: "Success",
+					data: resData,
+					total_flashcard: resData.length
+				});
+
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found flashcard with keyword: " + searchValue,
+				});
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
+
 };
