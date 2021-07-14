@@ -363,7 +363,7 @@ async function getSubjectById(subjectId) {
         const sql = `select s.subjectId,
         s.subjectName, s.accountId, s.topicId, s.subjectDescription,
          s.createdDate, s.statusId, s.numOfView, a.fullName from tbl_subject s, tbl_account a
-         where s.accountId = a.email and s.subjectId = 1 and s.statusId != 3`;
+         where s.accountId = a.email and s.subjectId = ? and s.statusId != 3`;
         const params = [
             `${subjectId}`
         ]
