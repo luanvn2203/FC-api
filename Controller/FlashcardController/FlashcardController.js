@@ -148,6 +148,7 @@ module.exports = {
 						statusId: result[i].statusId,
 						dateOfCreate: result[i].dateOfCreate,
 						accountId: result[i].accountId,
+						author: result[i].author,
 						lessionId: result[i].lessionId,
 						totalQuestion: totalfc[0].totalQuestion,
 					};
