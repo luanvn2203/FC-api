@@ -357,6 +357,23 @@ async function increaseViewByClickBySubjectId(subjectId) {
         console.log(error)
     }
 }
+async function getSubjectById(subjectId) {
+    console.log(subjectId)
+    try {
+        const sql = `select subjectId,
+         subjectName, accountId, topicId, subjectDescription,
+          createdDate, statusId, numOfView from tbl_subject 
+          where subjectId = ? and statusId != 3`;
+        const params = [
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     createNewSubject,
@@ -364,7 +381,7 @@ module.exports = {
     getAllSubjectInListTopicId,
     updateSubject,
     increaseViewByClickBySubjectId,
-
+    getSubjectById,
     getTop5SubjectByTopicId,
     findSubjectBySubjectNameAndUserAccount,
     getSubjectBySignedInEmail,

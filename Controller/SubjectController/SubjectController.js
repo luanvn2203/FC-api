@@ -450,6 +450,25 @@ module.exports = {
 		} catch (error) {
 			console.log(error)
 		}
+	},
+	getSubjectById: async function (req, res, next) {
+		try {
+			const subjectId = req.body.params.subjectId;
+			const result = await subjectService.getSubjectById(subjectId)
+			if (result.length > 0) {
+				res.status(200).json({
+					status: "Success",
+					subjectFound: result
+				})
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found subject"
+				})
+			}
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 };

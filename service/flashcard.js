@@ -66,7 +66,6 @@ async function getFlashcardByFlashcardId(flashcardId) {
         const params = [`${flashcardId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
-        console.log(result);
         return result;
     } catch (error) {
         console.log(error);

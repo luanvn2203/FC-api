@@ -60,6 +60,8 @@ module.exports = {
 	getFlashcardByFlashcardId: async function (req, res, next) {
 		try {
 			const flashcardId = req.body.params.flashcardId;
+			console.log(flashcardId)
+
 			const result = await flashcardService.getFlashcardByFlashcardId(
 				flashcardId
 			);
@@ -71,7 +73,7 @@ module.exports = {
 					total: result.length,
 				});
 			} else {
-				res.status(201).json({
+				res.status(202).json({
 					status: "Failed",
 					message: "No record Found",
 					flashcard: [],
