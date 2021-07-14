@@ -106,7 +106,11 @@ async function getFlashcardByMe(email) {
 
 async function getFlashcardByLessionId(lessionId) {
     try {
-        const sql = 'select flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where lessionId = ? and statusId != 3 order by dateOfCreate desc';
+        const sql = `select f.flashcardId, f.flashcardName,   f.flashcardContent,
+        f.statusId, f.dateOfCreate,
+         f.accountId, f.lessionId, a.fullName as author 
+         from tbl_flashcards f, tbl_account a 
+         where f.accountId = a.email and f.lessionId = ? and f.statusId != 3 order by f.dateOfCreate desc`;
         const params = [`${lessionId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
