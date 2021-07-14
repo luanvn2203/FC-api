@@ -458,7 +458,7 @@ module.exports = {
 			if (result.length > 0) {
 				res.status(200).json({
 					status: "Success",
-					subjectFound: result
+					subjectFound: result[0]
 				})
 			} else {
 				res.status(202).json({
