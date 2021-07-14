@@ -231,6 +231,15 @@ module.exports = {
                     if (questions.length > 0) {
                         for (let j = 0; j < questions.length; j++) {
                             const options = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(questions[j])
+                            for (let j = 0; j < options.length; j++) {
+                                const isCorrectA = JSON.parse(JSON.stringify(options[j].isCorrect))
+                                if (isCorrectA.data[0] === 1) {
+                                    options[j].isCorrect = true
+                                } else {
+                                    options[j].isCorrect = false
+                                }
+                            }
+
                             const questionInfor = {
                                 question: questions[j],
                                 options: options
