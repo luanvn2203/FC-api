@@ -144,6 +144,7 @@ module.exports = {
 					const resObj = {
 						flashcardId: result[i].flashcardId,
 						flashcardName: result[i].flashcardName,
+						flashcardContent: result[i].flashcardContent,
 						statusId: result[i].statusId,
 						dateOfCreate: result[i].dateOfCreate,
 						accountId: result[i].accountId,
@@ -189,6 +190,7 @@ module.exports = {
 					const resObj = {
 						flashcardId: result[i].flashcardId,
 						flashcardName: result[i].flashcardName,
+						flashcardContent: result[i].flashcardContent,
 						statusId: result[i].statusId,
 						dateOfCreate: result[i].dateOfCreate,
 						accountId: result[i].accountId,
