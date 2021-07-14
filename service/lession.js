@@ -60,7 +60,13 @@ async function getLessionByMe(email) {
 
 async function getLessionBySubjectId(subjectId) {
     try {
-        const sql = 'select lessionId, lessionName, lessionDescription, createdDate from tbl_lession where subjectId = ? and statusId != 3 order by createdDate desc';
+        const sql = `select l.lessionId, 
+        l.lessionName, 
+        l.lessionDescription, 
+        l.statusId,
+        a.fullName as author,
+        l.createdDate from tbl_lession l, tbl_account a 
+        where l.accountId = a.email and l.subjectId = ? and l.statusId != 3  order by l.createdDate desc`;
         const params = [`${subjectId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
