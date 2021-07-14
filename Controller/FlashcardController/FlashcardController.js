@@ -21,7 +21,7 @@ module.exports = {
 				} else {
 					res.status(202).json({
 						status: "Failed",
-						message: "Create flashcard failed",
+						message: "Create flashcard failed: Invalid params",
 					});
 				}
 			} else {
@@ -355,6 +355,44 @@ module.exports = {
 		} catch (error) {
 			console.log(error)
 		}
+	},
+	increaseViewByUserClick: async function (req, res, next) {
+		try {
+			const flashcardToIncrease = req.body.params.flashcardId;
+			const userEmail = req.userEmail;
+			const flashcardFound = await flashcardService.getFlashcardByFlashcardId(flashcardToIncrease)
+			//check 
+			if (flashcardFound.length > 0) {
+				if (flashcardFound[0].accountId !== userEmail) {
+					const isIncrease = await flashcardService.increaseViewByClickByFlashcardId(flashcardToIncrease)
+					if (isIncrease === true) {
+						res.status(200).json({
+							status: "Success",
+							message: "Increase view successfully"
+						})
+					} else {
+						res.status(202).json({
+							status: "Failed",
+							message: "Increase view failed"
+						})
+					}
+				} else {
+					res.status(202).json({
+						status: "Failed",
+						message: "Author cannot increase view of their flashcard"
+					})
+				}
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found flashcard id"
+				})
+			}
+
+		} catch (error) {
+			console.log(error)
+		}
+
 	}
 
 };

@@ -12,8 +12,8 @@ async function saveRequest(requestFrom, requestTo, subjectId, statusId) {
         values(?,?,?,?,?)`
 
         const params = [
-            `${requestFrom}`,
-            `${requestTo}`,
+            `${requestFrom.trim()}`,
+            `${requestTo.trim()}`,
             `${subjectId}`,
             `${statusId}`,
             `${dateTime}`
@@ -83,10 +83,32 @@ async function updateRequestStatus(requestId, status) {
     }
 }
 
+async function checkDuplicateRequest(subjectId, from, to) {
+    try {
+        const sql = `SELECT id FROM tbl_subject_request 
+      where subjectId = ?  
+      and requestFrom = ? 
+      and requestTo = ?`;
+        const params = [
+            `${subjectId}`,
+            `${from.trim()}`,
+            `${to.trim()}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result);
+        return data
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 module.exports = {
     saveRequest,
     getAllRequestSendToMeByEmail,
     getRequestDetailById,
+    checkDuplicateRequest,
 
     updateRequestStatus
 

@@ -16,7 +16,7 @@ async function getAllLession() {
 
 async function getLessionByLessionId(lessionId) {
     try {
-        const sql = 'select lessionId, lessionName, accountId, subjectId, lessionDescription, createdDate, statusId from tbl_lession where lessionId = ? and statusId != 3';
+        const sql = 'select lessionId, lessionName, accountId, subjectId, lessionDescription, createdDate, statusId, numOfView from tbl_lession where lessionId = ? and statusId != 3';
         const params = [`${lessionId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
@@ -212,6 +212,24 @@ async function updateLessionStatus(lessionId, status, userEmail) {
 //         console.log(error)
 //     }
 // }
+async function increaseViewByClickByLessionId(lessionId) {
+    try {
+        const sql = `update tbl_lession set numOfview = (numOfview + 1) where lessionId = ?`;
+        const params = [
+            `${lessionId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true;
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     getAllLession,
@@ -224,5 +242,6 @@ module.exports = {
     getLessionByMe,
     updateLessionStatus,
     getLessionBySubjectIdByPublicStatus,
+    increaseViewByClickByLessionId
     // findByFullTextFlashcard,
 }

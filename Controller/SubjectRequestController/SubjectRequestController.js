@@ -11,19 +11,31 @@ module.exports = {
             if (subjectFound.length > 0) {
                 const subjectId = req.body.params.subjectId;
                 const waittingStatus = 1;
+
+
                 if (subjectFound[0].accountId !== requestedAccount) {
-                    const result = await subjectRequestService.saveRequest(requestedAccount, subjectFound[0].accountId, subjectId, waittingStatus)
-                    if (result !== -1) {
-                        res.status(200).json({
-                            status: "Success",
-                            message: "Send request successfully, waiting for author approvement"
-                        })
+                    // check requet is existed
+                    const isExistedRequest = await subjectRequestService.checkDuplicateRequest(subjectFound[0].subjectId, requestedAccount, subjectFound[0].accountId)
+                    if (!isExistedRequest.length > 0) {
+                        const result = await subjectRequestService.saveRequest(requestedAccount, subjectFound[0].accountId, subjectId, waittingStatus)
+                        if (result !== -1) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Send request successfully, waiting for author approvement"
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Send request Failed"
+                            })
+                        }
                     } else {
                         res.status(202).json({
                             status: "Failed",
-                            message: "Send request Failed"
+                            message: "Request have send before, please wait response from author"
                         })
                     }
+
                 } else {
                     res.status(202).json({
                         status: "Failed",
@@ -111,7 +123,7 @@ module.exports = {
             } else {
                 res.status(202).json({
                     status: "Failed",
-                    message: "Request might be approved before"
+                    message: "Request might be approved or denine before"
                 })
             }
         } else {
@@ -122,6 +134,62 @@ module.exports = {
             })
         }
 
+    },
+    denineRequest: async function (req, res, next) {
+        const author = req.userEmail;
+        const requestId = req.body.params.requestId;
+        const requestFound = await subjectRequestService.getRequestDetailById(requestId);
+        if (requestFound.length > 0) {
+            if (requestFound[0].statusId === 1) {
+                if (author === requestFound[0].requestTo) {
+                    const denineStatus = 3
+                    const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, denineStatus)
+                    //update
+                    if (isUpdateRequestStatus === true) {
+                        const isApprovedRequest = await subjectRelationAccountService.saveRelationBetweenAccountAndSubject(
+                            requestFound[0].subjectId,
+                            requestFound[0].requestFrom,
+                            author,
+                            requestFound[0].id
+                        )
+                        if (isApprovedRequest !== -1) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Approved request successfully"
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Approved request failed"
+                            })
+                        }
+                    } else {
+                        console.log("update failed")
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Approved request failed"
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "You do not have permission to approve this request"
+                    })
+                }
+
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Request might be approved or denine before"
+                })
+            }
+        } else {
+            res.status(202).json({
+                status: "Failed",
+                message: "Not found request Id",
+                requestId: requestId
+            })
+        }
     }
 
 }

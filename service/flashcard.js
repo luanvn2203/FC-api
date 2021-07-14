@@ -62,7 +62,7 @@ async function getAllFlashcard() {
 
 async function getFlashcardByFlashcardId(flashcardId) {
     try {
-        const sql = 'select flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId from tbl_flashcards where flashcardId = ?';
+        const sql = 'select flashcardId, flashcardName,  flashcardContent, statusId, dateOfCreate, accountId, lessionId, numOfView from tbl_flashcards where flashcardId = ? and statusId != 3';
         const params = [`${flashcardId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
@@ -236,6 +236,23 @@ async function findFlashcardByFullTextFlashcard(searchValue) {
         console.log(error)
     }
 }
+async function increaseViewByClickByFlashcardId(flashcardId) {
+    try {
+        const sql = `update tbl_flashcards set numOfview = (numOfview + 1) where flashcardId = ?`;
+        const params = [
+            `${flashcardId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true;
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     createFlashcard,
@@ -251,4 +268,5 @@ module.exports = {
     getFlashcardByArrayLessionIdAndFilteredInfo,
     getPublicFlashcardByLessionId,
     findFlashcardByFullTextFlashcard,
+    increaseViewByClickByFlashcardId
 }

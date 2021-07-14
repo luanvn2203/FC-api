@@ -106,10 +106,11 @@ async function getTop5SubjectByTopicId(paramsId, status) {
         a.fullName as author,
          s.topicId, 
          s.subjectDescription,
-         s.statusId 
+         s.statusId,
+         s.numOfView
          FROM tbl_subject s,
           tbl_account a where s.accountId = a.email 
-          and topicId = ? and s.statusId = ? order by s.createdDate desc LIMIT 5  `
+          and topicId = ? and s.statusId = ? order by numOfView desc LIMIT 5  `
 
         const params = [
             `${id}`,

@@ -28,5 +28,7 @@ router.post('/public-flashcard-by-lessionid', verifyToken, flashcardController.g
 
 router.post('/find-by-ft-question', verifyToken, flashcardController.findFlashcardByFtQuestion)
 
+router.put('/increase-view', verifyToken, flashcardController.increaseViewByUserClick)
+
 
 module.exports = router;

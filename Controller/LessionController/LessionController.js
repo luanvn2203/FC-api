@@ -304,10 +304,6 @@ module.exports = {
 					message: "Not found result with keyword: " + searchValue
 				})
 			}
-
-
-
-
 			// if (result.length > 0) {
 			// 	res.status(200).json({
 			// 		status: responseStatus.SUCCESS,
@@ -325,5 +321,45 @@ module.exports = {
 		} catch (error) {
 			console.log(error)
 		}
+	},
+
+	increaseViewByUserClick: async function (req, res, next) {
+		try {
+			const lessionToIncrease = req.body.params.lessionId;
+			const userEmail = req.userEmail;
+			const lessionFound = await lessionService.getLessionByLessionId(lessionToIncrease)
+			//check 
+			if (lessionFound.length > 0) {
+				if (lessionFound[0].accountId !== userEmail) {
+					const isIncrease = await lessionService.increaseViewByClickByLessionId(lessionToIncrease)
+					if (isIncrease === true) {
+						res.status(200).json({
+							status: "Success",
+							message: "Increase view successfully"
+						})
+					} else {
+						res.status(202).json({
+							status: "Failed",
+							message: "Increase view failed"
+						})
+					}
+				} else {
+					res.status(202).json({
+						status: "Failed",
+						message: "Author cannot increase view of their lession"
+					})
+				}
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found lession id"
+				})
+			}
+
+		} catch (error) {
+			console.log(error)
+		}
+
+
 	}
 };

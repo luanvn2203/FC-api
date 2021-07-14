@@ -10,6 +10,6 @@ router.get('/to-me', verifyToken, subjectRequestController.getAllRequestSendToMe
 
 router.post('/author-approve', verifyToken, subjectRequestController.approveRequest)
 
-
+router.post('/author-denine', verifyToken, subjectRequestController.denineRequest)
 
 module.exports = router;

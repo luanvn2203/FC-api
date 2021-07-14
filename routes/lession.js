@@ -28,5 +28,7 @@ router.post('/public-lession-by-subjectid', verifyToken, lessionController.getPu
 
 router.post('/find-by-ft-flashacrd', verifyToken, lessionController.findLessionByFullTextFlashcard)
 
+router.put('/increase-view', verifyToken, lessionController.increaseViewByUserClick)
+
 
 module.exports = router;
