@@ -231,14 +231,6 @@ module.exports = {
                     if (questions.length > 0) {
                         for (let j = 0; j < questions.length; j++) {
                             const options = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(questions[j])
-                            for (let j = 0; j < options.length; j++) {
-                                const isCorrectA = JSON.parse(JSON.stringify(options[j].isCorrect))
-                                if (isCorrectA.data[0] === 1) {
-                                    options[j].isCorrect = true
-                                } else {
-                                    options[j].isCorrect = false
-                                }
-                            }
 
                             const questionInfor = {
                                 question: questions[j],
@@ -279,6 +271,67 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
-    }
+    },
+    // getQuestionByArrayOfLessionId: async function (req, res, next) {
+    //     try {
+    //         const flashcardObject = []
+    //         const lessionArr = req.body.params.lessionArr
+    //         const listFlascardFound = await flashcardService.getFlashcardByArrayLessionIdAndFilteredInfo(lessionArr);
+    //         if (listFlascardFound.length > 0) {
+    //             for (let i = 0; i < listFlascardFound.length; i++) {
+    //                 const questionArr = []
+    //                 const questions = await questionService.getQuestionsByFlashcardIdAndFilteredInfor(listFlascardFound[i].flashcardId)
+    //                 if (questions.length > 0) {
+    //                     for (let j = 0; j < questions.length; j++) {
+    //                         const options = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(questions[j])
+    //                         for (let j = 0; j < options.length; j++) {
+    //                             const isCorrectA = JSON.parse(JSON.stringify(options[j].isCorrect))
+    //                             if (isCorrectA.data[0] === 1) {
+    //                                 options[j].isCorrect = true
+    //                             } else {
+    //                                 options[j].isCorrect = false
+    //                             }
+    //                         }
+
+    //                         const questionInfor = {
+    //                             question: questions[j],
+    //                             options: options
+    //                         }
+    //                         questionArr.push(questionInfor)
+    //                     }
+    //                     flashcardObject.push({
+    //                         flashcard: listFlascardFound[i],
+    //                         questions: questionArr, // mang nhieu cau hoi
+    //                         total_question: questions.length
+    //                     })
+    //                 }
+    //             }
+
+    //             if (flashcardObject.length > 0) {
+    //                 res.status(200).json({
+    //                     status: "Success",
+    //                     flashcardObj: flashcardObject,
+    //                     total_flashcard: flashcardObject.length,
+    //                     total_lession: lessionArr.length
+    //                 })
+    //             } else {
+    //                 res.status(202).json({
+    //                     status: "Failed",
+    //                     flashcardObj: {},
+    //                     total_flashcard: 0,
+    //                     total_lession: lessionArr.length
+    //                 })
+    //             }
+    //         } else {
+    //             res.status(202).json({
+    //                 status: "Failed",
+    //                 message: "Not found flashcard or question for this Lession Id"
+    //             })
+    //         }
+
+    //     } catch (error) {
+    //         console.log(error)
+    //     }
+    // }
 
 }

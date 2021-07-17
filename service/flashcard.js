@@ -218,6 +218,9 @@ async function getFlashcardByArrayLessionIdAndFilteredInfo(arrayLessionId) {
         console.log(error)
     }
 }
+
+// MATCH (flashcardName,flashcardContent) 
+//         AGAINST (?)
 async function findFlashcardByFullTextFlashcard(searchValue) {
     try {
         const sql = `select flashcardId,
@@ -228,9 +231,14 @@ async function findFlashcardByFullTextFlashcard(searchValue) {
                  lessionId,
                   flashcardContent
                    from tbl_flashcards where MATCH (flashcardName,flashcardContent) 
-        AGAINST (? WITH QUERY EXPANSION) and statusId != 3`;
+                   AGAINST (? WITH QUERY EXPANSION) or flashcardName LIKE ? or flashcardContent LIKE ? 
+                   and statusId != 3`;
         const params = [
-            `${searchValue}`
+            `%${searchValue}%`,
+            `%${searchValue}%`,
+            `%${searchValue}%`
+
+
         ];
         const result = await db.query(sql, params)
         const data = helper.emptyOrRows(result)

@@ -189,4 +189,37 @@ module.exports = {
 			console.log(error);
 		}
 	},
+	updateTopicInformation: async function (req, res, next) {
+		try {
+			const signInEmail = req.userEmail;
+			const topic = req.body.params
+			const topicId = req.body.params.topicId;
+			console.log(req.body)
+			const topicFound = await topicService.getTopicByIdReuse(topicId)
+			if (topicFound.length > 0) {
+				if (signInEmail === topicFound[0].accountId) {
+					console.log("BANG")
+					const result = await topicService.updateTopic(topic);
+					if (result === true) {
+						res.status(200).json({
+							status: responseStatus.SUCCESS,
+							message: responseMessage.UPDATE_TOPIC_SUCCESS,
+						});
+					} else {
+						res.status(202).json({
+							status: responseStatus.FAILED,
+							message: responseMessage.UPDATE_TOPIC_FAILED
+						});
+					}
+				} else {
+					res.status(202).json({
+						status: responseStatus.FAILED,
+						message: responseMessage.UPDATE_TOPIC_FAILED_WITH_NO_PERMISSION
+					});
+				}
+			}
+		} catch (error) {
+			console.log(error);
+		}
+	}
 };

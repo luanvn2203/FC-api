@@ -20,4 +20,6 @@ router.post('/delete', verifyToken, topicController.updateTopicStatusToDelete)
 
 router.put('/change-status', verifyToken, topicController.updateTopicStatusToPublicOrPrivate)
 
+router.put('/update', verifyToken, topicController.updateTopicInformation)
+
 module.exports = router;

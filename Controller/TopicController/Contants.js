@@ -25,7 +25,10 @@ module.exports = {
         },
 
         UPDATE_TOPIC_STATUS_FAILED_WITH_NO_PERMISSION: 'Update status failed, you do not have permission to update this topic',
-        UPDATE_TOPIC_STATUS_FAILED_WITH_WRONG_STATUS: 'Cannot update to this status'
+        UPDATE_TOPIC_STATUS_FAILED_WITH_WRONG_STATUS: 'Cannot update to this status',
+        UPDATE_TOPIC_SUCCESS: "Update topic successfully",
+        UPDATE_TOPIC_FAILED: "Update topic failed",
+        UPDATE_TOPIC_FAILED_WITH_NO_PERMISSION: "You don't have permission to update this topic"
     }
 
 }

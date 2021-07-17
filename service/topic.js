@@ -46,6 +46,23 @@ async function getTopicById(topicId) {
     const data = helper.emptyOrRows(rows);
     return data;
 }
+async function getTopicByIdReuse(topicId) {
+    try {
+        const sql = `SELECT 
+    topicId,
+    topicName,
+    accountId 
+    FROM tbl_topic
+    WHERE topicId = ?`;
+        const params = [`${topicId}`]
+        const rows = await db.query(sql, params);
+        const data = helper.emptyOrRows(rows);
+        console.log(data)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 async function createNewTopic(topicParams, student) {
     try {
@@ -145,6 +162,27 @@ async function updateTopicStatus(topicId, status, userEmail) {
     }
 }
 
+async function updateTopic(topic) {
+    try {
+        const sql = `update tbl_topic set topicName = ?, topicDescription = ?, statusId = ? where topicId =?`;
+        const params = [
+            `${topic.topicName}`,
+            `${topic.topicDescription}`,
+            `${topic.statusId}`,
+            `${topic.topicId}`
+        ]
+        const result = await db.query(sql, params);
+        if (result.affectedRows) {
+            return true;
+        } else {
+            return false;
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     getAllTopic,
     getTopicById,
@@ -154,5 +192,7 @@ module.exports = {
     findemail,
     getAllTopicInArrayOfId,
     updateTopicStatus,
+    updateTopic,
+    getTopicByIdReuse
 }
 

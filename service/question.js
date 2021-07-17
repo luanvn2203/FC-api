@@ -166,7 +166,7 @@ async function get3QuestionByFlashcardIdWithinFullTextSearch(searchValue, flashc
     try {
         const sql = `select questionId, questionContent, createdDate, flashcardId,
          statusId from tbl_question where flashcardId = ? and
-        MATCH (questionContent) AGAINST (? WITH QUERY EXPANSION) and statusId != 3 limit 3`;
+        MATCH (questionContent) AGAINST (? ) and statusId != 3 limit 3`;
         const params = [
             `${flashcardId}`,
             `${searchValue}`
