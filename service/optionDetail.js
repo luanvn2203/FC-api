@@ -37,7 +37,6 @@ async function addOptionForAnswer(listOption, questionId) {
 async function getOptionsByQuestionId(question) {
     try {
         const questionId = question.questionId;
-        console.log(questionId)
 
         const sql = `SELECT optionId,
         optionContent, 
@@ -63,7 +62,6 @@ async function updateOptionsByQuestionId(options) {
         const sql = `UPDATE tbl_optiondetail set optionContent = ?, isCorrect = ? where optionId = ?`
 
         for (let i = 0; i < options.length; i++) {
-            console.log(options[i])
             const params = [
                 `${options[i].optionContent}`,
                 options[i].isCorrect,

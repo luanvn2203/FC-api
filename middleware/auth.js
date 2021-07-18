@@ -21,7 +21,6 @@ const verifyToken = (req, res, next) => {
                 errors: error.message
             })
         }
-        console.log("ahihihii")
         console.log(error)
     }
 }

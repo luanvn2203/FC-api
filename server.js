@@ -12,6 +12,10 @@ const quizTestRoutes = require('./routes/quizTest')
 const quizHistory = require('./routes/quizHistory')
 const subjectRequestRoutes = require('./routes/subjectRequest')
 const subjectRelationAcccountRoutes = require('./routes/subjectRelationAccount')
+const lessionRequestRoutes = require('./routes/lessionRequest')
+const lessionRelationAccountRoues = require('./routes/lessionRelationAccount')
+
+
 // const accountRoutes = require('./routes/account');
 
 
@@ -51,9 +55,10 @@ app.use('/flashcard', flashcardRouter);
 app.use('/question', questionRouter);
 app.use('/quiz-test', quizTestRoutes)
 app.use('/test', quizHistory)
-app.use('/request-view', subjectRequestRoutes)
+app.use('/request-subject', subjectRequestRoutes)
 app.use('/access-subject', subjectRelationAcccountRoutes)
-
+app.use('/request-lession', lessionRequestRoutes)
+app.use('/access-lession', lessionRelationAccountRoues)
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {

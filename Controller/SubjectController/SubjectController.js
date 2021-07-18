@@ -66,7 +66,6 @@ module.exports = {
 			const listTopicFound = await topicService.getAllTopicInArrayOfId(
 				req.body.params.listTopicId
 			);
-			console.log(listTopicFound);
 			if (listTopicFound.length > 0) {
 				const listSubjectFound =
 					await subjectService.getAllSubjectInListTopicId(
@@ -171,7 +170,6 @@ module.exports = {
 						listTopicFound[i].topicId,
 						publicStatus
 					);
-					console.log(listSubjectFound)
 					let topicAndSubjectInside = {
 						topicDetail: listTopicFound[i],
 						listSubjects: listSubjectFound,

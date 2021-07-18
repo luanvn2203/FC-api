@@ -60,8 +60,6 @@ module.exports = {
 	getFlashcardByFlashcardId: async function (req, res, next) {
 		try {
 			const flashcardId = req.body.params.flashcardId;
-			console.log(flashcardId)
-
 			const result = await flashcardService.getFlashcardByFlashcardId(
 				flashcardId
 			);

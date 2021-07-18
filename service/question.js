@@ -2,7 +2,6 @@ const db = require('./db');
 const helper = require('../helper');
 
 async function addNewQuestionToFlashCard(questionParams) {
-    console.log(questionParams)
     try {
         const sql = `INSERT INTO 
         tbl_question(questionContent, createdDate, flashcardId, statusId)
@@ -23,7 +22,6 @@ async function addNewQuestionToFlashCard(questionParams) {
         const result = await db.query(sql, params);
 
         if (result.affectedRows) {
-            console.log(result)
             // const lastetestId = await getLatestInsertQuestionID();
             // question.questionId = lastetestId
             return result.insertId
@@ -42,7 +40,6 @@ async function getLatestInsertQuestionID(flashcardID) {
         const sql = `SELECT max(questionId) as id from tbl_question where flashcardId = ? `;
         const params = [`${flashcardID}`]
         const latestId = await db.query(sql, params);
-        console.log(latestId[0].id)
         if (latestId[0].id > 0) {
             return latestId[0].id
         } else {
@@ -68,7 +65,6 @@ async function getTotalQuestionByFlashcardId(flashcardId) {
 }
 
 async function getQuestionsByFlashcardId(flashcardIdParam) {
-    console.log(flashcardIdParam)
     try {
         const fcid = flashcardIdParam;
         const sql = `SELECT questionId,

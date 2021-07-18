@@ -4,8 +4,6 @@ const helper = require('../helper');
 async function addRecordToQuizTestQuestionByQuizTestIdAndQuestionArray(questionArray, quiztestId) {
     try {
         const sql = `INSERT INTO tbl_quiztest_question(questionId,quiztestId) values(?,?)`;
-        console.log(quiztestId)
-        console.log(questionArray)
         if (questionArray.length > 0) {
             for (let i = 0; i < questionArray.length; i++) {
                 const params = [
