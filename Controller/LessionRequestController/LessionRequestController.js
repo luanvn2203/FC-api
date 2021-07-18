@@ -3,22 +3,22 @@ const subjectRequestService = require('../../service/subjectRequestService')
 const subjectService = require('../../service/subject')
 const subjectRelationAccountService = require('../../service/subjectRelationAccount')
 const accountService = require('../../service/account')
-
+const lessionService = require('../../service/lession')
+const lessionRequestService = require('../../service/lessionRequestService')
+const lessionRelationAccountService = require('../../service/lessionRelationAccount')
 
 module.exports = {
-    sendViewSubjectRequest: async function (req, res, next) {
+    sendViewLessionRequest: async function (req, res, next) {
         try {
             const requestedAccount = req.userEmail.trim();
-            const subjectId = req.body.params.subjectId;
-            const subjectFound = await subjectService.getSubjecDetailById(subjectId)
-            if (subjectFound.length > 0) {
-                const subjectId = req.body.params.subjectId;
+            const lessionId = req.body.params.lessionId;
+            const lessionFound = await lessionService.getLessionByLessionId(lessionId)
+            if (lessionFound.length > 0) {
                 const waittingStatus = 1;
-                if (subjectFound[0].accountId !== requestedAccount) {
-                    // check requet is existed
-                    const isExistedRequest = await subjectRequestService.checkDuplicateRequest(subjectFound[0].subjectId, requestedAccount, subjectFound[0].accountId)
+                if (lessionFound[0].accountId !== requestedAccount) {
+                    const isExistedRequest = await lessionRequestService.checkDuplicateRequest(lessionFound[0].lessionId, requestedAccount, lessionFound[0].accountId)
                     if (!isExistedRequest.length > 0) {
-                        const result = await subjectRequestService.saveRequest(requestedAccount, subjectFound[0].accountId, subjectId, waittingStatus)
+                        const result = await lessionRequestService.saveRequest(requestedAccount, lessionFound[0].accountId, lessionId, waittingStatus)
                         if (result !== -1) {
                             res.status(200).json({
                                 status: "Success",
@@ -46,8 +46,8 @@ module.exports = {
             } else {
                 res.status(202).json({
                     status: "Failed",
-                    message: "Not found subjectId",
-                    subjectId: subjectId
+                    message: "Not found lessionId",
+                    lessionId: lessionId
                 })
             }
 
@@ -59,9 +59,8 @@ module.exports = {
     },
     getAllRequestSendToMe: async function (req, res, next) {
         try {
-
             const userEmail = req.userEmail;
-            const result = await subjectRequestService.getAllRequestSendToMeByEmail(userEmail)
+            const result = await lessionRequestService.getAllRequestSendToMeByEmail(userEmail)
             if (result.length > 0) {
                 res.status(200).json({
                     status: "Success",
@@ -83,46 +82,48 @@ module.exports = {
     approveRequest: async function (req, res, next) {
         const author = req.userEmail;
         const requestId = req.body.params.requestId;
-        const requestFound = await subjectRequestService.getRequestDetailById(requestId);
+        const requestFound = await lessionRequestService.getRequestDetailById(requestId);
         if (requestFound.length > 0) {
             if (requestFound[0].statusId === 1) {
                 if (author === requestFound[0].requestTo) {
                     const approvedStatus = 2;
-                    const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, approvedStatus)
+                    const isUpdateRequestStatus = await lessionRequestService.updateRequestStatus(requestId, approvedStatus)
+                    //xong toi day
                     //update
                     if (isUpdateRequestStatus === true) {
-                        const isApprovedRequest = await subjectRelationAccountService.saveRelationBetweenAccountAndSubject(
-                            requestFound[0].subjectId,
+
+                        const isApprovedRequest = await lessionRelationAccountService.saveRelationBetweenAccountAndLession(
+                            requestFound[0].lessionId,
                             requestFound[0].requestFrom,
                             author,
                             requestFound[0].id
                         )
                         if (isApprovedRequest !== -1) {
                             //cong diem
-                            const isAddPoint = await accountService.addPointToAccountByEmail(author, 1)
+                            const isAddPoint = await accountService.addPointToAccountByEmail(author, 2)
                             if (isAddPoint === true) {
                                 res.status(200).json({
                                     status: "Success",
-                                    message: "Approved request successfully"
+                                    message: "Denine request successfully"
                                 })
                             } else {
                                 res.status(202).json({
                                     status: "Failed",
-                                    message: "Approved request successfully but add point failed"
+                                    message: "Denine request successfully but add point failed"
                                 })
                             }
 
                         } else {
                             res.status(202).json({
                                 status: "Failed",
-                                message: "Approved request failed"
+                                message: "Denine request failed"
                             })
                         }
                     } else {
                         console.log("update failed")
                         res.status(202).json({
                             status: "Failed",
-                            message: "Approved request failed"
+                            message: "Denine request failed"
                         })
                     }
                 } else {
@@ -150,31 +151,31 @@ module.exports = {
     denineRequest: async function (req, res, next) {
         const author = req.userEmail;
         const requestId = req.body.params.requestId;
-        const requestFound = await subjectRequestService.getRequestDetailById(requestId);
+        const requestFound = await lessionRequestService.getRequestDetailById(requestId);
         if (requestFound.length > 0) {
             if (requestFound[0].statusId === 1) {
                 if (author === requestFound[0].requestTo) {
                     const denineStatus = 3
-                    const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, denineStatus)
+                    const isUpdateRequestStatus = await lessionRequestService.updateRequestStatus(requestId, denineStatus)
                     //update
                     if (isUpdateRequestStatus === true) {
-                        const isApprovedRequest = await subjectRelationAccountService.saveRelationBetweenAccountAndSubject(
-                            requestFound[0].subjectId,
-                            requestFound[0].requestFrom,
-                            author,
-                            requestFound[0].id
-                        )
-                        if (isApprovedRequest !== -1) {
-                            res.status(200).json({
-                                status: "Success",
-                                message: "Approved request successfully"
-                            })
-                        } else {
-                            res.status(202).json({
-                                status: "Failed",
-                                message: "Approved request failed"
-                            })
-                        }
+                        // const isApprovedRequest = await lessionRelationAccountService.saveRelationBetweenAccountAndSubject(
+                        //     requestFound[0].subjectId,
+                        //     requestFound[0].requestFrom,
+                        //     author,
+                        //     requestFound[0].id
+                        // )
+                        // if (isApprovedRequest !== -1) {
+                        res.status(200).json({
+                            status: "Success",
+                            message: "Denine request successfully"
+                        })
+                        // // } else {
+                        //     res.status(202).json({
+                        //         status: "Failed",
+                        //         message: "Approved request failed"
+                        //     })
+                        // }
                     } else {
                         console.log("update failed")
                         res.status(202).json({

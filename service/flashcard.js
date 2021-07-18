@@ -13,7 +13,6 @@ async function createFlashcard(flashcardParams, student) {
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
-        console.log(flashcard)
         const params = [
             `${flashcard.flashcardName.trim()}`,
             `${flashcard.statusId}`,
@@ -113,7 +112,6 @@ async function getFlashcardByLessionId(lessionId) {
         const params = [`${lessionId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
-        console.log(result);
         return result;
     } catch (error) {
         console.log(error);
@@ -130,7 +128,6 @@ async function getPublicFlashcardByLessionId(lessionId) {
         const params = [`${lessionId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
-        console.log(result);
         return result;
     } catch (error) {
         console.log(error);
@@ -139,7 +136,6 @@ async function getPublicFlashcardByLessionId(lessionId) {
 
 async function UpdateFlashcardByID(flashcardParams) {
     const flashcard = flashcardParams.params;
-    console.log(flashcard)
     try {
         const sql = `UPDATE tbl_flashcards set flashcardName = ?, flashcardContent = ?, statusId = ? where flashcardId = ?`;
         const params = [
@@ -148,7 +144,6 @@ async function UpdateFlashcardByID(flashcardParams) {
             flashcard.statusId,
             flashcard.flashcardId,
         ]
-        console.log(params)
         const result = await db.query(sql, params)
         if (result.affectedRows) {
             return true
@@ -184,7 +179,6 @@ async function updateFlashcardStatus(flashcardId, status, userEmail) {
 }
 
 async function getFlashcardByArrayLessionId(arrayLessionId) {
-    console.log(arrayLessionId)
     try {
         const sql = `select flashcardId,
          flashcardName, 
@@ -204,7 +198,6 @@ async function getFlashcardByArrayLessionId(arrayLessionId) {
 }
 
 async function getFlashcardByArrayLessionIdAndFilteredInfo(arrayLessionId) {
-    console.log(arrayLessionId)
     try {
         const sql = `select flashcardId,
          flashcardName, 

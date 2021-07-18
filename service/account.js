@@ -41,7 +41,6 @@ async function getAllUser(page = 1) {
 
 //checkLogin
 async function checkLogin(loginObject) {
-  console.log(loginObject.params)
   // const sql = `SELECT email,
   //   password,
   //   fullName,
@@ -75,7 +74,6 @@ async function checkLogin(loginObject) {
   const params = [`${loginObject.params.email}`]
   const rows = await db.query(sql, params);
   const data = helper.emptyOrRows(rows);
-  console.log(data)
   if (data.length > 0) {
     let valid = await bcrypt.compare(loginObject.params.password, data[0].password);
     if (valid) {
@@ -222,7 +220,6 @@ async function updateAccountStatus(email, status) {
 //update account in profile manage
 async function updateAccountInformation(accountParams) {
   const account = accountParams.params;
-  console.log(account)
   try {
     const sql = `UPDATE tbl_account 
     set 
@@ -271,7 +268,6 @@ async function getPasswordByEmail(email) {
 }
 //change password 
 async function changePassword(email, newPassword) {
-  console.log(newPassword)
   try {
     let saltRounds = 7;
     let salt = bcrypt.genSaltSync(saltRounds);  // encrypt password
@@ -297,7 +293,6 @@ async function changePassword(email, newPassword) {
 
 
 async function findAccountByEmail(emailSearchValue) {
-  console.log(emailSearchValue)
   try {
     const sql = `SELECT 
     email,
@@ -345,8 +340,6 @@ async function updateInterestByEmail(email, listId) {
 async function banAccountByAdmin(banInfor, status) {
   try {
     const sql = `UPDATE tbl_account SET statusId = ?, adminDescription= ? where email = ?`;
-    console.log(banInfor)
-
     const params = [
       `${status}`,
       `${banInfor.params.adminDescription}`,
@@ -383,7 +376,6 @@ async function addPointToAccountByEmail(account, point) {
 }
 
 async function minusPointToAccountByEmail(account, point) {
-  console.log(account, point)
   try {
     const sql = `update tbl_account set point = (point - ?) where email = ?`;
     const params = [

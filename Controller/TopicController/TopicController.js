@@ -31,7 +31,6 @@ module.exports = {
 	findById: async function (req, res, next) {
 		try {
 			const topicResult = await topicService.getTopicById(req.body);
-			console.log("ahhihihihi")
 			if (topicResult.length > 0) {
 				res.status(200).json({
 					status: responseStatus.SUCCESS,
@@ -105,7 +104,6 @@ module.exports = {
 		try {
 			const signInEmail = req.userEmail;
 			const result = await topicService.findemail(signInEmail);
-			console.log(signInEmail);
 			if (result.length > 0) {
 				res.status(200).json({
 					status: responseStatus.SUCCESS,
@@ -194,11 +192,9 @@ module.exports = {
 			const signInEmail = req.userEmail;
 			const topic = req.body.params
 			const topicId = req.body.params.topicId;
-			console.log(req.body)
 			const topicFound = await topicService.getTopicByIdReuse(topicId)
 			if (topicFound.length > 0) {
 				if (signInEmail === topicFound[0].accountId) {
-					console.log("BANG")
 					const result = await topicService.updateTopic(topic);
 					if (result === true) {
 						res.status(200).json({

@@ -19,7 +19,6 @@ const generateToken = (payload) => {
 //update refreshToken
 const updateRefreshToken = async (userEmail, token) => {
 	const result = await accountService.updateRefreshToken(userEmail, token);
-	console.log(result);
 };
 module.exports = {
 	getAllAccountForAdmin: async function (req, res, next) {
@@ -55,7 +54,6 @@ module.exports = {
 		}
 	},
 	postLogin: async function (req, res, next) {
-		console.log(req.body);
 		try {
 			const result = await accountService.checkLogin(req.body);
 			if (result.length > 0) {
@@ -131,7 +129,6 @@ module.exports = {
 					tokens,
 				});
 			} catch (error) {
-				console.log(errror);
 				res.sendStatus(403);
 			}
 		}
@@ -151,7 +148,6 @@ module.exports = {
 				res.sendStatus(403);
 			}
 		} catch (error) {
-			console.log(error);
 			res.sendStatus(403);
 		}
 	},
@@ -171,7 +167,6 @@ module.exports = {
 				req.get("host")
 			);
 			if (result) {
-				console.log(result);
 				res.status(200).json({
 					status: "Success",
 					message: result,
@@ -200,7 +195,6 @@ module.exports = {
 			// if (data.length > 0) {
 			//
 			//   }
-			console.log(req.params);
 			const result = await accountService.verifyAccountByEmailToken(
 				req.params.token
 			);
@@ -249,7 +243,6 @@ module.exports = {
 	postUpdateAccount: async function (req, res, next) {
 		try {
 			const result = await accountService.updateAccountInformation(req.body);
-			console.log(result);
 			if (result === true) {
 				return res.status(200).json({
 					status: "Success",
@@ -269,14 +262,12 @@ module.exports = {
 	},
 	postChangePassword: async function (req, res, next) {
 		try {
-			console.log(req.userEmail);
 			const password = await accountService.getPasswordByEmail(req.userEmail);
 			const passwordFromDB = password[0].password;
 			const oldPassword = req.body.params.oldPassword;
 			const newPassword = req.body.params.newPassword;
 
 			let valid = await bcrypt.compare(oldPassword, passwordFromDB);
-			console.log("valid: " + valid);
 			if (valid) {
 				const result = await accountService.changePassword(
 					req.userEmail,

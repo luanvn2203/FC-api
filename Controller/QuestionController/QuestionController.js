@@ -179,7 +179,6 @@ module.exports = {
 
 
     updateQuestionAndOption: async function (req, res, next) {
-        console.log(req.body);
         try {
             const question = req.body.params.question;
             const options = req.body.params.options;
@@ -188,8 +187,6 @@ module.exports = {
             options.forEach(element => {
                 listOptionContent.push(element.optionContent.trim())
             });
-            console.log(listOptionContent)
-
             let result = listOptionContent.filter((item, index) => {
                 return listOptionContent.indexOf(item) != index
             })
