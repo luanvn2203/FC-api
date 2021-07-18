@@ -27,7 +27,56 @@ async function saveRelationBetweenAccountAndSubject(subjectId, requester, author
         console.log(error)
     }
 }
+async function getRelationByEmailAndSubjectId(email, subjectId) {
 
+
+    try {
+        const sql = `select id,
+         subjectId,
+          accountId,
+           approvedAt,
+            subjectAuthor,
+             subjectRequestId,
+             isMinusPoint
+              from tbl_subject_relation_account 
+        where accountId = ? and subjectId = ?`
+        const params = [
+            `${email}`,
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function setIsMinusPoint(value, account, subjectId) {
+    try {
+        const sql = `update tbl_subject_relation_account 
+        set isMinusPoint = ? 
+        where accountId = ? 
+        and subjectId = ?`;
+
+        const params = [
+            value,
+            `${account}`,
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true;
+        } else {
+            return false;
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 module.exports = {
-    saveRelationBetweenAccountAndSubject
+    saveRelationBetweenAccountAndSubject,
+    getRelationByEmailAndSubjectId,
+    setIsMinusPoint
 }

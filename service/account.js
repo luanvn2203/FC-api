@@ -363,6 +363,44 @@ async function banAccountByAdmin(banInfor, status) {
   }
 }
 
+async function addPointToAccountByEmail(account, point) {
+  try {
+    const sql = `update tbl_account set point = (point + ?) where email = ?`;
+    const params = [
+      point,
+      `${account}`
+    ]
+    const result = await db.query(sql, params);
+    if (result.affectedRows) {
+      return true
+    } else {
+      return false
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function minusPointToAccountByEmail(account, point) {
+  console.log(account, point)
+  try {
+    const sql = `update tbl_account set point = (point - ?) where email = ?`;
+    const params = [
+      point,
+      `${account}`
+    ]
+    const result = await db.query(sql, params);
+    if (result.affectedRows) {
+      return true
+    } else {
+      return false
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
 
 module.exports = {
   getAllUser,
@@ -377,5 +415,7 @@ module.exports = {
   findAccountByEmail,
   updateInterestByEmail,
   updateAccountStatus,
-  banAccountByAdmin
+  banAccountByAdmin,
+  addPointToAccountByEmail,
+  minusPointToAccountByEmail
 }
