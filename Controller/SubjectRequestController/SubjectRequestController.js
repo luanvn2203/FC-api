@@ -11,8 +11,6 @@ module.exports = {
             if (subjectFound.length > 0) {
                 const subjectId = req.body.params.subjectId;
                 const waittingStatus = 1;
-
-
                 if (subjectFound[0].accountId !== requestedAccount) {
                     // check requet is existed
                     const isExistedRequest = await subjectRequestService.checkDuplicateRequest(subjectFound[0].subjectId, requestedAccount, subjectFound[0].accountId)
@@ -58,6 +56,7 @@ module.exports = {
     },
     getAllRequestSendToMe: async function (req, res, next) {
         try {
+
             const userEmail = req.userEmail;
             const result = await subjectRequestService.getAllRequestSendToMeByEmail(userEmail)
             if (result.length > 0) {

@@ -11,6 +11,7 @@ const questionRouter = require('./routes/question');
 const quizTestRoutes = require('./routes/quizTest')
 const quizHistory = require('./routes/quizHistory')
 const subjectRequestRoutes = require('./routes/subjectRequest')
+const subjectRelationAcccountRoutes = require('./routes/subjectRelationAccount')
 // const accountRoutes = require('./routes/account');
 
 
@@ -51,7 +52,7 @@ app.use('/question', questionRouter);
 app.use('/quiz-test', quizTestRoutes)
 app.use('/test', quizHistory)
 app.use('/request-view', subjectRequestRoutes)
-
+app.use('/access-subject', subjectRelationAcccountRoutes)
 
 
 /* Error handler middleware */

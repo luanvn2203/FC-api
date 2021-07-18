@@ -40,5 +40,8 @@ router.put('/update-interest', verifyToken, accountController.updateInterest)
 
 router.post('/ban-account', verifyToken, accountController.banAccountForAdminRole)
 
+router.put('/add-point', verifyToken, accountController.addPointToAccount)
+
+router.put('/minus-point', verifyToken, accountController.minusPointsToAccount)
 
 module.exports = router;

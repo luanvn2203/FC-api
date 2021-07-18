@@ -372,4 +372,65 @@ module.exports = {
 			});
 		}
 	},
+	addPointToAccount: async function (req, res, next) {
+		try {
+			const emailToAdd = req.body.params.email;
+			const point = req.body.params.point;
+
+			const result = await accountService.addPointToAccountByEmail(emailToAdd, point)
+			if (result === true) {
+				res.status(200).json({
+					status: "Success",
+					message: `Add ${point} to account ${emailToAdd} successfully`
+				})
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: `Add ${point} to account ${emailToAdd} failed, not found email`
+				})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	},
+	minusPointsToAccount: async function (req, res, next) {
+		try {
+			const emailToMinus = req.body.params.email;
+			const point = req.body.params.point;
+			const accountFound = await accountService.findAccountByEmail(emailToMinus)
+			if (accountFound.length > 0) {
+				if (accountFound[0].point > point) {
+					const result = await accountService.minusPointToAccountByEmail(emailToMinus, point)
+					if (result === true) {
+						res.status(200).json({
+							status: "Success",
+							message: `Minus points ${point} to account ${emailToMinus} successfully`
+						})
+					} else {
+						res.status(202).json({
+							status: "Failed",
+							message: `Minus points ${point} to account ${emailToAdd} failed`
+						})
+					}
+				} else {
+					res.status(202).json({
+						status: "Failed",
+						message: "Account don't have enough point to minus"
+					})
+				}
+			} else {
+				res.status(202).json({
+					status: "Faied",
+					message: "Not found account email"
+				})
+			}
+
+
+
+
+
+		} catch (error) {
+			console.log(error)
+		}
+	},
 };

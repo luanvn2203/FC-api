@@ -28,7 +28,6 @@ async function createNewSubject(subjectParams, student) {
         ]
 
         const result = await db.query(sql, params);
-        console.log(result.affectedRows)
         if (result.affectedRows) {
             return true;
         } else {
@@ -54,7 +53,6 @@ async function getAllSubjectByTopicId(topicId) {
 
 
 async function getAllSubjectInListTopicId(IdArray) {
-    console.log(IdArray)
     try {
         const sql = `SELECT subjectId,
          subjectName, 
@@ -98,7 +96,6 @@ async function updateSubject(subjectParams) {
 
 async function getTop5SubjectByTopicId(paramsId, status) {
     const id = paramsId;
-    console.log(id)
     try {
         const sql = `SELECT 
         s.subjectId,
@@ -358,7 +355,6 @@ async function increaseViewByClickBySubjectId(subjectId) {
     }
 }
 async function getSubjectById(subjectId) {
-    console.log(subjectId)
     try {
         const sql = `select s.subjectId,
         s.subjectName, s.accountId, s.topicId, s.subjectDescription,
