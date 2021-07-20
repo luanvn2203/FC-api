@@ -69,6 +69,7 @@ module.exports = {
 					DOB: account.DOB,
 					gender: account.gender,
 					interestTopic: account.interestTopic,
+					point: account.point
 				};
 				if (account.statusId != 1) {
 					//generate

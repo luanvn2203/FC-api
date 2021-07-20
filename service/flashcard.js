@@ -189,7 +189,6 @@ async function getFlashcardByArrayLessionId(arrayLessionId) {
          lessionId 
         from tbl_flashcards where lessionId in (${arrayLessionId})`;
         const result = await db.query(sql);
-        console.log(result);
         const data = helper.emptyOrRows(result)
         return data;
     } catch (error) {
