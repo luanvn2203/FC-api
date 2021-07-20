@@ -19,33 +19,33 @@ module.exports = {
                                 const setIsMinusPoint = await subjectRelationAccountService.setIsMinusPoint(1, userEmail, subjectId)
                                 if (setIsMinusPoint === true) {
                                     res.status(200).json({
-                                        status: "Success",
+                                        status: "InPoint",
                                         message: "Approved",
                                         subjectId: subjectId
                                     })
-                                }
+                                }//
                             } else {
                                 res.status(202).json({
                                     status: "Failed",
-                                    message: "Approved by author but user don't have enough point left.",
+                                    message: "Minus failed.",
                                 })
                             }
                         } else {
                             res.status(202).json({
-                                status: "Failed",
+                                status: "Point Unavailable",
                                 message: "Approved by author but user don't have enough point left.",
                             })
                         }
                     } else {
                         res.status(200).json({
-                            status: "Success",
+                            status: "OutPoint",
                             message: "Approved",
                             subjectId: subjectId
                         })
                     }
                 } else {
                     res.status(202).json({
-                        status: "Failed",
+                        status: "Not Found Request",
                         message: "User need to send request to author before.",
                         subjectId: subjectId
                     })
