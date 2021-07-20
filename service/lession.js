@@ -70,7 +70,6 @@ async function getLessionBySubjectId(subjectId) {
         const params = [`${subjectId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
-        console.log(result);
         return result;
     } catch (error) {
         console.log(error)
@@ -149,7 +148,6 @@ async function findLessionByNameAndSubjectId(lessionParams) {
 
 async function UpdateLessionByID(lessionParams) {
     const lession = lessionParams.params;
-    console.log(lession)
     try {
         const sql = `UPDATE tbl_lession 
       set 
