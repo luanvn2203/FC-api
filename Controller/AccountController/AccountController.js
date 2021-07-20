@@ -58,7 +58,6 @@ module.exports = {
 			const result = await accountService.checkLogin(req.body);
 			if (result.length > 0) {
 				const account = result[0];
-
 				const accountForToken = {
 					email: account.email,
 					fullName: account.fullName,
@@ -71,6 +70,7 @@ module.exports = {
 					interestTopic: account.interestTopic,
 					point: account.point
 				};
+
 				if (account.statusId != 1) {
 					//generate
 					const tokens = generateToken(accountForToken);

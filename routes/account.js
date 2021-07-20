@@ -19,7 +19,7 @@ router.post("/token", verifyToken, accountController.getNewAccessToken);
 router.get('/me', verifyToken, accountController.getMyInformation)
 
 //logout 
-router.delete('/logout', verifyToken, accountController.deleteLogout);
+router.get('/logout', verifyToken, accountController.deleteLogout);
 
 //Register account
 router.post("/register", accountController.postRegister);
