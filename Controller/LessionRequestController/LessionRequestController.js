@@ -104,26 +104,26 @@ module.exports = {
                             if (isAddPoint === true) {
                                 res.status(200).json({
                                     status: "Success",
-                                    message: "Denine request successfully"
+                                    message: "Approved request successfully"
                                 })
                             } else {
                                 res.status(202).json({
                                     status: "Failed",
-                                    message: "Denine request successfully but add point failed"
+                                    message: "Approved request successfully but add point failed"
                                 })
                             }
 
                         } else {
                             res.status(202).json({
                                 status: "Failed",
-                                message: "Denine request failed"
+                                message: "Approved request failed"
                             })
                         }
                     } else {
                         console.log("update failed")
                         res.status(202).json({
                             status: "Failed",
-                            message: "Denine request failed"
+                            message: "Approved request failed"
                         })
                     }
                 } else {
@@ -180,20 +180,20 @@ module.exports = {
                         console.log("update failed")
                         res.status(202).json({
                             status: "Failed",
-                            message: "Approved request failed"
+                            message: "Denine request failed"
                         })
                     }
                 } else {
                     res.status(202).json({
                         status: "Failed",
-                        message: "You do not have permission to approve this request"
+                        message: "You do not have permission to denine this request"
                     })
                 }
 
             } else {
                 res.status(202).json({
                     status: "Failed",
-                    message: "Request might be approved or denine before"
+                    message: "Request might be denine or denine before"
                 })
             }
         } else {
