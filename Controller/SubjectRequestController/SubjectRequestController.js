@@ -3,7 +3,8 @@ const subjectRequestService = require('../../service/subjectRequestService')
 const subjectService = require('../../service/subject')
 const subjectRelationAccountService = require('../../service/subjectRelationAccount')
 const accountService = require('../../service/account')
-
+const pointHistoryService = require('../../service/pointHistory')
+const Point = require('../../pointConfig')
 
 module.exports = {
     sendViewSubjectRequest: async function (req, res, next) {
@@ -101,6 +102,12 @@ module.exports = {
                             //cong diem
                             const isAddPoint = await accountService.addPointToAccountByEmail(author, 1)
                             if (isAddPoint === true) {
+                                const author_approved_subject = 3;
+                                const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
+                                const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
+                                if (isSaveHistory !== -1) {
+                                    console.log("history saved")
+                                }
                                 res.status(200).json({
                                     status: "Success",
                                     message: "Approved request successfully"
