@@ -4,6 +4,10 @@ const lessionRelationAccountService = require('../../service/lessionRelationAcco
 const accountService = require('../../service/account')
 const lessionService = require('../../service/lession')
 const subjectService = require('../../service/subject')
+const pointHistoryService = require('../../service/pointHistory')
+
+const Point = require('../../pointConfig')
+
 const e = require('express')
 module.exports = {
     checkIsAccessible: async function (req, res, next) {
@@ -39,16 +43,22 @@ module.exports = {
                                 if (relationshipFound.length > 0) {
                                     const isMinus = JSON.parse(JSON.stringify(relationshipFound[0].isMinusPoint))
                                     if (isMinus.data[0] === 0) {
-                                        if (accountFound[0].point > 7) {
-                                            const isMinusSuccess = await accountService.minusPointToAccountByEmail(userEmail, 7)
+                                        if (accountFound[0].point > Point.point_minus.lession_request_point_minus) {
+                                            const isMinusSuccess = await accountService.minusPointToAccountByEmail(userEmail, Point.point_minus.lession_request_point_minus)
                                             if (isMinusSuccess === true) {
+                                                const requestLessionType = 2;
+                                                const description = `${userEmail} request to see lession : ${lessionFound[0].lessionName}`
+                                                const isSaveHistory = pointHistoryService.savePointHistory(userEmail, Point.point_minus.lession_request_point_minus, requestLessionType, description)
+                                                if (isSaveHistory !== -1) {
+                                                    console.log("history saved")
+                                                }
                                                 const setIsMinusPoint = await lessionRelationAccountService.setIsMinusPoint(1, userEmail, lessionId)
                                                 if (setIsMinusPoint === true) {
                                                     res.status(200).json({
                                                         status: "Success",
                                                         message: "Approved",
                                                         lessionId: lessionId,
-                                                        user_point: (accountFound[0].point - 7)
+                                                        user_point: (accountFound[0].point - Point.point_minus.lession_request_point_minus)
                                                     })
                                                 }
                                             } else {

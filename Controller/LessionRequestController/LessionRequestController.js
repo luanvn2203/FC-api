@@ -6,6 +6,8 @@ const accountService = require('../../service/account')
 const lessionService = require('../../service/lession')
 const lessionRequestService = require('../../service/lessionRequestService')
 const lessionRelationAccountService = require('../../service/lessionRelationAccount')
+const pointHistoryService = require('../../service/pointHistory')
+const Point = require('../../pointConfig')
 
 module.exports = {
     sendViewLessionRequest: async function (req, res, next) {
@@ -100,8 +102,14 @@ module.exports = {
                         )
                         if (isApprovedRequest !== -1) {
                             //cong diem
-                            const isAddPoint = await accountService.addPointToAccountByEmail(author, 2)
+                            const isAddPoint = await accountService.addPointToAccountByEmail(author, Point.point_add.author_approved_lession)
                             if (isAddPoint === true) {
+                                const author_approved_lession = 4;
+                                const description = `${author} approved request with ID : ${requestFound[0].lessionId} from ${requestFound[0].requestFrom} `
+                                const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_lession, author_approved_lession, description)
+                                if (isSaveHistory !== -1) {
+                                    console.log("history saved")
+                                }
                                 res.status(200).json({
                                     status: "Success",
                                     message: "Approved request successfully"
