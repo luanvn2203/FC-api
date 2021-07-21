@@ -34,7 +34,7 @@ async function saveRequest(requestFrom, requestTo, subjectId, statusId) {
 async function getAllRequestSendToMeByEmail(email) {
     try {
         const sql = ` select sq.id, sq.requestFrom, sq.requestTo,
-         sq.subjectId, sq.statusId, rs.statusName as statusName, sq.requestedAt , s.subjectName
+         sq.subjectId, sq.statusId, rs.statusName as statusName, sq.requestedAt , s.subjectName as name
         from tbl_subject_request sq, tbl_request_status rs, tbl_subject s 
         where sq.statusId = rs.id and sq.subjectId = s.subjectId
         and requestTo = ? order by sq.requestedAt desc`

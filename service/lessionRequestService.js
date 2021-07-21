@@ -40,7 +40,7 @@ async function getAllRequestSendToMeByEmail(email) {
         le.statusId,
         rs.statusName as statusName,
         le.requestedAt,
-        l.lessionName
+        l.lessionName as name
         from tbl_lession_request le,
         tbl_request_status rs,
         tbl_lession l 
