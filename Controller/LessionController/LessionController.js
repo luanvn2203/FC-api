@@ -285,8 +285,8 @@ module.exports = {
 								}
 								const resObject = {
 									lession: lessionFound[le_index],
-									flashcard_inside: flashcard_inside,
-									total_flashcard: flashcard_inside.length
+									flashcard_inside: flashcard_inside.filter((item, index) => index < 2),
+									total_flashcard: flashcard_inside.filter((item, index) => index < 2).length
 								}
 								resData.push(resObject)
 							}
