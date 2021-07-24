@@ -1,9 +1,7 @@
-const questionService = require("../../service/question");
 const optionDetailService = require("../../service/optionDetail");
-const flashcardService = require('../../service/flashcard')
 const quizHistoryService = require('../../service/quizHistory')
-const quizHistoryDetailService = require('../../service/quizHistoryDetail')
-const userChocieService = require('../../service/userChocie')
+const userChocieService = require('../../service/userChocie');
+const QuizTestController = require("../QuizTestController/QuizTestController");
 
 
 function diffArray(arr1, arr2) {
@@ -37,38 +35,64 @@ module.exports = {
             }
             totalCore = (numOfCorrect / numOfQuestion) * 10
             //save to database
-            const saveHistory_id = await quizHistoryService.saveQuizHistory(userEmail, quizTestId, numOfQuestion)
+            const saveHistory_id = await quizHistoryService.saveQuizHistory(userEmail, quizTestId, numOfQuestion, numOfCorrect, totalCore)
             if (saveHistory_id !== -1) {
-                const saveHistoryDetail_id = await quizHistoryDetailService.saveQuizHistoryDetail(saveHistory_id, numOfCorrect, totalCore)
-                if (saveHistoryDetail_id !== -1) {
-                    //for truoc
-                    if (userChoice.length > 0) {
-                        for (let i = 0; i < userChoice.length; i++) {
-                            const optionId_arr_json = JSON.stringify(userChoice[i].optionId_choice)
-                            const isSaveUserChoice = await userChocieService.saveUserChoice(userEmail, optionId_arr_json, saveHistoryDetail_id, userChoice[i].questionId)
-                            if (isSaveUserChoice) {
-                                console.log("ok ")
-                            }
+                console.log(saveHistory_id, "IDIDIDIIDID")
+                if (userChoice.length > 0) {
+                    for (let i = 0; i < userChoice.length; i++) {
+                        const optionId_arr_json = JSON.stringify(userChoice[i].optionId_choice)
+                        const isSaveUserChoice = await userChocieService.saveUserChoice(userEmail, optionId_arr_json, saveHistory_id, userChoice[i].questionId)
+                        if (isSaveUserChoice) {
+                            console.log("ok ")
                         }
                     }
-                } else {
-                    console.log("save detail failed")
                 }
                 res.status(200).json({
                     status: "Success",
-                    totalCore: totalCore,
-                    numOfCorrect: numOfCorrect,
-                    totalQuestion: numOfQuestion,
-                    checkCorrectObj: resDataUserChoice
+                    quizTestId: quizTestId,
+                    quizHistoryId: saveHistory_id,
+
                 })
             } else {
                 res.status(202).json({
                     status: "Failed",
-                    totalCore: totalCore,
-                    numOfCorrect: numOfCorrect,
-                    checkCorrectObj: resDataUserChoice
+                    quizTestId: quizTestId,
+                    quizHistoryId: saveHistory_id,
                 })
             }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getQuizHistoryById: async function (req, res, next) {
+        try {
+            const historyId = req.body.params.historyId;
+            const quizHistoryFound = await quizHistoryService.getQuizHistoryById(historyId)
+            if (quizHistoryFound.length > 0) {
+                const listQuestionFound = await QuizTestController.getQuestionByQuizTestIdFunction(quizHistoryFound[0].quiztestId)
+                const user_choice = await userChocieService.getUserChoiceByHistoryId(historyId)
+                if (user_choice.length > 0) {
+                    res.status(200).json({
+                        status: "Success",
+                        history: quizHistoryFound[0],
+                        user_choice: user_choice,
+                        test_detail: listQuestionFound
+                    })
+                }
+            } else {
+                res.status(200).json({
+                    status: "Failed",
+                    message: "Not found history ID"
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getAllQuizHistoryByMe: async function (req, res, next) {
+        try {
+
         } catch (error) {
             console.log(error)
         }

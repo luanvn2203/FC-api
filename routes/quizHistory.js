@@ -5,7 +5,7 @@ const quizHistoryController = require('../Controller/QuizHistoryController/QuizH
 
 router.post('/submit', verifyToken, quizHistoryController.saveQuizHistory)
 
-
+router.post('/get-by-id', verifyToken, quizHistoryController.getQuizHistoryById)
 
 
 

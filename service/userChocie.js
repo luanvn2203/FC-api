@@ -5,7 +5,7 @@ async function saveUserChoice(accountID, optionId_arr_json, historyDetailId, que
     try {
 
 
-        const sql = `INSERT into tbl_user_choice(accountId, optionId, historyDetailId, questionId) values(?,?,?,?)`
+        const sql = `INSERT into tbl_user_choice(accountId, optionId, historyId, questionId) values(?,?,?,?)`
         const params = [
             `${accountID}`,
             `${optionId_arr_json}`,
@@ -24,6 +24,19 @@ async function saveUserChoice(accountID, optionId_arr_json, historyDetailId, que
     }
 }
 
+async function getUserChoiceByHistoryId(historyId) {
+    try {
+        const sql = `select questionId, optionId from tbl_user_choice where historyId = ?`
+        const params = [`${historyId}`]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
-    saveUserChoice
+    saveUserChoice,
+    getUserChoiceByHistoryId
 }
