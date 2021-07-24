@@ -8,5 +8,10 @@ router.post('/submit', verifyToken, quizHistoryController.saveQuizHistory)
 router.post('/get-by-id', verifyToken, quizHistoryController.getQuizHistoryById)
 
 
+router.get('/get-by-me', verifyToken, quizHistoryController.getAllQuizHistoryByMe)
+
+
+
+
 
 module.exports = router;
