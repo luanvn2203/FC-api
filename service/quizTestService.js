@@ -67,14 +67,15 @@ async function checkDuplicateName(quizTestParams) {
 
 async function getQuizTestsBySubjectId(subjectId) {
     try {
-        const sql = `SELECT id,
-        testName,
-        createdDate,
-        isFinalQuiz,
-        subjectId,
-        lessionId_arr
-        from tbl_quiztest 
-        where subjectId = ? order by createdDate desc`;
+        const sql = `SELECT s.id,
+        s.testName,
+        s.createdDate,
+        s.isFinalQuiz,
+        s.subjectId,
+        s.lessionId_arr,
+        a.fullName as author
+        from tbl_quiztest s, tbl_account a
+        where s.accountId = a.email and  s.subjectId = 2 order by s.createdDate desc`;
         const params = [
             `${subjectId}`
         ]

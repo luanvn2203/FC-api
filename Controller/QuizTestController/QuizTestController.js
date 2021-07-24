@@ -61,6 +61,9 @@ module.exports = {
 
                 const listQuizTestFound = await quizTestService.getQuizTestsBySubjectId(subjectId);
                 if (listQuizTestFound.length > 0) {
+
+
+
                     for (let i = 0; i < listQuizTestFound.length; i++) {
                         let listLession = [];
                         const lessionIdArray = JSON.parse(listQuizTestFound[i].lessionId_arr)
@@ -74,7 +77,15 @@ module.exports = {
                             listLession.push(lessionFound[0])
                         }
                         listQuizTestFound[i].lessions = listLession
-                        // goi api get tong so cau hoi       
+                        const isManyLession = JSON.parse(JSON.stringify(listQuizTestFound[i].isFinalQuiz))
+                        if (isManyLession.data[0] === 1) {
+                            listQuizTestFound[i].isManyLession = true
+                        } else {
+                            listQuizTestFound[i].isManyLession = false
+                        }
+                        delete listQuizTestFound[i].isFinalQuiz
+                        // goi api get tong so cau hoi  
+
                         const totalQuestion = await quizTestQuestionService.getTotalQuestionInTest(listQuizTestFound[i].id)
                         if (totalQuestion.length > 0) {
                             listQuizTestFound[i].total_question = totalQuestion[0].total
@@ -146,6 +157,56 @@ module.exports = {
                         listQuestion: [],
                         total_question: 0
                     })
+                }
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    getQuestionByQuizTestIdFunction: async function (quizTestId) {
+        try {
+            const quiztestInfo = await quizTestService.getQuizTestInfomationById(quizTestId)
+            if (quiztestInfo.length > 0) {
+                const listQuestionFound = await quizTestQuestionService.getQuestionsByQuizTestId(quizTestId)
+                if (listQuestionFound.length > 0) {
+                    for (let i = 0; i < listQuestionFound.length; i++) {
+                        const listOptionFoundEachQuestion = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(listQuestionFound[i])
+                        if (listOptionFoundEachQuestion.length > 0) {
+                            for (let j = 0; j < listOptionFoundEachQuestion.length; j++) {
+                                const isCorrectA = JSON.parse(JSON.stringify(listOptionFoundEachQuestion[j].isCorrect))
+                                if (isCorrectA.data[0] === 1) {
+                                    listOptionFoundEachQuestion[j].isCorrect = true
+                                } else {
+                                    listOptionFoundEachQuestion[j].isCorrect = false
+                                }
+                            }
+                            listQuestionFound[i].options = listOptionFoundEachQuestion
+                        } else {
+                            listQuestionFound[i].options = []
+                        }
+                        delete listQuestionFound[i].flashcardId
+                        delete listQuestionFound[i].createdDate
+                        delete listQuestionFound[i].statusId
+                    }
+                    // res.status(200).json({
+                    //     status: 'Success',
+                    //     quiztestInfo: quiztestInfo[0],
+                    //     listQuestion: listQuestionFound,
+                    //     total_question: listQuestionFound.length,
+                    // })
+                    return {
+                        quiztestInfo: quiztestInfo[0],
+                        listQuestion: listQuestionFound,
+                        total_question: listQuestionFound.length,
+                    }
+                } else {
+                    return {
+                        quiztestInfo: quiztestInfo[0],
+                        listQuestion: [],
+                        total_question: listQuestionFound.length,
+                    }
                 }
             }
 
