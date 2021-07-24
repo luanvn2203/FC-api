@@ -10,17 +10,20 @@ const verifyToken = (req, res, next) => {
         req.signInAccount = decoded
         next()
     } catch (error) {
-        if (error.message === 'invalid token') {
-            return res.status(403).json({
-                errors: error.message
-            })
-        }
-        if (error.message === 'jwt expired') {
-            return res.status(403).json({
-                errors: error.message
-            })
-        }
-        console.log(error.message)
+        // if (error.message === 'invalid token') {
+        //     return res.status(403).json({
+        //         errors: error.message
+        //     })
+        // }
+        // if (error.message === 'jwt expired') {
+        //     return res.status(403).json({
+        //         errors: error.message
+        //     })
+        // }
+        return res.status(403).json({
+            errors: error.message
+        })
+
     }
 }
 

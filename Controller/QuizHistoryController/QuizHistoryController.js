@@ -1,3 +1,4 @@
+const { db } = require("../../config");
 const optionDetailService = require("../../service/optionDetail");
 const quizHistoryService = require('../../service/quizHistory')
 const userChocieService = require('../../service/userChocie');
@@ -92,7 +93,21 @@ module.exports = {
     },
     getAllQuizHistoryByMe: async function (req, res, next) {
         try {
-
+            const userEmail = req.userEmail
+            const listHistoryFound = await quizHistoryService.getAllQuizHistoryByAccountId(userEmail)
+            if (listHistoryFound.length > 0) {
+                res.status(200).json({
+                    status: "Success",
+                    listHistory: listHistoryFound,
+                    total: listHistoryFound.length
+                })
+            } else {
+                res.status(200).json({
+                    status: "Failed",
+                    listHistory: listHistoryFound,
+                    total: listHistoryFound.length
+                })
+            }
         } catch (error) {
             console.log(error)
         }

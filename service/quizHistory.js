@@ -55,7 +55,32 @@ async function getQuizHistoryById(historyId) {
     }
 }
 
+async function getAllQuizHistoryByAccountId(email) {
+    try {
+        const sql = `select qh.id as historyId, 
+        qh.accountID, 
+        qh.quiztestId, 
+        qh.numOfQuestion, 
+        qh.takeQuizAt, 
+        qh.numOfCorrect, 
+        qh.totalCore,
+        qt.testName,
+        (select subjectName from tbl_subject where subjectId = qt.subjectId) as subjectName
+        from tbl_quiz_history qh, tbl_quiztest qt
+        where qh.quiztestId = qt.id and qh.accountID = ?`;
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveQuizHistory,
-    getQuizHistoryById
+    getQuizHistoryById,
+    getAllQuizHistoryByAccountId
 }
