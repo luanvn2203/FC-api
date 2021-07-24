@@ -4,6 +4,7 @@ const config = require('../config');
 
 async function createFlashcard(flashcardParams, student) {
     try {
+        publicStatus = 1;
         const sql = `Insert into 
         tbl_flashcards(flashcardName, statusId, dateOfCreate, accountId, lessionId, flashcardContent) 
         values(?,?,?,?,?,?)`;
@@ -15,7 +16,7 @@ async function createFlashcard(flashcardParams, student) {
         let dateTime = cDate + ' ' + cTime;
         const params = [
             `${flashcard.flashcardName.trim()}`,
-            `${flashcard.statusId}`,
+            `${publicStatus}`,
             `${dateTime}`,
             `${student}`,
             `${flashcard.lessionId}`,
