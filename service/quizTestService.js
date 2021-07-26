@@ -75,7 +75,7 @@ async function getQuizTestsBySubjectId(subjectId) {
         s.lessionId_arr,
         a.fullName as author
         from tbl_quiztest s, tbl_account a
-        where s.accountId = a.email and  s.subjectId = 2 order by s.createdDate desc`;
+        where s.accountId = a.email and  s.subjectId = ? order by s.createdDate desc`;
         const params = [
             `${subjectId}`
         ]

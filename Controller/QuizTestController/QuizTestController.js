@@ -56,6 +56,7 @@ module.exports = {
         try {
             // const resData = [];
             const subjectId = req.body.params.subjectId;
+            console.log(subjectId)
             const subjectDetail = await subjectService.getSubjecDetailById(subjectId);
             if (subjectDetail.length > 0) {
 
@@ -245,6 +246,13 @@ module.exports = {
                     total_question: 0
                 })
             }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    deleteQuizTestById: async function (req, res, next) {
+        try {
+
         } catch (error) {
             console.log(error)
         }
