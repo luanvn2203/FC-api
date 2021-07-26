@@ -138,11 +138,10 @@ async function getPublicFlashcardByLessionId(lessionId) {
 async function UpdateFlashcardByID(flashcardParams) {
     const flashcard = flashcardParams.params;
     try {
-        const sql = `UPDATE tbl_flashcards set flashcardName = ?, flashcardContent = ?, statusId = ? where flashcardId = ?`;
+        const sql = `UPDATE tbl_flashcards set flashcardName = ?, flashcardContent = ? where flashcardId = ?`;
         const params = [
             `${flashcard.flashcardName}`,
             `${flashcard.flashcardContent}`,
-            flashcard.statusId,
             flashcard.flashcardId,
         ]
         const result = await db.query(sql, params)
