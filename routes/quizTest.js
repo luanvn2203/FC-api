@@ -11,5 +11,5 @@ router.post('/questions-by-quiztestid', verifyToken, quizTestController.getQuest
 
 router.post('/take-quiz-questions', verifyToken, quizTestController.getQuestionForUserQuizByTestId)
 
-// router.post('/delete', verifyToken, quizTestController.deleteQuizTestById)
+router.post('/delete', verifyToken, quizTestController.deleteQuizTestById)
 module.exports = router;

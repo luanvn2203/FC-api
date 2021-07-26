@@ -252,6 +252,40 @@ module.exports = {
     },
     deleteQuizTestById: async function (req, res, next) {
         try {
+            const userEmail = req.userEmail
+            const quizTestId = req.body.params.quizTestId
+            const quizTestFound = await quizTestService.getQuizTestInfomationById(quizTestId)
+            if (quizTestFound.length > 0) {
+                if (quizTestFound[0].accountId === userEmail) {
+                    const deleteStatus = 3;
+                    const isDelete = await quizTestService.updateQuizTestStatus(quizTestId, deleteStatus)
+                    if (isDelete === true) {
+                        res.status(200).json({
+                            status: "Success",
+                            message: "Delete test successfully, testID: " + quizTestId
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Delete test failed, testID: " + quizTestId
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Delete test failed, You don't have permission "
+                    })
+                }
+
+
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Not found  testID: " + quizTestId
+                })
+            }
+
+
 
         } catch (error) {
             console.log(error)

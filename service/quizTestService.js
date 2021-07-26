@@ -7,16 +7,17 @@ async function createQuizTest(quizTestParams, user, isFinalQuiz) {
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
-
+        const publicStatus = 1
         const quizTest = quizTestParams.params;
-        const sql = 'INSERT INTO tbl_quiztest(testName, createdDate, isFinalQuiz, accountId, subjectId, lessionId_arr) values(?, ?, ?, ?,?,?) ';
+        const sql = 'INSERT INTO tbl_quiztest(testName, createdDate, isFinalQuiz, accountId, subjectId, lessionId_arr,statusId) values(?, ?, ?, ?,?,?,?) ';
         const params = [
             `${quizTest.testName}`,
             `${dateTime}`,
             isFinalQuiz,
             `${user}`,
             quizTest.subjectId,
-            `${JSON.stringify(quizTest.lessionArr)}`
+            `${JSON.stringify(quizTest.lessionArr)}`,
+            `${publicStatus}`
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
@@ -101,7 +102,39 @@ async function getQuizTestInfomationById(quiztestId) {
         console.log(error)
     }
 }
+async function checkQuizTestExisted(quiztestId) {
+    try {
+        const sql = `SELECT id
+        from tbl_quiztest where id = ?`;
+        const params = [
+            `${quiztestId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
 
+async function updateQuizTestStatus(quizTestId, statusId) {
+    try {
+        const sql = `update tbl_quiztest set statusId = ? where id = ?`;
+        const params = [
+            `${statusId}`,
+            `${quizTestId}`
+        ]
+        const result = await db.query(sql, params);
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 
 module.exports = {
@@ -109,5 +142,7 @@ module.exports = {
     getCurrentInsertId,
     checkDuplicateName,
     getQuizTestsBySubjectId,
-    getQuizTestInfomationById
+    getQuizTestInfomationById,
+    checkQuizTestExisted,
+    updateQuizTestStatus
 }
