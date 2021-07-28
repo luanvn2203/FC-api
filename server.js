@@ -15,7 +15,7 @@ const subjectRelationAcccountRoutes = require('./routes/subjectRelationAccount')
 const lessionRequestRoutes = require('./routes/lessionRequest')
 const lessionRelationAccountRoues = require('./routes/lessionRelationAccount')
 const pointHistoryRoutes = require('./routes/pointHistory')
-
+const donorServiceRoutes = require('./routes/donorService')
 // const accountRoutes = require('./routes/account');
 
 
@@ -60,6 +60,9 @@ app.use('/access-subject', subjectRelationAcccountRoutes)
 app.use('/request-lession', lessionRequestRoutes)
 app.use('/access-lession', lessionRelationAccountRoues)
 app.use('/account-point', pointHistoryRoutes)
+app.use('/donor-service', donorServiceRoutes)
+
+
 /* Error handler middleware */
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
