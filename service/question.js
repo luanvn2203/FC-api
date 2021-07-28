@@ -104,6 +104,7 @@ async function updateQuestionStatus(questionIdParams, status) {
 }
 
 async function updateQuestionOption(question) {
+    console.log(question)
     try {
         const sql = `UPDATE tbl_question 
         set questionContent = ?

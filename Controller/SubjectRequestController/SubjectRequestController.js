@@ -84,6 +84,7 @@ module.exports = {
     approveRequest: async function (req, res, next) {
         const author = req.userEmail;
         const requestId = req.body.params.requestId;
+        console.log(requestId)
         const requestFound = await subjectRequestService.getRequestDetailById(requestId);
         if (requestFound.length > 0) {
             if (requestFound[0].statusId === 1) {
@@ -165,23 +166,11 @@ module.exports = {
                     const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, denineStatus)
                     //update
                     if (isUpdateRequestStatus === true) {
-                        const isApprovedRequest = await subjectRelationAccountService.saveRelationBetweenAccountAndSubject(
-                            requestFound[0].subjectId,
-                            requestFound[0].requestFrom,
-                            author,
-                            requestFound[0].id
-                        )
-                        if (isApprovedRequest !== -1) {
-                            res.status(200).json({
-                                status: "Success",
-                                message: "Approved request successfully"
-                            })
-                        } else {
-                            res.status(202).json({
-                                status: "Failed",
-                                message: "Approved request failed"
-                            })
-                        }
+
+                        res.status(200).json({
+                            status: "Success",
+                            message: "Approved request successfully"
+                        })
                     } else {
                         console.log("update failed")
                         res.status(202).json({
