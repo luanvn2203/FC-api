@@ -5,6 +5,8 @@ const accountService = require("../../service/account");
 const roleService = require("../../service/role");
 const accountStatusService = require("../../service/accountStatus");
 const { accountMessage } = require("../../lang/vi");
+const subjectService = require('../../service/subject')
+
 const generateToken = (payload) => {
 	//jwt
 	const accessToken = jwt.sign(payload, process.env.ACCESS_TOKEN_SECRET, {
@@ -416,13 +418,47 @@ module.exports = {
 					message: "Not found account email"
 				})
 			}
-
-
-
-
-
 		} catch (error) {
 			console.log(error)
 		}
 	},
+
+	getUserInformation: async function (req, res, next) {
+		try {
+			//get public subject quan tam, prvate subject quan tam . . .
+			const userEmail = req.userEmail;
+			const emailForGet = req.body.params.email
+			const basicInfor = await accountService.findAccountByEmail(emailForGet)
+			if (basicInfor.length > 0) {
+				delete basicInfor[0].roleId
+				delete basicInfor[0].createdDate
+				delete basicInfor[0].point
+
+				const subjectFound = await subjectService.getSubjectUserLearning(emailForGet)
+				if (subjectFound.length > 0) {
+					res.status(200).json({
+						status: "Success",
+						basicInfor: basicInfor[0],
+						subjectInterest: subjectFound,
+						totalSubject: subjectFound.length
+					})
+				} else {
+					res.status(200).json({
+						status: "Success",
+						basicInfor: basicInfor[0],
+						subjectInterest: subjectFound,
+						totalSubject: subjectFound.length,
+						message: "Account have not start to learning any thing"
+					})
+				}
+			} else {
+				res.status(202).json({
+					status: "Failed",
+					message: "Not found user"
+				})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+	}
 };

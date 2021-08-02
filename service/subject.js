@@ -370,6 +370,31 @@ async function getSubjectById(subjectId) {
         console.log(error)
     }
 }
+async function getSubjectUserLearning(accountId) {
+    console.log(accountId)
+    try {
+        const sql = `select subjectId, 
+        subjectName, 
+        accountId, 
+        topicId, 
+        subjectDescription
+        from tbl_subject
+        where subjectId in (SELECT distinct subjectId  FROM tbl_subject_public_relationship where accountId = ?)
+        or subjectId in (select distinct subjectId from tbl_subject_relation_account where accountId = ?)
+        and statusId != 3`
+        const params = [
+            `${accountId}`,
+            `${accountId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     createNewSubject,
@@ -386,7 +411,7 @@ module.exports = {
 
     updateSubjectStatus,
     getSubjectByTopicId,
-
+    getSubjectUserLearning,
 
 
     findSubjectByNameAndDes,

@@ -44,4 +44,5 @@ router.put('/add-point', verifyToken, accountController.addPointToAccount)
 
 router.put('/minus-point', verifyToken, accountController.minusPointsToAccount)
 
+router.post('/user-infor', verifyToken, accountController.getUserInformation)
 module.exports = router;

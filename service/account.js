@@ -307,7 +307,7 @@ async function findAccountByEmail(emailSearchValue) {
     interestTopic,
     point
     FROM tbl_account 
-    WHERE email = ?`
+    WHERE email = ? and statusId != 4`
     const params = [`${emailSearchValue}`]
     const rows = await db.query(sql, params)
     const data = helper.emptyOrRows(rows)
