@@ -187,4 +187,5 @@ module.exports = {
     getQuestionsByFlashcardIdAndFilteredInfor,
     findFlashCardByQuestionByFullTextSearch,
     get3QuestionByFlashcardIdWithinFullTextSearch,
+
 }

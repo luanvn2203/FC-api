@@ -44,7 +44,7 @@ async function getOptionsByQuestionId(question) {
         createdDate, 
         statusId, 
         isCorrect  
-        from tbl_optiondetail where questionId = ?`;
+        from tbl_optiondetail where questionId = ? and statusId = 1`;
         const params = [
             `${questionId}`
         ]
@@ -87,7 +87,7 @@ async function getOptionsByQuestionIdAndFilteredInfo(question) {
         optionContent, 
         questionId, 
         isCorrect  
-        from tbl_optiondetail where questionId = ?`;
+        from tbl_optiondetail where questionId = ? and statusId = 1`;
         const params = [
             `${questionId}`
         ]
@@ -106,7 +106,7 @@ async function getOptionsByQuestionIdAndFilteredInfoWithRandomIndex(question) {
         optionContent, 
         questionId, 
         isCorrect  
-        from tbl_optiondetail where questionId = ? ORDER BY RAND()`;
+        from tbl_optiondetail where questionId = ? and statusId = 1 ORDER BY RAND()`;
         const params = [
             `${questionId}`
         ]
@@ -121,7 +121,7 @@ async function getOptionsByQuestionIdAndFilteredInfoWithRandomIndex(question) {
 
 async function getTrueOptionByQuestionId(questionId) {
     try {
-        const sql = `SELECT optionId from tbl_optiondetail where isCorrect = 1 and questionId  = ?`
+        const sql = `SELECT optionId from tbl_optiondetail where isCorrect = 1 and questionId  = ? and statusId = 1`
         const params = [
             `${questionId}`
         ]
@@ -136,6 +136,23 @@ async function getTrueOptionByQuestionId(questionId) {
 
     }
 }
+async function updateOptionStatus(optionId, status) {
+    try {
+        const sql = 'update tbl_optiondetail set statusId = ? where optionId = ?'
+        const params = [
+            `${status}`,
+            `${optionId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true;
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     addOptionForAnswer,
@@ -143,7 +160,8 @@ module.exports = {
     updateOptionsByQuestionId,
     getOptionsByQuestionIdAndFilteredInfo,
     getOptionsByQuestionIdAndFilteredInfoWithRandomIndex,
-    getTrueOptionByQuestionId
+    getTrueOptionByQuestionId,
+    updateOptionStatus
 }
 
 // let strArray = [ "q", "w", "w", "w", "e", "i", "u", "r"];

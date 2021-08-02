@@ -182,34 +182,112 @@ module.exports = {
         try {
             const question = req.body.params.question;
             const options = req.body.params.options;
-
-            const listOptionContent = [];
-            options.forEach(element => {
-                listOptionContent.push(element.optionContent.trim())
-            });
-            let result = listOptionContent.filter((item, index) => {
-                return listOptionContent.indexOf(item) != index
-            })
-            if (result.length > 0) {
-                res.status(202).json({
-                    status: 'Failed',
-                    message: 'Option must be unique in a question'
+            const newOption = req.body.params.newOption;
+            const listOptionFoundId = []
+            const listOptionParamsId = []
+            const listOptionFound = await optionDetailService.getOptionsByQuestionId(question)
+            if (listOptionFound.length > 0) {
+                for (let optFindex = 0; optFindex < listOptionFound.length; optFindex++) {
+                    listOptionFoundId.push(listOptionFound[optFindex].optionId)
+                }
+                console.log(listOptionFoundId) // list lay tu database
+            }
+            for (let optPindex = 0; optPindex < options.length; optPindex++) {
+                listOptionParamsId.push(options[optPindex].optionId)
+            }
+            console.log(listOptionParamsId) // list tu params
+            if (listOptionFoundId.length > listOptionParamsId.length) {
+                const idOptionForDelete = listOptionFoundId.filter((item, index) => item !== listOptionParamsId[index])
+                // tim duoc thang bi xoa. => xoa di
+                if (idOptionForDelete.length > 0) {
+                    for (let dindex = 0; dindex < idOptionForDelete.length; dindex++) {
+                        deleteOption = await optionDetailService.updateOptionStatus(idOptionForDelete[dindex], 3)
+                        // delete option
+                    }
+                }
+                // delete xong van phai update
+                const listOptionContent = [];
+                options.forEach(element => {
+                    listOptionContent.push(element.optionContent.trim())
+                });
+                if (newOption.length > 0) {
+                    newOption.forEach(element => {
+                        listOptionContent.push(element.optionContent.trim())
+                    });
+                }
+                let result = listOptionContent.filter((item, index) => {
+                    return listOptionContent.indexOf(item) != index
                 })
-            } else {
-                const isUpdateQuestion = await questionService.updateQuestionOption(question);
-                if (isUpdateQuestion === true) {
-                    const isUpdateOption = await optionDetailService.updateOptionsByQuestionId(options)
-                    if (isUpdateOption === true) {
+                if (result.length > 0) {
+                    res.status(202).json({
+                        status: 'Failed',
+                        message: 'Option must be unique in a question'
+                    })
+                } else {
+                    const isUpdateQuestion = await questionService.updateQuestionOption(question);
+                    if (isUpdateQuestion === true) {
+                        const isUpdateOption = await optionDetailService.updateOptionsByQuestionId(options)
+                        if (isUpdateOption === true) {
+                            //add new option
+                            if (newOption.length > 0) {
+                                await optionDetailService.addOptionForAnswer(newOption, question.questionId)
+                            }
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Update question successfully"
+                            })
+                        }
+                    } else {
                         res.status(200).json({
-                            status: "Success",
-                            message: "Update question successfully"
+                            status: "Failed",
+                            message: "Update failed"
                         })
                     }
-                } else {
-                    res.status(200).json({
-                        status: "Failed",
-                        message: "Update failed"
+                }
+            } else if (listOptionFoundId.length < listOptionParamsId.length) {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Incorrect params"
+                })
+            } else {
+                // 4 cai cu ok
+                const listOptionContent = [];
+                options.forEach(element => {
+                    listOptionContent.push(element.optionContent.trim())
+                });
+                if (newOption.length > 0) {
+                    newOption.forEach(element => {
+                        listOptionContent.push(element.optionContent.trim())
+                    });
+                }
+                let result = listOptionContent.filter((item, index) => {
+                    return listOptionContent.indexOf(item) != index
+                })
+                if (result.length > 0) {
+                    res.status(202).json({
+                        status: 'Failed',
+                        message: 'Option must be unique in a question'
                     })
+                } else {
+                    const isUpdateQuestion = await questionService.updateQuestionOption(question);
+                    if (isUpdateQuestion === true) {
+                        const isUpdateOption = await optionDetailService.updateOptionsByQuestionId(options)
+                        if (isUpdateOption === true) {
+                            //add new option
+                            if (newOption.length > 0) {
+                                await optionDetailService.addOptionForAnswer(newOption, question.questionId)
+                            }
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Update question successfully"
+                            })
+                        }
+                    } else {
+                        res.status(200).json({
+                            status: "Failed",
+                            message: "Update failed"
+                        })
+                    }
                 }
             }
         } catch (error) {
