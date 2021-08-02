@@ -79,8 +79,26 @@ async function getAllQuizHistoryByAccountId(email) {
     }
 }
 
+async function getNumOfTakeQuizTime(accountId, quizTestId) {
+    try {
+        const sql = `select count(id) as timeOfTakeQuiz from tbl_quiz_history
+        where accountID = ? and quiztestId = ?`
+        const params = [
+            `${accountId}`,
+            `${quizTestId}`
+        ]
+        const result = await db.query(sql, params);
+        const data = helper.emptyOrRows(result)
+        return data
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveQuizHistory,
     getQuizHistoryById,
-    getAllQuizHistoryByAccountId
+    getAllQuizHistoryByAccountId,
+    getNumOfTakeQuizTime
 }

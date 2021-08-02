@@ -3,7 +3,7 @@ const optionDetailService = require("../../service/optionDetail");
 const quizHistoryService = require('../../service/quizHistory')
 const userChocieService = require('../../service/userChocie');
 const QuizTestController = require("../QuizTestController/QuizTestController");
-
+const quizTestService = require('../../service/quizTestService')
 
 function diffArray(arr1, arr2) {
     return arr1
@@ -48,12 +48,24 @@ module.exports = {
                         }
                     }
                 }
-                res.status(200).json({
-                    status: "Success",
-                    quizTestId: quizTestId,
-                    quizHistoryId: saveHistory_id,
+                const timeOfTakeQuiz = await quizHistoryService.getNumOfTakeQuizTime(userEmail, quizTestId)
+                if (timeOfTakeQuiz.length > 0) {
+                    const quiztestFound = await quizTestService.getQuizTestInfomationById(quizTestId)
+                    if (quiztestFound.length > 0) {
+                        res.status(200).json({
+                            status: "Success",
+                            quizTestId: quizTestId,
+                            quizHistoryId: saveHistory_id,
+                            point: totalCore,
+                            numOfCorrect: numOfCorrect,
+                            numOfQuestion: numOfQuestion,
+                            NumOfTakeQuizTime: timeOfTakeQuiz[0].timeOfTakeQuiz,//so lan lam
+                            testId: quizTestId,
+                            testName: quiztestFound[0].testName
+                        })
+                    }
+                }
 
-                })
             } else {
                 res.status(202).json({
                     status: "Failed",
