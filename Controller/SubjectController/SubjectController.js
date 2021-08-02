@@ -467,6 +467,11 @@ module.exports = {
 		} catch (error) {
 			console.log(error)
 		}
+	},
+
+	checkDeleteAndUpdateAbilitiy: async function (req, res, next) {
+		// neu co nguoi dang hoc thi khong update or delete dc
+		// phai co bang quan he 
 	}
 
 };

@@ -38,7 +38,6 @@ module.exports = {
             //save to database
             const saveHistory_id = await quizHistoryService.saveQuizHistory(userEmail, quizTestId, numOfQuestion, numOfCorrect, totalCore)
             if (saveHistory_id !== -1) {
-                console.log(saveHistory_id, "IDIDIDIIDID")
                 if (userChoice.length > 0) {
                     for (let i = 0; i < userChoice.length; i++) {
                         const optionId_arr_json = JSON.stringify(userChoice[i].optionId_choice)
@@ -54,14 +53,16 @@ module.exports = {
                     if (quiztestFound.length > 0) {
                         res.status(200).json({
                             status: "Success",
-                            quizTestId: quizTestId,
-                            quizHistoryId: saveHistory_id,
-                            point: totalCore,
-                            numOfCorrect: numOfCorrect,
-                            numOfQuestion: numOfQuestion,
-                            NumOfTakeQuizTime: timeOfTakeQuiz[0].timeOfTakeQuiz,//so lan lam
-                            testId: quizTestId,
-                            testName: quiztestFound[0].testName
+                            result: {
+                                quizTestId: quizTestId,
+                                quizHistoryId: saveHistory_id,
+                                point: totalCore,
+                                numOfCorrect: numOfCorrect,
+                                numOfQuestion: numOfQuestion,
+                                NumOfTakeQuizTime: timeOfTakeQuiz[0].timeOfTakeQuiz,//so lan lam
+                                testId: quizTestId,
+                                testName: quiztestFound[0].testName
+                            }
                         })
                     }
                 }
