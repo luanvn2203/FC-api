@@ -39,5 +39,10 @@ router.post('/find-by-question', verifyToken, subjectController.findSubjectByQue
 
 router.put('/increase-view', verifyToken, subjectController.increaseViewByUserClick)
 
+router.post('/save-relation', verifyToken, subjectController.savePublicRelationShip)
+
+router.post('/check-public-access', verifyToken, subjectController.checkAccessPublicSubject)
 
 module.exports = router;
+
+

@@ -1,6 +1,10 @@
 const subjectService = require("../../service/subject");
 const topicService = require("../../service/topic");
 const { responseStatus, responseMessage } = require('./Contants')
+const subjectPublicRelationshipService = require('../../service/subjectPublicRelationship')
+const Point = require('../../pointConfig')
+const accountService = require('../../service/account')
+
 
 module.exports = {
 	createNewSubject: async function (req, res, next) {
@@ -469,9 +473,90 @@ module.exports = {
 		}
 	},
 
-	checkDeleteAndUpdateAbilitiy: async function (req, res, next) {
-		// neu co nguoi dang hoc thi khong update or delete dc
-		// phai co bang quan he 
+	savePublicRelationShip: async function (req, res, next) {
+		try {
+			const signInAccount = req.signInAccount
+			const subjectId = req.body.params.subjectId;
+			const learingInProgressStatus = 1;
+			// find relation truoc
+			const isExistedRelation = await subjectPublicRelationshipService.getRelationByAccountIdAndSubjectId(signInAccount.email, subjectId)
+
+
+			if (isExistedRelation.length > 0) {
+				res.status(202).json({
+					status: "Failed",
+					message: "Save relation failed by existed relationship"
+				})
+			} else {
+				console.log(Point.point_minus.public_relation_point_subject)
+
+				if (signInAccount.point > Point.point_minus.public_relation_point_subject) {
+					//tru diem truoc
+					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, Point.point_minus.public_relation_point_subject)
+					if (isMinusPoint === true) {
+						const result = await subjectPublicRelationshipService.savePublicRelationship(signInAccount.email, subjectId, learingInProgressStatus)
+						if (result === true) {
+							res.status(200).json({
+								status: "Success",
+								message: "Save relation success"
+							})
+						} else {
+							res.status(202).json({
+								status: "Failed",
+								message: "Save relation Failed"
+							})
+						}
+					} else {
+						res.status(202).json({
+							status: "Failed",
+							message: "Minus point failed..."
+						})
+					}
+				} else {
+					res.status(202).json({
+						status: "Failed",
+						message: "No point left, require 3 point to view this content"
+					})
+				}
+
+			}
+
+
+		} catch (error) {
+			console.log(error)
+		}
+	},
+
+	checkAccessPublicSubject: async function (req, res, next) {
+		try {
+			const userEmail = req.userEmail
+			const subjectId = req.body.params.subjectId
+			const subjectFound = await subjectService.getSubjectById(subjectId)
+			if (subjectFound.length > 0) {
+				if (subjectFound[0].accountId !== userEmail) {
+					const isExistedRelation = await subjectPublicRelationshipService.getRelationByAccountIdAndSubjectId(userEmail, subjectId)
+					if (isExistedRelation) {
+						res.status(200).json({
+							status: "Success",
+							message: "Relation existed, approved access"
+						})
+					} else {
+						res.status(202).json({
+							status: "Failed",
+							message: "Not found relation, denine access"
+						})
+					}
+				} else {
+					res.status(200).json({
+						status: "Success",
+						message: "Author, approved access"
+					})
+				}
+			}
+
+		} catch (error) {
+			console.log(error)
+		}
 	}
 
 };

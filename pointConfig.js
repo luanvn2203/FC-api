@@ -1,6 +1,8 @@
 const point_minus = {
     subject_request_point_minus: 10,
-    lession_request_point_minus: 7
+    lession_request_point_minus: 7,
+
+    public_relation_point_subject: 3
 }
 const point_add = {
     author_approved_subject: 3,
