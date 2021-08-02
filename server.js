@@ -17,6 +17,7 @@ const lessionRelationAccountRoues = require('./routes/lessionRelationAccount')
 const pointHistoryRoutes = require('./routes/pointHistory')
 const donorServiceRoutes = require('./routes/donorService')
 // const accountRoutes = require('./routes/account');
+const donorServiceTypes = require('./routes/donorServiceTypes')
 
 
 //header
@@ -61,7 +62,7 @@ app.use('/request-lession', lessionRequestRoutes)
 app.use('/access-lession', lessionRelationAccountRoues)
 app.use('/account-point', pointHistoryRoutes)
 app.use('/donor-service', donorServiceRoutes)
-
+app.use('/service-type', donorServiceTypes)
 
 /* Error handler middleware */
 app.use((err, req, res, next) => {
