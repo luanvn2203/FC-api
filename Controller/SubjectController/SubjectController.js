@@ -535,7 +535,8 @@ module.exports = {
 			if (subjectFound.length > 0) {
 				if (subjectFound[0].accountId !== userEmail) {
 					const isExistedRelation = await subjectPublicRelationshipService.getRelationByAccountIdAndSubjectId(userEmail, subjectId)
-					if (isExistedRelation) {
+					console.log(isExistedRelation)
+					if (isExistedRelation.length > 0) {
 						res.status(200).json({
 							status: "Success",
 							message: "Relation existed, approved access"
