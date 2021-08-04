@@ -1,26 +1,87 @@
 
 const { sign } = require('jsonwebtoken');
 const donorServiceService = require('../../service/donorServiceService')
+const serviceDetailService = require('../../service/serviceDetail')
 
 module.exports = {
     createService: async function (req, res, next) {
         try {
-            const serviceInfor = req.body;
-            signInAccount = req.signInAccount
+            const signInAccount = req.signInAccount
             if (signInAccount.roleId === 3) {
-                const isCreateService = await donorServiceService.createNewService(serviceInfor, signInAccount.email)
-                console.log(isCreateService)
-                if (isCreateService === true) {
-                    res.status(200).json({
-                        status: "Success",
-                        message: "Create service successfully",
-                        service: serviceInfor.params
-                    })
+                const serviceTypeId = req.body.params.serviceTypeId
+                const serviceName = req.body.params.serviceName
+                const serviceInformation = req.body.params.serviceInformation
+                const quantity = req.body.params.quantity
+                const detail = req.body.params.detail
+                if (serviceTypeId === 3) {
+                    // hien vat
+                    const isCreateService = await donorServiceService.createNewService(
+                        signInAccount.email,
+                        serviceTypeId,
+                        serviceName,
+                        serviceInformation,
+                        quantity
+                    );
+                    console.log(isCreateService)
+                    if (isCreateService !== -1 && isCreateService >= 0) {
+                        res.status(200).json({
+                            status: "Success",
+                            message: "Create service successfully",
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Create service failed"
+                        })
+                    }
                 } else {
-                    res.status(202).json({
-                        status: "Failed",
-                        message: "Create service failed"
-                    })
+                    // code - co detail
+                    const isCreateService = await donorServiceService.createNewService(
+                        signInAccount.email,
+                        serviceTypeId,
+                        serviceName,
+                        serviceInformation,
+                        quantity
+                    );
+                    console.log(isCreateService)
+                    if (isCreateService !== -1 && isCreateService >= 0) {
+                        // save detail
+                        const ErrorObj = []
+                        if (detail.length > 0) {
+                            for (let index = 0; index < detail.length; index++) {
+                                const isSaveDetail = await serviceDetailService.saveServiceDetail(
+                                    isCreateService,
+                                    detail[index].serviceContent,
+                                    detail[index].startDate,
+                                    detail[index].endDate,
+                                    1
+                                );
+                                if (isSaveDetail === true) {
+
+                                } else {
+                                    ErrorObj.push(detail[index])
+                                }
+                            }
+                        }
+                        if (ErrorObj.length === 0) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Create service successfully",
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Create service failed",
+                                failed: ErrorObj
+                            })
+                        }
+
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Create service failed"
+                        })
+                    }
                 }
             } else {
                 res.status(202).json({
@@ -128,6 +189,10 @@ module.exports = {
             if (signInAccount.roleId === 3) {
                 const listServiceFound = await donorServiceService.getAllServiceByEmail(signInAccount.email)
                 if (listServiceFound.length > 0) {
+                    for (let index = 0; index < listServiceFound.length; index++) {
+                        const serviceDetailFound = await serviceDetailService.getAllDetailByServiceId(listServiceFound[index].id)
+                        listServiceFound[index].detail = serviceDetailFound
+                    }
                     res.status(200).json({
                         status: "Success",
                         listService: listServiceFound,

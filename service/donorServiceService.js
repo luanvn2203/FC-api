@@ -1,7 +1,7 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function createNewService(serviceInfo, donorId) {
+async function createNewService(donorId, serviceTypeId, serviceName, serviceInformation, quantity) {
     try {
         let current = new Date();
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
@@ -12,17 +12,17 @@ async function createNewService(serviceInfo, donorId) {
          values(?,?,?,?,?,?)`;
         const params = [
             `${donorId}`,
-            `${serviceInfo.params.serviceTypeId}`,
-            `${serviceInfo.params.serviceName}`,
-            `${serviceInfo.params.serviceInformation}`,
+            `${serviceTypeId}`,
+            `${serviceName}`,
+            `${serviceInformation}`,
             `${dateTime}`,
-            `${serviceInfo.params.quantity}`
+            `${quantity}`
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
-            return true
+            return result.insertId
         } else {
-            return false
+            return -1
         }
     } catch (error) {
         console.log(error)
