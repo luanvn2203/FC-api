@@ -19,6 +19,8 @@ const donorServiceRoutes = require('./routes/donorService')
 // const accountRoutes = require('./routes/account');
 const donorServiceTypes = require('./routes/donorServiceTypes')
 const advertisementRoutes = require('./routes/advertisement')
+const donorServiceRelationAccountRoutes = require('./routes/donorServiceRelationAccount')
+const serviceFeedBackRoutes = require('./routes/serviceFeedback')
 
 
 //header
@@ -65,6 +67,9 @@ app.use('/account-point', pointHistoryRoutes)
 app.use('/donor-service', donorServiceRoutes)
 app.use('/service-type', donorServiceTypes)
 app.use('/ads', advertisementRoutes)
+app.use('/donor-service-learner', donorServiceRelationAccountRoutes)
+app.use('/feedback', serviceFeedBackRoutes)
+
 /* Error handler middleware */
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

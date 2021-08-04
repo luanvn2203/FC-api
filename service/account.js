@@ -398,6 +398,25 @@ async function minusPointToAccountByEmail(account, point) {
   }
 }
 
+async function addDonorPointToDonor(account, donorPoint) {
+  try {
+    const sql = `update tbl_account set donorPoint = (point + ?) where email = ?`;
+    const params = [
+      point,
+      `${account}`
+    ]
+    const result = await db.query(sql, params);
+    if (result.affectedRows) {
+      return true
+    } else {
+      return false
+    }
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   getAllUser,
   checkLogin,
@@ -413,5 +432,6 @@ module.exports = {
   updateAccountStatus,
   banAccountByAdmin,
   addPointToAccountByEmail,
-  minusPointToAccountByEmail
+  minusPointToAccountByEmail,
+  addDonorPointToDonor
 }

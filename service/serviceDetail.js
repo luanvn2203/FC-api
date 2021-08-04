@@ -57,8 +57,45 @@ async function updateDetailStatusByServiceId(serviceId, status) {
     }
 }
 
+async function getServiceDetailInformationById(serviceDetailId) {
+    try {
+        const sql = `select id, serviceId, serviceContent, startDate, endDate, quantity , statusId
+        from  tbl_service_detail
+        where id = ? and statusId != 3 `
+        const params = [
+            `${serviceDetailId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+async function updateDetailStatusById(id, status) {
+    try {
+        const sql = `UPDATE tbl_service_detail set statusId = ? where id = ? `
+        const params = [
+            `${status}`,
+            `${id}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 module.exports = {
     saveServiceDetail,
     getAllDetailByServiceId,
     updateDetailStatusByServiceId,
+    getServiceDetailInformationById,
+    updateDetailStatusById
 }
