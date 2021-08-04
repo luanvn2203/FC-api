@@ -18,6 +18,7 @@ const pointHistoryRoutes = require('./routes/pointHistory')
 const donorServiceRoutes = require('./routes/donorService')
 // const accountRoutes = require('./routes/account');
 const donorServiceTypes = require('./routes/donorServiceTypes')
+const advertisementRoutes = require('./routes/advertisement')
 
 
 //header
@@ -63,7 +64,7 @@ app.use('/access-lession', lessionRelationAccountRoues)
 app.use('/account-point', pointHistoryRoutes)
 app.use('/donor-service', donorServiceRoutes)
 app.use('/service-type', donorServiceTypes)
-
+app.use('/ads', advertisementRoutes)
 /* Error handler middleware */
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;

@@ -38,8 +38,27 @@ async function getAllDetailByServiceId(serviceId) {
         console.log(error)
     }
 }
+async function updateDetailStatusByServiceId(serviceId, status) {
+    try {
+        const sql = `UPDATE tbl_service_detail set statusId = ? where serviceId = ? `
+        const params = [
+            `${status}`,
+            `${serviceId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     saveServiceDetail,
-    getAllDetailByServiceId
+    getAllDetailByServiceId,
+    updateDetailStatusByServiceId,
 }

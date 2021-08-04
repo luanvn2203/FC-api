@@ -147,20 +147,22 @@ module.exports = {
                 if (serviceFound.length > 0) {
                     if (serviceFound[0].donorId === signInAccount.email) {
                         const deleteStatus = 3;
-                        const isDelete = await donorServiceService.updateServiceStatus(serviceId, deleteStatus)
-                        if (isDelete === true) {
-                            res.status(200).json({
-                                status: "Failed",
-                                message: "Delete successfully",
-                                serviceId: serviceId
-                            })
-                        } else {
-                            res.status(202).json({
-                                status: "Failed",
-                                message: "Delete failed"
-                            })
+                        const deleteDetail = await serviceDetailService.updateDetailStatusByServiceId(serviceFound[0].id, deleteStatus)
+                        if (deleteDetail === true) {
+                            const isDelete = await donorServiceService.updateServiceStatus(serviceId, deleteStatus)
+                            if (isDelete === true) {
+                                res.status(200).json({
+                                    status: "Success",
+                                    message: "Delete successfully",
+                                    serviceId: serviceId
+                                })
+                            } else {
+                                res.status(202).json({
+                                    status: "Failed",
+                                    message: "Delete failed"
+                                })
+                            }
                         }
-
                     } else {
                         res.status(202).json({
                             status: "Failed",

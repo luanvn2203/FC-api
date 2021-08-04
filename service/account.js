@@ -19,7 +19,8 @@ async function getAllUser(page = 1) {
     DOB,
     gender,
     createdDate,
-    point
+    point,
+    donorPoint
   FROM tbl_account where roleId != 2 `;
   // limit ? offset ?
   // const params = [`${config.listPerPage}`, `${offset}`]
@@ -68,7 +69,8 @@ async function checkLogin(loginObject) {
     gender,
     createdDate,
     interestTopic,
-    point
+    point,
+    donorPoint
     FROM tbl_account
     WHERE email = ? `;
   const params = [`${loginObject.params.email}`]
@@ -108,7 +110,8 @@ async function findAccountByRefreshToken(token) {
     DOB,
     gender,
     createdDate,
-    point
+    point,
+    donorPoint
     FROM tbl_account
     WHERE refreshToken = ?`;
   const params = [`${token}`]
@@ -305,7 +308,8 @@ async function findAccountByEmail(emailSearchValue) {
     gender,
     createdDate,
     interestTopic,
-    point
+    point,
+    donorPoint
     FROM tbl_account 
     WHERE email = ? and statusId != 4`
     const params = [`${emailSearchValue}`]
