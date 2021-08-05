@@ -10,5 +10,6 @@ router.post('/save-relation', verifyToken, donorServiceRelationAccountController
 
 router.get('/history', verifyToken, donorServiceRelationAccountController.viewReceivedServiceHistoryByMe)
 
+router.get('/available-service', verifyToken, donorServiceRelationAccountController.getAllAvailableService)
 
 module.exports = router;

@@ -110,6 +110,18 @@ async function updateServiceDetailQuantity(serviceDetailId, quantity) {
     }
 }
 
+async function getAllAvailableService() {
+    try {
+        const sql = `select id, serviceId , serviceContent, sum(quantity) as quantity
+        from tbl_service_detail where statusId != 4 group by serviceId `
+        const result = await db.query(sql)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     saveServiceDetail,
@@ -117,5 +129,7 @@ module.exports = {
     updateDetailStatusByServiceId,
     getServiceDetailInformationById,
     updateDetailStatusById,
-    updateServiceDetailQuantity
+    updateServiceDetailQuantity,
+
+    getAllAvailableService
 }

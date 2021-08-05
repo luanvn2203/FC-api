@@ -93,11 +93,33 @@ module.exports = {
                 })
             } else {
                 res.status(202).json({
-                    status: "Success",
+                    status: "Failed",
                     listServices: result,
                     total: result.length
                 })
             }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    getAllAvailableService: async function (req, res, next) {
+        try {
+            const result = await serviceDetailService.getAllAvailableService()
+            if (result.length > 0) {
+                res.status(200).json({
+                    status: "Success",
+                    listServices: result,
+                    total: result.length
+                })
+            } else {
+                res.status(200).json({
+                    status: "Failed",
+                    listServices: result,
+                    total: result.length
+                })
+            }
+
         } catch (error) {
             console.log(error)
         }
