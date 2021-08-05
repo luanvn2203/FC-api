@@ -28,36 +28,43 @@ module.exports = {
                     );
                     console.log(isCreateService)
                     if (isCreateService !== -1 && isCreateService >= 0) {
-                        const ErrorObj = []
+                        // const ErrorObj = []
                         // for 
-                        for (let qindex = 0; qindex < quantity; qindex++) {
-                            console.log("ahhiii")
-                            const isSaveDetail = await serviceDetailService.saveServiceDetail(
-                                isCreateService,
-                                (serviceName + uuidv4()),
-                                dateTime,
-                                dateTime,
-                                1
-                            );
-                            if (isSaveDetail === true) {
-
-                            } else {
-                                ErrorObj.push(serviceName + uuidv4())
-                            }
-                        }
-                        if (ErrorObj.length === 0) {
+                        // for (let qindex = 0; qindex < quantity; qindex++) {
+                        //     console.log("ahhiii")
+                        const isSaveDetail = await serviceDetailService.saveServiceDetail(
+                            isCreateService,
+                            serviceName,
+                            dateTime,
+                            dateTime,
+                            quantity
+                        );
+                        if (isSaveDetail === true) {
                             res.status(200).json({
                                 status: "Success",
                                 message: "Create service successfully",
                             })
                         } else {
-                            const deleteService = donorServiceService.updateServiceStatus(isCreateService, 3)
                             res.status(202).json({
                                 status: "Failed",
                                 message: "Create service failed",
                                 failed: ErrorObj
                             })
                         }
+                        // }
+                        // if (ErrorObj.length === 0) {
+                        //     res.status(200).json({
+                        //         status: "Success",
+                        //         message: "Create service successfully",
+                        //     })
+                        // } else {
+                        //     const deleteService = donorServiceService.updateServiceStatus(isCreateService, 3)
+                        //     res.status(202).json({
+                        //         status: "Failed",
+                        //         message: "Create service failed",
+                        //         failed: ErrorObj
+                        //     })
+                        // }
                     } else {
                         res.status(202).json({
                             status: "Failed",

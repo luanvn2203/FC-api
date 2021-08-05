@@ -1,18 +1,19 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function saveServiceRelationToAccount(accountId, serviceDetailId) {
+async function saveServiceRelationToAccount(accountId, serviceDetailId, quantity) {
     try {
         let current = new Date();
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
-        const sql = `INSERT INTO tbl_donorservice_relation_account(accountId, serviceDetailId, dateOfReceived) 
-        values(?,?,?)`;
+        const sql = `INSERT INTO tbl_donorservice_relation_account(accountId, serviceDetailId, dateOfReceived, quantity) 
+        values(?,?,?,?)`;
         const params = [
             `${accountId}`,
             `${serviceDetailId}`,
             `${dateTime}`,
+            `${quantity}`
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {

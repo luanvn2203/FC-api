@@ -91,11 +91,31 @@ async function updateDetailStatusById(id, status) {
     }
 }
 
+async function updateServiceDetailQuantity(serviceDetailId, quantity) {
+    try {
+        const sql = `UPDATE tbl_service_detail set quantity = ? where id = ?`
+        const params = [
+            `${quantity}`,
+            `${serviceDetailId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     saveServiceDetail,
     getAllDetailByServiceId,
     updateDetailStatusByServiceId,
     getServiceDetailInformationById,
-    updateDetailStatusById
+    updateDetailStatusById,
+    updateServiceDetailQuantity
 }
