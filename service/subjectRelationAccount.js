@@ -75,8 +75,36 @@ async function setIsMinusPoint(value, account, subjectId) {
         console.log(error)
     }
 }
+
+async function getRecentLearningPrivateSubject(email) {
+    try {
+        const sql = `select s.subjectId,
+        s.subjectName,
+        s.accountId,
+        s.topicId,
+        s.subjectDescription,
+        s.createdDate,
+        s.statusId,
+        s.numOfView, 
+        rs.approvedAt as joinDate
+       from tbl_subject s ,
+       tbl_subject_relation_account rs where s.subjectId = rs.subjectId and rs.accountId = ? 
+       order by rs.approvedAt desc
+       `
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveRelationBetweenAccountAndSubject,
     getRelationByEmailAndSubjectId,
-    setIsMinusPoint
+    setIsMinusPoint,
+    getRecentLearningPrivateSubject
 }

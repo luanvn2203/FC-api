@@ -4,7 +4,8 @@ const { responseStatus, responseMessage } = require('./Contants')
 const subjectPublicRelationshipService = require('../../service/subjectPublicRelationship')
 const Point = require('../../pointConfig')
 const accountService = require('../../service/account')
-
+const subjectRelationAccountService = require('../../service/subjectRelationAccount')
+const subjectPublicRelationShipService = require('../../service/subjectPublicRelationship')
 
 module.exports = {
 	createNewSubject: async function (req, res, next) {
@@ -558,6 +559,34 @@ module.exports = {
 		} catch (error) {
 			console.log(error)
 		}
+	},
+
+	getRecentLearningSubject: async function (req, res, next) {
+		try {
+			const userEmail = req.userEmail
+			let resData = null
+			const privateSubjectRecentLearning = await subjectRelationAccountService.getRecentLearningPrivateSubject(userEmail)
+			const publicSubjectRecentLearning = await subjectPublicRelationShipService.getRecentLearningPublicSubject(userEmail)
+			resData = privateSubjectRecentLearning.concat(publicSubjectRecentLearning)
+			resData.sort((a, b) => (new Date(b.joinDate)) - (new Date(a.joinDate)));
+
+			if (resData.length > 0) {
+				res.status(200).json({
+					status: "Success",
+					recentSubject: resData,
+					total: resData.length
+				})
+			} else {
+				res.status(200).json({
+					status: "Failed",
+					recentSubject: resData,
+					total: resData.length
+				})
+			}
+		} catch (error) {
+			console.log(error)
+		}
+
 	}
 
 };

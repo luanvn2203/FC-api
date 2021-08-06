@@ -43,6 +43,8 @@ router.post('/save-relation', verifyToken, subjectController.savePublicRelationS
 
 router.post('/check-public-access', verifyToken, subjectController.checkAccessPublicSubject)
 
+router.get('/recent-learning', verifyToken, subjectController.getRecentLearningSubject)
+
 module.exports = router;
 
 

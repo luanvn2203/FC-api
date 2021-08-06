@@ -45,7 +45,33 @@ async function getRelationByAccountIdAndSubjectId(accountId, subjectId) {
     }
 }
 
+async function getRecentLearningPublicSubject(email) {
+    try {
+        const sql = `select s.subjectId,
+        s.subjectName,
+        s.accountId,
+        s.topicId,
+        s.subjectDescription,
+        s.createdDate,
+        s.statusId,
+        s.numOfView ,
+        rs.joinDate
+       from tbl_subject s ,
+       tbl_subject_public_relationship rs where s.subjectId = rs.subjectId and rs.accountId = ? 
+       order by rs.joinDate desc`
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     savePublicRelationship,
-    getRelationByAccountIdAndSubjectId
+    getRelationByAccountIdAndSubjectId,
+    getRecentLearningPublicSubject
 }
