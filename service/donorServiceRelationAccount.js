@@ -26,10 +26,35 @@ async function saveServiceRelationToAccount(accountId, serviceDetailId, quantity
         console.log(error)
     }
 }
+// Select dra.id, dra.serviceDetailId, 
+// dra.dateOfReceived,dra.quantity, sd.serviceContent, sd.startDate, sd.endDate,
+// ds.serviceName, ds.serviceTypeId, ds.serviceInformation,
+// st.typeName as serviceTypeName
+// from tbl_donorservice_relation_account dra ,
+// tbl_service_detail sd,
+// tbl_donor_service ds,
+// tbl_service_type st
+// where dra.serviceDetailId = sd.id 
+// and sd.serviceId = ds.id
+// and ds.serviceTypeId = st.id
+// and accountId = 'luanvnse632@gmail.com'
+// group by dra.id order by dra.dateOfReceived desc
 
 async function viewHistoryReceiveService(email) {
     try {
-        const sql = `Select id, accountId, serviceDetailId, dateOfReceived from tbl_donorservice_relation_account where accountId = ? `;
+        const sql = `Select dra.id, 
+        dra.dateOfReceived,dra.quantity, sd.serviceContent, sd.startDate, sd.endDate,
+        ds.serviceName,  ds.serviceInformation,
+        st.typeName as serviceTypeName
+        from tbl_donorservice_relation_account dra ,
+        tbl_service_detail sd,
+        tbl_donor_service ds,
+        tbl_service_type st
+        where dra.serviceDetailId = sd.id 
+        and sd.serviceId = ds.id
+        and ds.serviceTypeId = st.id
+        and accountId = ?
+        group by dra.id order by dra.dateOfReceived desc`;
         const params = [
             `${email}`
         ]

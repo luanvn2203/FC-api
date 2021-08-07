@@ -72,6 +72,21 @@ async function getServiceDetailInformationById(serviceDetailId) {
         console.log(error)
     }
 }
+async function getAvailableServiceDetailInformationById(serviceDetailId) {
+    try {
+        const sql = `select id, serviceId, serviceContent, startDate, endDate, quantity , statusId
+        from  tbl_service_detail
+        where id = ? and statusId != 3 and statusId != 4 `
+        const params = [
+            `${serviceDetailId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
 async function updateDetailStatusById(id, status) {
     try {
         const sql = `UPDATE tbl_service_detail set statusId = ? where id = ? `
@@ -132,5 +147,6 @@ module.exports = {
     updateDetailStatusById,
     updateServiceDetailQuantity,
 
-    getAllAvailableService
+    getAllAvailableService,
+    getAvailableServiceDetailInformationById
 }
