@@ -192,6 +192,10 @@ module.exports = {
         try {
             const result = await serviceDetailService.getAllAvailableService()
             if (result.length > 0) {
+                for (let index = 0; index < result.length; index++) {
+                    result[index].quantity = JSON.parse(result[index].quantity)
+                }
+
                 res.status(200).json({
                     status: "Success",
                     listServices: result,
