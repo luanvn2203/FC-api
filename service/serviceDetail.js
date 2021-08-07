@@ -112,8 +112,9 @@ async function updateServiceDetailQuantity(serviceDetailId, quantity) {
 
 async function getAllAvailableService() {
     try {
-        const sql = `select id, serviceId , serviceContent, sum(quantity) as quantity
-        from tbl_service_detail where statusId != 4 group by serviceId `
+        const sql = `select sd.id, sd.serviceId, ds.serviceName, ds.serviceTypeId , serviceInformation, sum(sd.quantity) as quantity, sd.startDate ,sd.endDate
+        from tbl_service_detail sd, tbl_donor_service ds
+        where sd.serviceId = ds.id and  sd.statusId != 4 group by sd.serviceId,sd.startDate ,sd.endDate `
         const result = await db.query(sql)
         const data = helper.emptyOrRows(result)
         return data

@@ -545,7 +545,7 @@ module.exports = {
 					} else {
 						res.status(202).json({
 							status: "Failed",
-							message: "Not found relation, denine access"
+							message: "Do you wan to use 3 point to view this content"
 						})
 					}
 				} else {
