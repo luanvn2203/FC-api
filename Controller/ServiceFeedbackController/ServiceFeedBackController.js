@@ -11,7 +11,8 @@ module.exports = {
             const point = req.body.params.point
             const content = req.body.params.content
             //chua check author relation
-            const relationFound = donorServiceRelationAccountService.getRelationByid(donorServiceRelationAccountId)
+            const relationFound = await donorServiceRelationAccountService.getRelationByid(donorServiceRelationAccountId)
+            console.log(relationFound)
             if (relationFound.length > 0) {
                 if (relationFound[0].accountId === userEmail) {
                     // tim trong feedback
@@ -43,8 +44,12 @@ module.exports = {
                         message: "No permission"
                     })
                 }
+            } else {
+                res.status(200).json({
+                    status: "Failed",
+                    message: "Not found history ID: " + donorServiceRelationAccountId
+                })
             }
-
         } catch (error) {
             console.log(error)
         }
