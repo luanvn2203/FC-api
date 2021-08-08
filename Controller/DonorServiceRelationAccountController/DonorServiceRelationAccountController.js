@@ -4,6 +4,7 @@ const serviceDetailService = require('../../service/serviceDetail')
 const donorServiceService = require('../../service/donorServiceService')
 const accountService = require('../../service/account')
 const { savePointHistory } = require('../../service/pointHistory')
+const mailer = require('../../mailer')
 module.exports = {
     saveRelation: async function (req, res, next) {
         try {
@@ -77,10 +78,25 @@ module.exports = {
                                         }
                                     }
                                     if (errorObject.length === 0) {
-
                                         res.status(200).json({
                                             status: "Success",
                                             message: "Exchange successfully"
+                                        })
+
+                                        //send mail
+                                        let infor = ``
+                                        listServiceDetailFound.map((item, index) => {
+                                            return infor = infor + `<p> ${index + 1} ) ${item.serviceContent}</p>`
+                                        })
+                                        let subject = "You has exchanges gift FC website";
+                                        let body = `
+                                        <h2>You receive this email by exchange gift on the flashcard system.</h2>
+                                        <h3>Here is your gift information: ${infor} </h3>
+                                        <h4>Vui lòng không reply. Trân trọng !</h4>
+                                        `
+                                        //sendEmail
+                                        mailer.sendMail(receiverEmail, subject, body).catch(error => {
+                                            console.log(error.message)
                                         })
                                     } else {
                                         res.status(202).json({
