@@ -43,7 +43,7 @@ async function saveServiceRelationToAccount(accountId, serviceDetailId, quantity
 async function viewHistoryReceiveService(email) {
     try {
         const sql = `Select dra.id, 
-        dra.dateOfReceived,dra.quantity, sd.serviceContent, sd.startDate, sd.endDate,
+        dra.dateOfReceived,dra.quantity,dra.isFeedback, sd.serviceContent, sd.startDate, sd.endDate,
         ds.serviceName,  ds.serviceInformation,
         st.typeName as serviceTypeName
         from tbl_donorservice_relation_account dra ,
@@ -80,8 +80,27 @@ async function getRelationByid(id) {
     }
 }
 
+async function updateIsFeedBack(dsraId, status) {
+    try {
+        const sql = `Update tbl_donorservice_relation_account set isFeedback = ? where id  = ? `
+        const params = [
+            `${status}`,
+            `${dsraId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveServiceRelationToAccount,
     viewHistoryReceiveService,
-    getRelationByid
+    getRelationByid,
+    updateIsFeedBack
 }

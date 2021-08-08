@@ -20,6 +20,8 @@ module.exports = {
                     if (feedbackFound.length === 0) {
                         const isSaveFeedback = await serviceFeedbackService.saveFeedBack(donorServiceRelationAccountId, userEmail, point, content)
                         if (isSaveFeedback === true) {
+                            // update feedback status
+                            await donorServiceRelationAccountService.updateIsFeedBack(donorServiceRelationAccountId, 1)
                             res.status(200).json({
                                 status: "Success",
                                 message: "Send feedback successfully"
