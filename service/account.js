@@ -182,7 +182,7 @@ async function registerAccount(accountToRegister, protocol, host) {
     <h2>Bạn nhận được email này vì đã đăng ký tài khoản trên ứng dụng FC.</h2>
     <h3>Vui long click vào liên kết bên dưới để xác nhận kích hoạt tài khoản: </h3>
     <h3>
-    <a href="${linkVerify}" target="_blank" >${linkVerify}</a>
+    Nhấn vào đây: <a href="${linkVerify}" target="_blank" >Click here</a>
     </h3>
     <h4>Vui lòng không reply. Trân trọng !</h4>
     `
