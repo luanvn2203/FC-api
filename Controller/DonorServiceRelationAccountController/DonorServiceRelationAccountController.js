@@ -9,7 +9,7 @@ module.exports = {
         try {
             const receiverEmail = req.body.params.email
             const listServiceDetail = req.body.params.listServiceDetail
-
+            const itemPrice = 600
             if (listServiceDetail.length > 0) {
                 const listServiceDetailFound = []
                 const listIdFound = []
@@ -20,8 +20,6 @@ module.exports = {
                         listIdFound.push(serviceDetailFound[0].id)
                     }
                 }
-                console.log(listServiceDetailFound)
-                console.log(listServiceDetail)
 
                 if (listServiceDetailFound.length === listServiceDetail.length) {
                     // console.log(listServiceDetailFound)
@@ -43,6 +41,7 @@ module.exports = {
                             const donorServiceFound = await donorServiceService.getServiceById(listServiceDetailFound[index3].serviceId)
                             if (donorServiceFound.length > 0) {
                                 if (donorServiceFound[0].serviceTypeId === 3) {
+                                    const priceToMinus = listServiceDetail[index3].quantity * 600
                                     const quantityDB = listServiceDetailFound[index3].quantity
                                     await serviceDetailService.updateServiceDetailQuantity(listServiceDetailFound[index3].id, (quantityDB - listServiceDetail[index3].quantity))
                                     if (quantityDB === listServiceDetail[index3].quantity) {

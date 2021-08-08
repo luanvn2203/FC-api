@@ -5,7 +5,8 @@ const subjectPublicRelationshipService = require('../../service/subjectPublicRel
 const Point = require('../../pointConfig')
 const accountService = require('../../service/account')
 const subjectRelationAccountService = require('../../service/subjectRelationAccount')
-const subjectPublicRelationShipService = require('../../service/subjectPublicRelationship')
+const subjectPublicRelationShipService = require('../../service/subjectPublicRelationship');
+const { savePointHistory } = require("../../service/pointHistory");
 
 module.exports = {
 	createNewSubject: async function (req, res, next) {
@@ -481,8 +482,6 @@ module.exports = {
 			const learingInProgressStatus = 1;
 			// find relation truoc
 			const isExistedRelation = await subjectPublicRelationshipService.getRelationByAccountIdAndSubjectId(signInAccount.email, subjectId)
-
-
 			if (isExistedRelation.length > 0) {
 				res.status(202).json({
 					status: "Failed",
@@ -495,6 +494,9 @@ module.exports = {
 					//tru diem truoc
 					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, Point.point_minus.public_relation_point_subject)
 					if (isMinusPoint === true) {
+						const useType = 6
+						const description = `${signInAccount.email} use ${Point.point_minus.public_relation_point_subject} point to access the subjectId: ${subjectId}`
+						await savePointHistory(signInAccount.email, Point.point_minus.public_relation_point_subject, useType, description)
 						const result = await subjectPublicRelationshipService.savePublicRelationship(signInAccount.email, subjectId, learingInProgressStatus)
 						if (result === true) {
 							res.status(200).json({
