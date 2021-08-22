@@ -107,20 +107,70 @@ module.exports = {
     getAllQuizHistoryByMe: async function (req, res, next) {
         try {
             const userEmail = req.userEmail
-            const listHistoryFound = await quizHistoryService.getAllQuizHistoryByAccountId(userEmail)
-            if (listHistoryFound.length > 0) {
-                res.status(200).json({
-                    status: "Success",
-                    listHistory: listHistoryFound,
-                    total: listHistoryFound.length
-                })
-            } else {
-                res.status(200).json({
-                    status: "Failed",
-                    listHistory: listHistoryFound,
-                    total: listHistoryFound.length
-                })
+            const listSubjectIdMemberTake = await quizHistoryService.getListSubjectIdMemberTake(userEmail)
+            // const listQuizTestIdMemberTake = await quizHistoryService.getListQuizTestMemberTakeByEmail(userEmail)
+            if (listSubjectIdMemberTake.length > 0) {
+                let listSubject = []
+                for (let i = 0; i < listSubjectIdMemberTake.length; i++) {
+                    //child 
+                    const listQuizTestPerSubject = await quizHistoryService.getListQuizTestPerSubject(userEmail, listSubjectIdMemberTake[i].subjectId)
+                    for (let j = 0; j < listQuizTestPerSubject.length; j++) {
+
+                    }
+                    listSubject.push({
+                        subjectId: listSubjectIdMemberTake[i].subjectId,
+                        subjectName: listSubjectIdMemberTake[i].subjectName,
+                        listTest: listQuizTestPerSubject
+                    })
+                }
+                for (let k = 0; k < listSubject.length; k++) {
+                    const listTestPersub = listSubject[k].listTest
+                    for (let h = 0; h < listTestPersub.length; h++) {
+                        const listHistoryPerTest = await quizHistoryService.getListHistoryPerQuizTest(userEmail, listTestPersub[h].quiztestId)
+                        if (listHistoryPerTest.length > 0) {
+                            listTestPersub[h].child = listHistoryPerTest
+                            listTestPersub[h].totalTakeQuiz = listHistoryPerTest.length
+                        } else {
+                            listTestPersub[h].child = []
+                            listTestPersub[h].totalTakeQuiz = listHistoryPerTest.length
+
+                        }
+                    }
+                }
+
+                // listSubject?.map((item, index) => {
+                //     item?.listTest.map(async (test, index2) => {
+                //         const listHistoryPerTest = await quizHistoryService.getListHistoryPerQuizTest(userEmail, test.quiztestId)
+                //         if (listHistoryPerTest.length > 0) {
+                //             test.child = listHistoryPerTest
+                //         }
+
+
+                //     })
+                // })
+
+                res.json(listSubject)
             }
+
+
+
+
+
+            // const userEmail = req.userEmail
+            // const listHistoryFound = await quizHistoryService.getAllQuizHistoryByAccountId(userEmail)
+            // if (listHistoryFound.length > 0) {
+            //     res.status(200).json({
+            //         status: "Success",
+            //         listHistory: listHistoryFound,
+            //         total: listHistoryFound.length
+            //     })
+            // } else {
+            //     res.status(200).json({
+            //         status: "Failed",
+            //         listHistory: listHistoryFound,
+            //         total: listHistoryFound.length
+            //     })
+            // }
         } catch (error) {
             console.log(error)
         }

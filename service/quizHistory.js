@@ -96,9 +96,76 @@ async function getNumOfTakeQuizTime(accountId, quizTestId) {
     }
 }
 
+async function getListQuizTestMemberTakeByEmail(email) {
+    try {
+        const sql = `select distinct qh.quiztestId, qt.testName, s.subjectName, s.subjectId from tbl_quiz_history qh, tbl_quiztest qt , tbl_subject s
+        where qh.quiztestId = qt.id and qt.subjectId = s.subjectId  and qh.accountID = ?`
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+async function getListHistoryPerQuizTest(email, quiztestId) {
+    try {
+        const sql = `select id as historyId, accountID, quiztestId, numOfQuestion, takeQuizAt, numOfCorrect, totalCore
+        from tbl_quiz_history where accountID = ? and quiztestId  = ?`
+        const params = [
+            `${email}`,
+            `${quiztestId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getListSubjectIdMemberTake(userEmail) {
+    try {
+        const sql = `select distinct s.subjectId, s.subjectName from tbl_quiz_history qh, tbl_quiztest qt , tbl_subject s
+        where qh.quiztestId = qt.id and qt.subjectId = s.subjectId  and qh.accountID = 'luanvnse63360@gmail.com' group by s.subjectId`
+        const params = [
+            `${userEmail}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getListQuizTestPerSubject(userEmail, subjectID) {
+    try {
+        const sql = `select distinct qh.quiztestId, qt.testName
+        from tbl_quiz_history qh, tbl_quiztest qt , tbl_subject s
+        where qh.quiztestId = qt.id and qt.subjectId = s.subjectId  and qh.accountID = ? 
+        and s.subjectId = ? group by qh.quiztestId`
+        const params = [
+            `${userEmail}`,
+            `${subjectID}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveQuizHistory,
     getQuizHistoryById,
     getAllQuizHistoryByAccountId,
-    getNumOfTakeQuizTime
+    getNumOfTakeQuizTime,
+    getListQuizTestMemberTakeByEmail,
+    getListHistoryPerQuizTest,
+    getListSubjectIdMemberTake,
+    getListQuizTestPerSubject,
 }
