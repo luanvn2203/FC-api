@@ -12,4 +12,5 @@ router.post('/author-approve', verifyToken, subjectRequestController.approveRequ
 
 router.post('/author-denine', verifyToken, subjectRequestController.denineRequest)
 
+router.get('/from-me', verifyToken, subjectRequestController.getAllRequestSendFromMe)
 module.exports = router;

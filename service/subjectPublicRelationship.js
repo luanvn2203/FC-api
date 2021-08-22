@@ -70,8 +70,23 @@ async function getRecentLearningPublicSubject(email) {
     }
 }
 
+async function getPublicSubjectUserHaveJoinedByEmail(email) {
+    try {
+        const sql = `select id, accountId, subjectId, joinDate, learningStatus from tbl_subject_public_relationship where accountId = ?`
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     savePublicRelationship,
     getRelationByAccountIdAndSubjectId,
-    getRecentLearningPublicSubject
+    getRecentLearningPublicSubject,
+    getPublicSubjectUserHaveJoinedByEmail
 }

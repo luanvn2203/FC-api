@@ -6,6 +6,8 @@ const Point = require('../../pointConfig')
 const accountService = require('../../service/account')
 const subjectRelationAccountService = require('../../service/subjectRelationAccount')
 const subjectPublicRelationShipService = require('../../service/subjectPublicRelationship');
+const subjectRequestService = require('../../service/subjectRequestService')
+
 const { savePointHistory } = require("../../service/pointHistory");
 
 module.exports = {
@@ -165,17 +167,35 @@ module.exports = {
 		next
 	) {
 		try {
+			const userEmail = req.userEmail
 			const publicStatus = 1;
 			const listTopicFound = await topicService.getAllTopicInArrayOfId(
 				req.body.params.listTopicId
 			);
+			console.log(listTopicFound)
 			if (listTopicFound.length > 0) {
 				let resData = [];
 				for (let i = 0; i < listTopicFound.length; i++) {
-					const listSubjectFound = await subjectService.getTop5SubjectByTopicId(
-						listTopicFound[i].topicId,
-						publicStatus
-					);
+					const listSubjectFound = await subjectService.getTop5SubjectByTopicId(listTopicFound[i].topicId, publicStatus);
+					if (listSubjectFound.length > 0) {
+						const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
+						if (listPrivateRequestSubject.length > 0) {
+							for (let index = 0; index < listSubjectFound.length; index++) {
+								for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
+									if (listSubjectFound[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
+										listSubjectFound[index].joinStatus = listPrivateRequestSubject[index2].statusId
+									} else {
+										listSubjectFound[index].joinStatus = -1
+									}
+								}
+							}
+						}
+
+						const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
+
+					}
+
+
 					let topicAndSubjectInside = {
 						topicDetail: listTopicFound[i],
 						listSubjects: listSubjectFound,

@@ -198,6 +198,27 @@ module.exports = {
                 requestId: requestId
             })
         }
+    },
+    getAllRequestSendFromMe: async function (req, res, next) {
+        try {
+            const userEmail = req.userEmail
+            const result = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
+            if (result.length > 0) {
+                res.status(200).json({
+                    status: "Success",
+                    listRequest: result,
+                    total: result.length
+                })
+            } else {
+                res.status(200).json({
+                    status: "Failed",
+                    listRequest: result,
+                    total: result.length
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }
