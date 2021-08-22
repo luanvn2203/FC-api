@@ -12,7 +12,7 @@ router.post('/get-lession-by-lessionid', lessionController.getLessionByLessionId
 
 router.post('/get-lession-by-accountid', verifyToken, lessionController.getLessionByAcountId)
 
-router.post('/get-lession-by-subjectid', lessionController.getLessionBySubjectId)
+router.post('/get-lession-by-subjectid', verifyToken, lessionController.getLessionBySubjectId)
 
 router.post('/create-lession-by-subjectid', verifyToken, lessionController.createNewLessionBySubjectId)
 

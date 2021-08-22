@@ -114,6 +114,20 @@ async function checkDuplicateRequest(lessionId, from, to) {
     }
 }
 
+async function getAllRequestByEmail(email) {
+    try {
+        const sql = `select lr.id, lr.requestFrom, lr.requestTo, lr.lessionId,l.lessionName, lr.statusId, lr.requestedAt from tbl_lession_request lr, tbl_lession l
+        where lr.lessionId = l.lessionId and  lr.requestFrom = ?`
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     saveRequest,
@@ -121,6 +135,7 @@ module.exports = {
     getRequestDetailById,
     checkDuplicateRequest,
 
-    updateRequestStatus
+    updateRequestStatus,
 
+    getAllRequestByEmail
 }

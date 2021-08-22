@@ -1,5 +1,8 @@
 const lessionService = require("../../service/lession");
 const flashcardService = require('../../service/flashcard')
+const subjectService = require("../../service/subject")
+const lessionRequestService = require('../../service/lessionRequestService')
+
 module.exports = {
 	getAllLession: async function (req, res, next) {
 		try {
@@ -95,23 +98,68 @@ module.exports = {
 
 	getLessionBySubjectId: async function (req, res, next) {
 		try {
+			const userEmail = req.userEmail
 			const subjectId = req.body.params.subjectId;
-			const result = await lessionService.getLessionBySubjectId(subjectId);
-			if (result.length > 0) {
-				res.status(200).json({
-					status: "Success",
-					message: "Get lession successfully",
-					lession: result,
-					total: result.length,
-				});
-			} else {
-				res.status(201).json({
-					status: "Failed",
-					message: "No record Found",
-					lession: [],
-					total: 0,
-				});
+			const subjectFound = await subjectService.getSubjectById(subjectId)
+			if (subjectFound.length > 0) {
+				const result = await lessionService.getLessionBySubjectId(subjectId);
+				if (result.length > 0) {
+					if (subjectFound[0].accountId === userEmail) {
+						res.status(200).json({
+							status: "Success",
+							message: "Get lession successfully",
+							lession: result,
+							total: result.length,
+						});
+					} else {
+						const listRequestFromMe = await lessionRequestService.getAllRequestByEmail(userEmail)
+						console.log(listRequestFromMe)
+						if (listRequestFromMe.length > 0) {
+							for (let index = 0; index < result.length; index++) {
+								for (let index2 = 0; index2 < listRequestFromMe.length; index2++) {
+									if (result[index].lessionId === listRequestFromMe[index2].lessionId) {
+										if (listRequestFromMe[index2].statusId === 1) {
+											result[index].joinStatus = "Waiting from author"
+										} else if (listRequestFromMe[index2].statusId === 2) {
+											result[index].joinStatus = "Author approved"
+										} else {
+											result[index].joinStatus = "Author denine"
+										}
+									} else {
+										if (result[index].statusId === 1) {
+											result[index].joinStatus = "Approve access"
+										} else {
+											result[index].joinStatus = "Not join"
+										}
+
+									}
+								}
+							}
+						} else {
+							for (let index3 = 0; index3 < result.length; index3++) {
+								result[index3].joinStatus = "Approve access"
+							}
+						}
+						res.status(200).json({
+							status: "Success",
+							message: "Get lession successfully",
+							lession: result,
+							total: result.length,
+						});
+
+					}
+
+
+				} else {
+					res.status(201).json({
+						status: "Failed",
+						message: "No record Found",
+						lession: [],
+						total: 0,
+					});
+				}
 			}
+
 		} catch (error) {
 			console.log(error);
 		}
