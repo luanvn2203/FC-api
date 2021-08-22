@@ -227,7 +227,6 @@ async function updateAccountInformation(accountParams) {
     const sql = `UPDATE tbl_account 
     set 
     fullName = ?,
-    roleId = ?,
     phone = ?,
     address = ?,
     DOB = ?,
@@ -235,7 +234,6 @@ async function updateAccountInformation(accountParams) {
     where email = ?`;
     const params = [
       `${account.fullName}`,
-      `${account.roleId}`,
       `${account.phone}`,
       `${account.address}`,
       `${account.DOB}`,
