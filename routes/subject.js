@@ -16,7 +16,7 @@ router.put('/update', verifyToken, subjectController.updateSubject)
 
 router.post('/five-popular-subject', verifyToken, subjectController.getTop5PopularSubjectByTopicId)
 
-router.post('/for-home-interest', subjectController.getTop5SubjectPerInterestTopicForStudentHome)
+router.post('/for-home-interest', verifyToken, subjectController.getTop5SubjectPerInterestTopicForStudentHome)
 
 router.get('/subject-by-signin-mail', verifyToken, subjectController.getSubjectBySignedInEmail)
 

@@ -172,7 +172,6 @@ module.exports = {
 			const listTopicFound = await topicService.getAllTopicInArrayOfId(
 				req.body.params.listTopicId
 			);
-			console.log(listTopicFound)
 			if (listTopicFound.length > 0) {
 				let resData = [];
 				for (let i = 0; i < listTopicFound.length; i++) {
@@ -183,19 +182,30 @@ module.exports = {
 							for (let index = 0; index < listSubjectFound.length; index++) {
 								for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
 									if (listSubjectFound[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
-										listSubjectFound[index].joinStatus = listPrivateRequestSubject[index2].statusId
+										// listSubjectFound[index].joinStatus = listPrivateRequestSubject[index2].statusId
+										if (listPrivateRequestSubject[index2].statusId === 1) {
+											listSubjectFound[index].joinStatus = "Waiting author approve"
+										} else if (listPrivateRequestSubject[index2].statusId === 2) {
+											listSubjectFound[index].joinStatus = "Author Approved Access"
+										} else {
+											listSubjectFound[index].joinStatus = "Author Denine Access"
+										}
+
 									} else {
-										listSubjectFound[index].joinStatus = -1
+										listSubjectFound[index].joinStatus = 'Not join'
 									}
 								}
 							}
 						}
-
 						const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
-
+						for (let index3 = 0; index3 < listSubjectFound.length; index3++) {
+							for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
+								if (listSubjectFound[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
+									listSubjectFound[index3].joinStatus = "Joined"
+								}
+							}
+						}
 					}
-
-
 					let topicAndSubjectInside = {
 						topicDetail: listTopicFound[i],
 						listSubjects: listSubjectFound,
@@ -352,9 +362,39 @@ module.exports = {
 	},
 	findSubjectByNameAndDescription: async function (req, res, next) {
 		try {
+			const userEmail = req.userEmail
 			const searchValue = req.body.params.searchValue
 			const result = await subjectService.findSubjectByNameAndDes(searchValue)
 			if (result.length > 0) {
+
+				const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
+				if (listPrivateRequestSubject.length > 0) {
+					for (let index = 0; index < result.length; index++) {
+						for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
+							if (result[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
+								// result[index].joinStatus = listPrivateRequestSubject[index2].statusId
+								if (listPrivateRequestSubject[index2].statusId === 1) {
+									result[index].joinStatus = "Waiting author approve"
+								} else if (listPrivateRequestSubject[index2].statusId === 2) {
+									result[index].joinStatus = "Author Approved Access"
+								} else {
+									result[index].joinStatus = "Author Denine Access"
+								}
+
+							} else {
+								result[index].joinStatus = 'Not join'
+							}
+						}
+					}
+				}
+				const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
+				for (let index3 = 0; index3 < result.length; index3++) {
+					for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
+						if (result[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
+							result[index3].joinStatus = "Joined"
+						}
+					}
+				}
 				res.status(200).json({
 					status: responseStatus.SUCCESS,
 					searchResult: result,
