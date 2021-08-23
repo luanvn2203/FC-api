@@ -290,6 +290,15 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+
+    checkTakeQuizAccess: async function (req, res, next) {
+        try {
+            const userEmail = req.userEmail;
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }

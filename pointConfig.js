@@ -8,7 +8,14 @@ const point_add = {
     author_approved_subject: 3,
     author_approved_lession: 1
 }
+
+const point_define = {
+    private_lesson: 100,
+    public_lesson: 50
+}
+
 module.exports = {
     point_minus,
-    point_add
+    point_add,
+    point_define
 }

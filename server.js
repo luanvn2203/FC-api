@@ -21,7 +21,7 @@ const donorServiceTypes = require('./routes/donorServiceTypes')
 const advertisementRoutes = require('./routes/advertisement')
 const donorServiceRelationAccountRoutes = require('./routes/donorServiceRelationAccount')
 const serviceFeedBackRoutes = require('./routes/serviceFeedback')
-
+const lessionPublicRelationShip = require('./routes/lessionPublicRelationship')
 
 //header
 app.use((req, res, next) => {
@@ -69,7 +69,7 @@ app.use('/service-type', donorServiceTypes)
 app.use('/ads', advertisementRoutes)
 app.use('/donor-service-learner', donorServiceRelationAccountRoutes)
 app.use('/feedback', serviceFeedBackRoutes)
-
+app.use('/recent-lesson', lessionPublicRelationShip)
 /* Error handler middleware */
 app.use((err, req, res, next) => {
     const statusCode = err.statusCode || 500;
