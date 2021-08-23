@@ -6,6 +6,8 @@ const optionDetailService = require('../../service/optionDetail')
 const quizTestQuestionService = require('../../service/quizTestQuestion')
 const lessionService = require('../../service/lession')
 const subjectService = require('../../service/subject')
+const lessionPublicRelationshipService = require('../../service/lessionPublicRelationShip')
+
 module.exports = {
     createNewQuizTest: async function (req, res, next) {
         try {
@@ -295,6 +297,45 @@ module.exports = {
     checkTakeQuizAccess: async function (req, res, next) {
         try {
             const userEmail = req.userEmail;
+            const quizTestId = req.body.params.quizTestId
+            const quizTestFound = await quizTestService.getQuizTestInfomationById(quizTestId)
+            if (quizTestFound.length > 0) {
+                const listLessionIdMemberLearning = await lessionPublicRelationshipService.getAllLessionIdBySubjectId(userEmail, quizTestFound[0].subjectId)
+                const listId = []
+                for (let index = 0; index < listLessionIdMemberLearning.length; index++) {
+                    listId.push(listLessionIdMemberLearning[index].lessionId)
+                }
+                if (checker(listId, JSON.parse(quizTestFound[0].lessionId_arr)) === true) {
+                    res.status(200).json({
+                        status: "Success",
+                        message: "Member can take quiz now"
+                    })
+                } else {
+                    const lessionRequireId = JSON.parse(quizTestFound[0].lessionId_arr).filter(e => !listId.includes(e))
+                    const resData = []
+                    for (let i = 0; i < lessionRequireId.length; i++) {
+                        const lessionF = await lessionService.getLessionByLessionId(lessionRequireId[i])
+                        resData.push({
+                            lessionId: lessionF[0].lessionId,
+                            lessionName: lessionF[0].lessionName
+                        })
+                    }
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Member need to complete learning require lesson before take quiz",
+                        requireLesson: resData,
+                        total: resData.length
+                    })
+
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Not found test ID"
+                })
+            }
+
+
 
         } catch (error) {
             console.log(error)
@@ -302,3 +343,4 @@ module.exports = {
     }
 
 }
+let checker = (arr, target) => target.every(v => arr.includes(v));
