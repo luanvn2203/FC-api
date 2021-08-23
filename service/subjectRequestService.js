@@ -52,7 +52,7 @@ async function getAllRequestSendToMeByEmail(email) {
 async function getRequestDetailById(requestId) {
     try {
         const sql = `select id, requestFrom, requestTo, subjectId, statusId, requestedAt 
-        from tbl_subject_request where id = ?  `;
+        from tbl_subject_request where id = ? and statusId != 4 `;
         const params = [
             `${requestId}`
         ]

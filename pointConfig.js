@@ -14,6 +14,12 @@ const point_define = {
     public_lesson: 50
 }
 
+const PointRate = {
+    minRate: 0.8, // 0.1 - 0.6
+    mediumRate: 0.9, //0.6- 0.8
+    maxRate: 1 // 0.8 - 1
+}
+
 module.exports = {
     point_minus,
     point_add,

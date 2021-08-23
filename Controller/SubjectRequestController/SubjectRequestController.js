@@ -219,6 +219,56 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+    cancelRequest: async function (req, res, next) {
+        try {
+            const userEmail = req.userEmail;
+            const requestId = req.body.params.requestId;
+            const requestFound = await subjectRequestService.getRequestDetailById(requestId)
+            if (requestFound.length > 0) {
+                if (requestFound[0].requestFrom === userEmail) {
+                    // update status
+                    if (requestFound[0].statusId === 1) {
+                        const cancelStatus = 5
+                        const isCancelSuccess = await subjectRequestService.updateRequestStatus(requestId, cancelStatus)
+                        if (isCancelSuccess === true) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Cancel request successfully"
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Cancel failed"
+                            })
+                        }
+                    } else if (requestFound[0].statusId === 5) {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Request have been cancel before"
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Request is not waiting, cannot cancel"
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Not your request"
+                    })
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Not found request ID"
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }

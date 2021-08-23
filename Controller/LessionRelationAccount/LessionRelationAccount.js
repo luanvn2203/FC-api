@@ -43,12 +43,12 @@ module.exports = {
                                 if (relationshipFound.length > 0) {
                                     const isMinus = JSON.parse(JSON.stringify(relationshipFound[0].isMinusPoint))
                                     if (isMinus.data[0] === 0) {
-                                        if (accountFound[0].point > Point.point_minus.lession_request_point_minus) {
-                                            const isMinusSuccess = await accountService.minusPointToAccountByEmail(userEmail, Point.point_minus.lession_request_point_minus)
+                                        if (accountFound[0].point > Point.point_define.private_lesson) {
+                                            const isMinusSuccess = await accountService.minusPointToAccountByEmail(userEmail, Point.point_define.private_lesson)
                                             if (isMinusSuccess === true) {
                                                 const requestLessionType = 2;
                                                 const description = `${userEmail} request to see lession : ${lessionFound[0].lessionName}`
-                                                const isSaveHistory = pointHistoryService.savePointHistory(userEmail, Point.point_minus.lession_request_point_minus, requestLessionType, description)
+                                                const isSaveHistory = pointHistoryService.savePointHistory(userEmail, Point.point_define.private_lesson, requestLessionType, description)
                                                 if (isSaveHistory !== -1) {
                                                     console.log("history saved")
                                                 }
@@ -58,19 +58,22 @@ module.exports = {
                                                         status: "Success",
                                                         message: "Approved",
                                                         lessionId: lessionId,
-                                                        user_point: (accountFound[0].point - Point.point_minus.lession_request_point_minus)
+                                                        user_point: (accountFound[0].point - Point.point_define.private_lesson)
                                                     })
                                                 }
                                             } else {
                                                 res.status(202).json({
                                                     status: "Point Unavailable",
                                                     message: "Approved by author but user don't have enough point left.",
+                                                    point_require: Point.point_define.private_lesson
+
                                                 })
                                             }
                                         } else {
                                             res.status(202).json({
                                                 status: "Failed",
                                                 message: "Approved by author but user don't have enough point left.",
+                                                point_require: Point.point_define.private_lesson
                                             })
                                         }
                                     } else {
@@ -84,7 +87,8 @@ module.exports = {
                                     res.status(202).json({
                                         status: "Not Found Request",
                                         message: "User need to send request to author before.",
-                                        lessionId: lessionId
+                                        lessionId: lessionId,
+                                        point_require: Point.point_define.private_lesson
                                     })
                                 }
                             } else {

@@ -12,4 +12,8 @@ router.post('/author-approve', verifyToken, lessionRequestController.approveRequ
 
 router.post('/author-denine', verifyToken, lessionRequestController.denineRequest)
 
+router.get('/from-me', verifyToken, lessionRequestController.getAllRequestSendFromMe)
+
+router.post('/cancel', verifyToken, lessionRequestController.cancelRequest)
+
 module.exports = router;

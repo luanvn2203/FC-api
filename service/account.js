@@ -431,5 +431,6 @@ module.exports = {
   banAccountByAdmin,
   addPointToAccountByEmail,
   minusPointToAccountByEmail,
-  addDonorPointToDonor
+  addDonorPointToDonor,
+
 }

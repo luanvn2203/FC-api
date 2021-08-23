@@ -1,28 +1,29 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function saveRequest(requestFrom, requestTo, lessionId, statusId) {
+async function saveRequest(requestFrom, requestTo, lessionId, statusId, subjectId) {
     try {
         let current = new Date();
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
 
-        const sql = `insert into tbl_lession_request(requestFrom, requestTo, lessionId, statusId, requestedAt) 
-        values(?,?,?,?,?)`
+        const sql = `insert into tbl_lession_request(requestFrom, requestTo, lessionId, statusId, requestedAt,subjectId) 
+        values(?,?,?,?,?,?)`
 
         const params = [
             `${requestFrom.trim()}`,
             `${requestTo.trim()}`,
             `${lessionId}`,
             `${statusId}`,
-            `${dateTime}`
+            `${dateTime}`,
+            `${subjectId}`
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
-            return result.insertId
+            return true
         } else {
-            return -1
+            return false
         }
 
 
@@ -37,16 +38,20 @@ async function getAllRequestSendToMeByEmail(email) {
         le.requestFrom,
         le.requestTo,
         le.lessionId,
+        concat('lesson named ',l.lessionName,' from subject : ',s.subjectName ) as requestContent,
         le.statusId,
         rs.statusName as statusName,
         le.requestedAt,
-        l.lessionName as name
+        l.lessionName as lessonName,
+        s.subjectName,
+        le.subjectId
         from tbl_lession_request le,
         tbl_request_status rs,
-        tbl_lession l 
+        tbl_lession l,
+        tbl_subject s
         where le.statusId = rs.id 
-        and le.lessionId = l.lessionId
-        and requestTo = ? order by le.requestedAt desc `
+        and le.lessionId = l.lessionId and le.subjectId = s.subjectId
+        and requestTo = ? and le.statusId != 5 and le.statusId != 4  order by le.requestedAt desc`
         const params = [
             `${email}`
         ]
@@ -60,8 +65,8 @@ async function getAllRequestSendToMeByEmail(email) {
 
 async function getRequestDetailById(requestId) {
     try {
-        const sql = `select id, requestFrom, requestTo, lessionId, statusId, requestedAt 
-        from tbl_lession_request where id = ?  `;
+        const sql = `select id, requestFrom, requestTo, lessionId, statusId, requestedAt, subjectId
+        from tbl_lession_request where id = ? and statusId != 4 `;
         const params = [
             `${requestId}`
         ]
@@ -129,6 +134,37 @@ async function getAllRequestByEmail(email) {
     }
 }
 
+async function getAllRequestSendFromByEmail(email) {
+    try {
+        const sql = `select le.id,
+        le.requestFrom,
+        le.requestTo,
+        le.lessionId,
+        concat('lesson named ',l.lessionName,' from subject : ',s.subjectName ) as requestContent,
+        le.statusId,
+        rs.statusName as statusName,
+        le.requestedAt,
+        l.lessionName as lessonName,
+        s.subjectName,
+        le.subjectId
+        from tbl_lession_request le,
+        tbl_request_status rs,
+        tbl_lession l,
+        tbl_subject s
+        where le.statusId = rs.id 
+        and le.lessionId = l.lessionId and le.subjectId = s.subjectId
+        and requestFrom = ? and le.statusId != 4 order by le.requestedAt desc`
+        const params = [
+            `${email}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data;
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveRequest,
     getAllRequestSendToMeByEmail,
@@ -137,5 +173,7 @@ module.exports = {
 
     updateRequestStatus,
 
-    getAllRequestByEmail
+    getAllRequestByEmail,
+
+    getAllRequestSendFromByEmail,
 }

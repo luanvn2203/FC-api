@@ -20,8 +20,8 @@ module.exports = {
                 if (lessionFound[0].accountId !== requestedAccount) {
                     const isExistedRequest = await lessionRequestService.checkDuplicateRequest(lessionFound[0].lessionId, requestedAccount, lessionFound[0].accountId)
                     if (!isExistedRequest.length > 0) {
-                        const result = await lessionRequestService.saveRequest(requestedAccount, lessionFound[0].accountId, lessionId, waittingStatus)
-                        if (result !== -1) {
+                        const result = await lessionRequestService.saveRequest(requestedAccount, lessionFound[0].accountId, lessionId, waittingStatus, lessionFound[0].subjectId)
+                        if (result === true) {
                             res.status(200).json({
                                 status: "Success",
                                 message: "Send request successfully, waiting for author approvement"
@@ -165,25 +165,11 @@ module.exports = {
                 if (author === requestFound[0].requestTo) {
                     const denineStatus = 3
                     const isUpdateRequestStatus = await lessionRequestService.updateRequestStatus(requestId, denineStatus)
-                    //update
                     if (isUpdateRequestStatus === true) {
-                        // const isApprovedRequest = await lessionRelationAccountService.saveRelationBetweenAccountAndSubject(
-                        //     requestFound[0].subjectId,
-                        //     requestFound[0].requestFrom,
-                        //     author,
-                        //     requestFound[0].id
-                        // )
-                        // if (isApprovedRequest !== -1) {
                         res.status(200).json({
                             status: "Success",
                             message: "Denine request successfully"
                         })
-                        // // } else {
-                        //     res.status(202).json({
-                        //         status: "Failed",
-                        //         message: "Approved request failed"
-                        //     })
-                        // }
                     } else {
                         console.log("update failed")
                         res.status(202).json({
@@ -210,6 +196,79 @@ module.exports = {
                 message: "Not found request Id",
                 requestId: requestId
             })
+        }
+    },
+    getAllRequestSendFromMe: async function (req, res, next) {
+        try {
+            const userEmail = req.userEmail;
+            const result = await lessionRequestService.getAllRequestSendFromByEmail(userEmail)
+            if (result.length > 0) {
+                res.status(200).json({
+                    status: "Success",
+                    listRequest: result,
+                    total: result.length
+                })
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "You have no request yet",
+                    listRequest: [],
+                    total: 0
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    cancelRequest: async function (req, res, next) {
+        try {
+            const userEmail = req.userEmail;
+            const requestId = req.body.params.requestId;
+            const requestFound = await lessionRequestService.getRequestDetailById(requestId)
+            console.log(requestFound)
+            if (requestFound.length > 0) {
+                if (requestFound[0].requestFrom === userEmail) {
+                    // update status
+                    if (requestFound[0].statusId === 1) {
+                        const cancelStatus = 5
+                        const isCancelSuccess = await lessionRequestService.updateRequestStatus(requestId, cancelStatus)
+                        if (isCancelSuccess === true) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Cancel request successfully"
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Cancel failed"
+                            })
+                        }
+                    } else if (requestFound[0].statusId === 5) {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Request have been cancel before"
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Request is not waiting, cannot cancel"
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Not your request"
+                    })
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Not found request ID"
+                })
+            }
+
+        } catch (error) {
+            console.log(error)
         }
     }
 
