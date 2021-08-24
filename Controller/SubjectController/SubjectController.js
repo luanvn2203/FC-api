@@ -190,7 +190,7 @@ module.exports = {
 								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
 								console.log(PointToMinus)
 								listSubjectFound[count].point_require = PointToMinus
-							} else if (statusId === 2) {
+							} else if (listSubjectFound[count].statusId === 2) {
 								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
 								console.log(totalLessonInSubject[0].total)
 								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
@@ -198,10 +198,6 @@ module.exports = {
 								listSubjectFound[count].point_require = PointToMinus
 
 							}
-
-
-
-
 						}
 						const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
 						if (listPrivateRequestSubject.length > 0) {
@@ -397,6 +393,29 @@ module.exports = {
 			const searchValue = req.body.params.searchValue
 			const result = await subjectService.findSubjectByNameAndDes(searchValue)
 			if (result.length > 0) {
+				for (let count = 0; count < result.length; count++) {
+					console.log(result[count])
+					console.log(result[count].accountId, userEmail)
+					if (result[count].accountId === userEmail) {
+						result[count].joinStatus = 'Joined'
+					}
+					if (result[count].statusId === 1) {
+						const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
+						console.log(totalLessonInSubject[0].total)
+						let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+						console.log(PointToMinus)
+						result[count].point_require = PointToMinus
+					} else if (result[count].statusId === 2) {
+						const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
+						console.log(totalLessonInSubject[0].total)
+						let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+						console.log(PointToMinus)
+						result[count].point_require = PointToMinus
+
+					}
+				}
+
+
 
 				const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
 				if (listPrivateRequestSubject.length > 0) {
