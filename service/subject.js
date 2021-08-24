@@ -101,6 +101,7 @@ async function getTop5SubjectByTopicId(paramsId, status) {
         s.subjectId,
         s.subjectName, 
         a.fullName as author,
+        s.accountId,
          s.topicId, 
          s.subjectDescription,
          s.statusId,

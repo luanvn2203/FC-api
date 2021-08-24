@@ -177,6 +177,13 @@ module.exports = {
 				for (let i = 0; i < listTopicFound.length; i++) {
 					const listSubjectFound = await subjectService.getTop5SubjectByTopicId(listTopicFound[i].topicId, publicStatus);
 					if (listSubjectFound.length > 0) {
+						for (let count = 0; count < listSubjectFound.length; count++) {
+							console.log(listSubjectFound[count])
+							console.log(listSubjectFound[count].accountId, userEmail)
+							if (listSubjectFound[count].accountId === userEmail) {
+								listSubjectFound[count].joinStatus = 'Author'
+							}
+						}
 						const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
 						if (listPrivateRequestSubject.length > 0) {
 							for (let index = 0; index < listSubjectFound.length; index++) {
@@ -184,7 +191,7 @@ module.exports = {
 									if (listSubjectFound[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
 										// listSubjectFound[index].joinStatus = listPrivateRequestSubject[index2].statusId
 										if (listPrivateRequestSubject[index2].statusId === 1) {
-											listSubjectFound[index].joinStatus = "Waiting author approve"
+											listSubjectFound[index].joinStatus = "Waiting Author Approve"
 										} else if (listPrivateRequestSubject[index2].statusId === 2) {
 											listSubjectFound[index].joinStatus = "Author Approved Access"
 										} else {
@@ -195,6 +202,7 @@ module.exports = {
 										listSubjectFound[index].joinStatus = 'Not join'
 									}
 								}
+
 							}
 						}
 						const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
@@ -205,14 +213,18 @@ module.exports = {
 								}
 							}
 						}
+						console.log(listPublicSubjectEmailJoined)
+						console.log(listPrivateRequestSubject)
 					}
+
 					let topicAndSubjectInside = {
 						topicDetail: listTopicFound[i],
 						listSubjects: listSubjectFound,
 					};
 					resData.push(topicAndSubjectInside);
-				}
 
+
+				}
 				if (resData.length > 0) {
 					res.status(200).json({
 						status: responseStatus.SUCCESS,
