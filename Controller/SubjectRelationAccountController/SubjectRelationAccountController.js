@@ -15,9 +15,9 @@ module.exports = {
             const accountFound = await accountService.findAccountByEmail(userEmail) //Kiểm tra account có tồn tại
             const subjectFound = await subjectService.getSubjectById(subjectId)
             if (subjectFound.length > 0) {
-                const totalPublicLessonInSubject = await lessionService.countTotalLessionInASubject(subjectId)
-                console.log(totalPublicLessonInSubject[0].total)
-                let PointToMinus = totalPublicLessonInSubject[0].total * Point.point_define.private_lesson
+                const totalLessonInSubject = await lessionService.countTotalLessionInASubject(subjectId)
+                console.log(totalLessonInSubject[0].total)
+                let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
                 console.log(PointToMinus)
 
                 if (accountFound.length > 0) {

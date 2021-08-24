@@ -236,7 +236,21 @@ async function increaseViewByClickByLessionId(lessionId) {
 
 async function countTotalLessionInASubject(subjectId) {
     try {
-        const sql = `select count(lessionId) as total from tbl_lession where subjectId  = ?`
+        const sql = `select count(lessionId) as total from tbl_lession where subjectId  = ? and statusId != 3`
+        const params = [
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function countTotalPublicLessionInASubject(subjectId) {
+    try {
+        const sql = `select count(lessionId) as total from tbl_lession where subjectId  = ? and statusId = 1`
         const params = [
             `${subjectId}`
         ]
@@ -261,5 +275,6 @@ module.exports = {
     getLessionBySubjectIdByPublicStatus,
     increaseViewByClickByLessionId,
     // findByFullTextFlashcard,
-    countTotalLessionInASubject
+    countTotalLessionInASubject,
+    countTotalPublicLessionInASubject
 }

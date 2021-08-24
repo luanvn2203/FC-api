@@ -7,7 +7,7 @@ const accountService = require('../../service/account')
 const subjectRelationAccountService = require('../../service/subjectRelationAccount')
 const subjectPublicRelationShipService = require('../../service/subjectPublicRelationship');
 const subjectRequestService = require('../../service/subjectRequestService')
-
+const lessionService = require('../../service/lession')
 const { savePointHistory } = require("../../service/pointHistory");
 
 module.exports = {
@@ -181,8 +181,27 @@ module.exports = {
 							console.log(listSubjectFound[count])
 							console.log(listSubjectFound[count].accountId, userEmail)
 							if (listSubjectFound[count].accountId === userEmail) {
-								listSubjectFound[count].joinStatus = 'Author'
+								listSubjectFound[count].joinStatus = 'Joined'
 							}
+
+							if (listSubjectFound[count].statusId === 1) {
+								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
+								console.log(totalLessonInSubject[0].total)
+								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+								console.log(PointToMinus)
+								listSubjectFound[count].point_require = PointToMinus
+							} else if (statusId === 2) {
+								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
+								console.log(totalLessonInSubject[0].total)
+								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+								console.log(PointToMinus)
+								listSubjectFound[count].point_require = PointToMinus
+
+							}
+
+
+
+
 						}
 						const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
 						if (listPrivateRequestSubject.length > 0) {
