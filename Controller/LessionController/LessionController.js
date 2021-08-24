@@ -127,7 +127,7 @@ module.exports = {
 										}
 									} else {
 										if (result[index].statusId === 1) {
-											result[index].joinStatus = "Approve access"
+											result[index].joinStatus = "Joined"
 										} else {
 											result[index].joinStatus = "Not join"
 										}
