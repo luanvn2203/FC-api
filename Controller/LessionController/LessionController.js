@@ -105,6 +105,9 @@ module.exports = {
 				const result = await lessionService.getLessionBySubjectId(subjectId);
 				if (result.length > 0) {
 					if (subjectFound[0].accountId === userEmail) {
+						for (let count = 0; count < result.length; count++) {
+							result[count].joinStatus = "Joined"
+						}
 						res.status(200).json({
 							status: "Success",
 							message: "Get lession successfully",
@@ -113,7 +116,6 @@ module.exports = {
 						});
 					} else {
 						const listRequestFromMe = await lessionRequestService.getAllRequestByEmail(userEmail)
-						console.log(listRequestFromMe)
 						if (listRequestFromMe.length > 0) {
 							for (let index = 0; index < result.length; index++) {
 								for (let index2 = 0; index2 < listRequestFromMe.length; index2++) {
