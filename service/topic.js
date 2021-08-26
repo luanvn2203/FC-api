@@ -164,11 +164,10 @@ async function updateTopicStatus(topicId, status, userEmail) {
 
 async function updateTopic(topic) {
     try {
-        const sql = `update tbl_topic set topicName = ?, topicDescription = ?, statusId = ? where topicId =?`;
+        const sql = `update tbl_topic set topicName = ?, topicDescription = ? where topicId =?`;
         const params = [
             `${topic.topicName}`,
             `${topic.topicDescription}`,
-            `${topic.statusId}`,
             `${topic.topicId}`
         ]
         const result = await db.query(sql, params);

@@ -682,6 +682,34 @@ module.exports = {
 			resData = privateSubjectRecentLearning.concat(publicSubjectRecentLearning)
 			resData.sort((a, b) => (new Date(b.joinDate)) - (new Date(a.joinDate)));
 
+			for (let index = 0; index < resData.length; index++) {
+				const totalLesson = await lessionService.countTotalLessionInASubject(resData[index].subjectId)
+				if (totalLesson.length > 0) {
+					resData[index].totalLesson = totalLesson[0].total
+				}
+
+				const listLessonFound = lessionService.getLessionBySubjectId(resData[index].subjectId)
+				if (listLessonFound.length > 0) {
+					for (let index2 = 0; index2 < listLessonFound.length; index2++) {
+						// const totalFlashcardInside
+					}
+				} else {
+					// no lesson inside
+				}
+
+			}
+
+
+			// get so lesson trong subject
+			// count lesson
+			// get lesson completion
+			// get flashcard completetion trong lesson
+			// => phan tram hoc xong
+			// => return
+
+
+
+
 			if (resData.length > 0) {
 				res.status(200).json({
 					status: "Success",

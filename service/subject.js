@@ -396,6 +396,20 @@ async function getSubjectUserLearning(accountId) {
     }
 }
 
+async function countLessonInsideSubjectById(subjectId) {
+    try {
+        const sql = `select count(lessionId) as total from tbl_lession where subjectId = ?`;
+        const params = [
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result);
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     createNewSubject,
@@ -418,7 +432,8 @@ module.exports = {
     findSubjectByNameAndDes,
     findSubjectByLessionNameAndDes,
     findSubjectByftFlashcardName,
-    findSubjectByftQuestionContent
+    findSubjectByftQuestionContent,
+    countLessonInsideSubjectById,
 
 
 }
