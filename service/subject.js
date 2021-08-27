@@ -410,6 +410,21 @@ async function countLessonInsideSubjectById(subjectId) {
     }
 }
 
+async function getTotalFlashcardInSubject(subjectId) {
+    try {
+        const sql = `select count(flashcardId) as totalFLashcard from tbl_flashcards where lessionId in 
+        (select lessionId from tbl_lession where subjectId = ? and statusId != 3) and statusId != 3`
+        const params = [
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     createNewSubject,
@@ -435,5 +450,6 @@ module.exports = {
     findSubjectByftQuestionContent,
     countLessonInsideSubjectById,
 
+    getTotalFlashcardInSubject
 
 }

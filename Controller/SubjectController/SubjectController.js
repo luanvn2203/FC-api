@@ -9,7 +9,7 @@ const subjectPublicRelationShipService = require('../../service/subjectPublicRel
 const subjectRequestService = require('../../service/subjectRequestService')
 const lessionService = require('../../service/lession')
 const { savePointHistory } = require("../../service/pointHistory");
-
+const learningFlashcardService = require('../../service/learningFlashcard')
 module.exports = {
 	createNewSubject: async function (req, res, next) {
 		const subject = req.body;
@@ -683,19 +683,36 @@ module.exports = {
 			resData.sort((a, b) => (new Date(b.joinDate)) - (new Date(a.joinDate)));
 
 			for (let index = 0; index < resData.length; index++) {
-				const totalLesson = await lessionService.countTotalLessionInASubject(resData[index].subjectId)
-				if (totalLesson.length > 0) {
-					resData[index].totalLesson = totalLesson[0].total
+
+
+				// const totalLesson = await lessionService.countTotalLessionInASubject(resData[index].subjectId)
+				// if (totalLesson.length > 0) {
+				// 	resData[index].totalLesson = totalLesson[0].total
+				// }
+
+
+				const totalFlashcardInside = await subjectService.getTotalFlashcardInSubject(resData[index].subjectId)
+				if (totalFlashcardInside.length > 0) {
+					resData[index].totalFLashcard = totalFlashcardInside[0].totalFLashcard
 				}
 
-				const listLessonFound = lessionService.getLessionBySubjectId(resData[index].subjectId)
-				if (listLessonFound.length > 0) {
-					for (let index2 = 0; index2 < listLessonFound.length; index2++) {
-						// const totalFlashcardInside
-					}
-				} else {
-					// no lesson inside
+				const completeFlashcard = await learningFlashcardService.countCompleteFlashcardBySubjectId(userEmail, resData[index].subjectId)
+				if (completeFlashcard.length > 0) {
+					resData[index].completeFlashcard = completeFlashcard[0].completeFlashcard
 				}
+
+				const percentComplete = (completeFlashcard[0].completeFlashcard / totalFlashcardInside[0].totalFLashcard) * 100
+				resData[index].completePercent = percentComplete || 0
+
+
+				// const listLessonFound = lessionService.getLessionBySubjectId(resData[index].subjectId)
+				// if (listLessonFound.length > 0) {
+				// 	for (let index2 = 0; index2 < listLessonFound.length; index2++) {
+				// 		// const totalFlashcardInside
+				// 	}
+				// } else {
+				// 	// no lesson inside
+				// }
 
 			}
 

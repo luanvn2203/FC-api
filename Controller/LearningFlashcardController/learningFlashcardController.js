@@ -16,13 +16,13 @@ module.exports = {
             if (relationFound.length === 0) {
                 const flashcardFound = await flashcardService.getFlashcardByFlashcardId(flashcardId)
                 if (flashcardFound.length > 0) {
-                    const isSave = await learningFlashcardService.saveLearningFLashcardByEmailAndFlashcardId(userEmail, flashcardId, flashcardFound[0].lessionId)
+                    const lessionFound = await lessionService.getLessionByLessionId(flashcardFound[0].lessionId)
+                    const isSave = await learningFlashcardService.saveLearningFLashcardByEmailAndFlashcardId(userEmail, flashcardId, flashcardFound[0].lessionId, lessionFound[0].subjectId)
                     if (isSave === true) {
-                        const listLessionFound = await flashcardService.getFlashcardByLessionId(flashcardFound[0].lessionId)
+                        const listFlashcardFound = await flashcardService.getFlashcardByLessionId(flashcardFound[0].lessionId)
                         const listFlashcardLearning = await learningFlashcardService.getAllRelationByLessionId(userEmail, flashcardFound[0].lessionId)
-                        if (listLessionFound.length === listFlashcardLearning.length) {
-                            const lessionFound = await lessionService.getLessionByLessionId(flashcardFound[0].lessionId)
-
+                        console.log(listFlashcardFound)
+                        if (listFlashcardFound.length === listFlashcardLearning.length) {
                             await lessionPublicRelationshipService.saveRelationShip(userEmail, flashcardFound[0].lessionId, lessionFound[0].subjectId)
                         }
                         res.status(202).json({

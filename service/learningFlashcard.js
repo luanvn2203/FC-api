@@ -2,7 +2,7 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function saveLearningFLashcardByEmailAndFlashcardId(email, flashcardId, lessionId) {
+async function saveLearningFLashcardByEmailAndFlashcardId(email, flashcardId, lessionId, subjectId) {
     try {
         console.log(email, flashcardId)
         let current = new Date();
@@ -10,13 +10,14 @@ async function saveLearningFLashcardByEmailAndFlashcardId(email, flashcardId, le
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
 
-        const sql = `INSERT INTO tbl_learning_flashcard(accountId, flashcardId, learningDate, lessionId) 
-        values(?,?,?,?)`
+        const sql = `INSERT INTO tbl_learning_flashcard(accountId, flashcardId, learningDate, lessionId,subjectId) 
+        values(?,?,?,?,?)`
         const params = [
             `${email}`,
             `${flashcardId}`,
             `${dateTime}`,
-            `${lessionId}`
+            `${lessionId}`,
+            `${subjectId}`
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {
@@ -62,9 +63,29 @@ async function getAllRelationByLessionId(accountId, lessionId) {
     }
 }
 
+async function countCompleteFlashcardBySubjectId(accountId, subjectId) {
+    try {
+        const sql = ` select count(flashcardId) as completeFlashcard from tbl_learning_flashcard 
+        where accountId = ?
+        and subjectId = ? `
+
+        const params = [
+            `${accountId}`,
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result);
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveLearningFLashcardByEmailAndFlashcardId,
     getRecentLearningByEmailAndFlashcardID,
 
-    getAllRelationByLessionId
+    getAllRelationByLessionId,
+
+    countCompleteFlashcardBySubjectId
 }
