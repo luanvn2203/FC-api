@@ -18,7 +18,7 @@ module.exports = {
 					status: "Failed",
 					listLession: [],
 					total: result.length,
-					message: "No lession found in database",
+					message: "No lesson found in database",
 				});
 			}
 		} catch (error) {
@@ -33,7 +33,7 @@ module.exports = {
 			if (result.length > 0) {
 				res.status(200).json({
 					status: "Success",
-					message: "Get lession successfully",
+					message: "Get lesson successfully",
 					lession: result,
 					total: result.length,
 				});
@@ -57,7 +57,7 @@ module.exports = {
 			if (result.length > 0) {
 				res.status(200).json({
 					status: "Success",
-					message: "Get lession successfully",
+					message: "Get lesson successfully",
 					lession: result,
 					total: result.length,
 				});
@@ -110,7 +110,7 @@ module.exports = {
 						}
 						res.status(200).json({
 							status: "Success",
-							message: "Get lession successfully",
+							message: "Get lesson successfully",
 							lession: result,
 							total: result.length,
 						});
@@ -144,7 +144,7 @@ module.exports = {
 						}
 						res.status(200).json({
 							status: "Success",
-							message: "Get lession successfully",
+							message: "Get lesson successfully",
 							lession: result,
 							total: result.length,
 						});
@@ -204,18 +204,18 @@ module.exports = {
 				if (result === true) {
 					res.status(200).json({
 						status: "Success",
-						message: "Create lession successfully",
+						message: "Create lesson successfully",
 					});
 				} else {
 					res.status(201).json({
 						status: "Failed",
-						message: "Create lession failed",
+						message: "Create lesson failed",
 					});
 				}
 			} else {
 				res.status(200).json({
 					status: "Failed",
-					message: "Lession is Existed in you subject",
+					message: "Lesson is Existed in you subject",
 				});
 			}
 		} catch (error) {
@@ -230,12 +230,12 @@ module.exports = {
 			if (result === true) {
 				return res.status(200).json({
 					status: "Success",
-					message: "Update lession successfully",
+					message: "Update lesson successfully",
 				});
 			} else {
 				return res.status(205).json({
 					status: "Failed",
-					message: "Update lession failed",
+					message: "Update lesson failed",
 				});
 			}
 		} catch (error) {
@@ -255,13 +255,13 @@ module.exports = {
 			if (deleteResult === true) {
 				res.status(200).json({
 					status: "Success",
-					message: "Delete lession successfully",
+					message: "Delete lesson successfully",
 				});
 			} else {
 				res.status(202).json({
 					status: "Failed",
 					message:
-						"Delete failed, you dont have permission to delete this lession",
+						"Delete failed, you dont have permission to delete this lesson",
 				});
 			}
 		} catch (error) {

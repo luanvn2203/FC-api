@@ -600,13 +600,17 @@ module.exports = {
 			} else {
 				console.log(Point.point_minus.public_relation_point_subject)
 
-				if (signInAccount.point > Point.point_minus.public_relation_point_subject) {
+				const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(subjectId)
+				let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+
+				if (signInAccount.point > PointToMinus) {
+					const subjectFound = subjectService.getSubjectById(subjectId)
 					//tru diem truoc
-					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, Point.point_minus.public_relation_point_subject)
+					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, PointToMinus)
 					if (isMinusPoint === true) {
 						const useType = 6
-						const description = `${signInAccount.email} use ${Point.point_minus.public_relation_point_subject} point to access the subjectId: ${subjectId}`
-						await savePointHistory(signInAccount.email, Point.point_minus.public_relation_point_subject, useType, description)
+						const description = `${signInAccount.email} use ${PointToMinus} point to access the subjectId: ${subjectFound[0].subjectName}`
+						await savePointHistory(signInAccount.email, PointToMinus, useType, description)
 						const result = await subjectPublicRelationshipService.savePublicRelationship(signInAccount.email, subjectId, learingInProgressStatus)
 						if (result === true) {
 							res.status(200).json({
@@ -645,6 +649,7 @@ module.exports = {
 			const userEmail = req.userEmail
 			const subjectId = req.body.params.subjectId
 			const subjectFound = await subjectService.getSubjectById(subjectId)
+
 			if (subjectFound.length > 0) {
 				if (subjectFound[0].accountId !== userEmail) {
 					const isExistedRelation = await subjectPublicRelationshipService.getRelationByAccountIdAndSubjectId(userEmail, subjectId)
@@ -655,9 +660,11 @@ module.exports = {
 							message: "Relation existed, approved access"
 						})
 					} else {
+						const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(subjectId)
+						let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
 						res.status(202).json({
 							status: "Failed",
-							message: "Do you wan to use 3 point to view this content"
+							message: "Do you wan to use " + PointToMinus + " point to view this content"
 						})
 					}
 				} else {
