@@ -184,7 +184,7 @@ module.exports = {
 								listSubjectFound[count].joinStatus = 'Join'
 							}
 							if (listSubjectFound[count].statusId === 1) {
-								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
+								const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(listSubjectFound[count].subjectId)
 								console.log(totalLessonInSubject[0].total)
 								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
 								console.log(PointToMinus)
