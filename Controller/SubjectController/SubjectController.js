@@ -181,55 +181,57 @@ module.exports = {
 							console.log(listSubjectFound[count])
 							console.log(listSubjectFound[count].accountId, userEmail)
 							if (listSubjectFound[count].accountId === userEmail) {
-								listSubjectFound[count].joinStatus = 'Joined'
+								listSubjectFound[count].joinStatus = 'Join'
 							}
 
-							if (listSubjectFound[count].statusId === 1) {
-								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
-								console.log(totalLessonInSubject[0].total)
-								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
-								console.log(PointToMinus)
-								listSubjectFound[count].point_require = PointToMinus
-							} else if (listSubjectFound[count].statusId === 2) {
-								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
-								console.log(totalLessonInSubject[0].total)
-								let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
-								console.log(PointToMinus)
-								listSubjectFound[count].point_require = PointToMinus
+							// if (listSubjectFound[count].statusId === 1) {
+							const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
+							console.log(totalLessonInSubject[0].total)
+							let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+							console.log(PointToMinus)
+							listSubjectFound[count].point_require = PointToMinus
+							// } else if (listSubjectFound[count].statusId === 2) {
+							// 	const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
+							// 	console.log(totalLessonInSubject[0].total)
+							// 	let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+							// 	console.log(PointToMinus)
+							// 	listSubjectFound[count].point_require = PointToMinus
 
-							}
+							// }
 						}
-						const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
-						if (listPrivateRequestSubject.length > 0) {
-							for (let index = 0; index < listSubjectFound.length; index++) {
-								for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
-									if (listSubjectFound[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
-										// listSubjectFound[index].joinStatus = listPrivateRequestSubject[index2].statusId
-										if (listPrivateRequestSubject[index2].statusId === 1) {
-											listSubjectFound[index].joinStatus = "Waiting Author Approve"
-										} else if (listPrivateRequestSubject[index2].statusId === 2) {
-											listSubjectFound[index].joinStatus = "Author Approved Access"
-										} else {
-											listSubjectFound[index].joinStatus = "Author Denine Access"
-										}
+						// const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
+						// if (listPrivateRequestSubject.length > 0) {
+						// 	for (let index = 0; index < listSubjectFound.length; index++) {
+						// 		for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
+						// 			if (listSubjectFound[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
+						// 				// listSubjectFound[index].joinStatus = listPrivateRequestSubject[index2].statusId
+						// 				if (listPrivateRequestSubject[index2].statusId === 1) {
+						// 					listSubjectFound[index].joinStatus = "Waiting Author Approve"
+						// 				} else if (listPrivateRequestSubject[index2].statusId === 2) {
+						// 					listSubjectFound[index].joinStatus = "Author Approved Access"
+						// 				} else {
+						// 					listSubjectFound[index].joinStatus = "Author Denine Access"
+						// 				}
 
-									} else {
-										listSubjectFound[index].joinStatus = 'Not join'
-									}
-								}
+						// 			} else {
+						// 				listSubjectFound[index].joinStatus = 'Not join'
+						// 			}
+						// 		}
 
-							}
-						}
+						// 	}
+						// }
 						const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
 						for (let index3 = 0; index3 < listSubjectFound.length; index3++) {
 							for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
 								if (listSubjectFound[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
-									listSubjectFound[index3].joinStatus = "Joined"
+									listSubjectFound[index3].joinStatus = "Join"
+								} else {
+									listSubjectFound[index3].joinStatus = "Not join"
 								}
 							}
 						}
 						console.log(listPublicSubjectEmailJoined)
-						console.log(listPrivateRequestSubject)
+						// console.log(listPrivateRequestSubject)
 					}
 
 					let topicAndSubjectInside = {

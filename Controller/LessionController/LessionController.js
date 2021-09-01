@@ -130,21 +130,21 @@ module.exports = {
 										}
 									} else {
 										if (result[index].statusId === 1) {
-											result[index].joinStatus = "Joined"
+											result[index].joinStatus = "Join"
 										} else {
 											result[index].joinStatus = "Not join"
 										}
 
 									}
 								}
-							}
+							} z
 						} else {
 							for (let index3 = 0; index3 < result.length; index3++) {
 								if (result[index3].statusId === 2) {
 									result[index3].joinStatus = "Not join"
 
 								} else {
-									result[index3].joinStatus = "Approve access"
+									result[index3].joinStatus = "Join"
 								}
 							}
 						}
