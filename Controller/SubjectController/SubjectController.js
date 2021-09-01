@@ -594,7 +594,7 @@ module.exports = {
 			} else {
 
 				const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(subjectId)
-				let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+				let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
 
 				if (signInAccount.point > PointToMinus) {
 					const subjectFound = await subjectService.getSubjectById(subjectId)
