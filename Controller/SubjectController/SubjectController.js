@@ -183,7 +183,6 @@ module.exports = {
 							if (listSubjectFound[count].accountId === userEmail) {
 								listSubjectFound[count].joinStatus = 'Join'
 							}
-
 							if (listSubjectFound[count].statusId === 1) {
 								const totalLessonInSubject = await lessionService.countTotalLessionInASubject(listSubjectFound[count].subjectId)
 								console.log(totalLessonInSubject[0].total)
@@ -228,9 +227,7 @@ module.exports = {
 								}
 							}
 						}
-
 					}
-
 					let topicAndSubjectInside = {
 						topicDetail: listTopicFound[i],
 						listSubjects: listSubjectFound,
@@ -595,13 +592,13 @@ module.exports = {
 					message: "Save relation failed by existed relationship"
 				})
 			} else {
-				console.log(Point.point_minus.public_relation_point_subject)
 
 				const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(subjectId)
 				let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
 
 				if (signInAccount.point > PointToMinus) {
-					const subjectFound = subjectService.getSubjectById(subjectId)
+					const subjectFound = await subjectService.getSubjectById(subjectId)
+					console.log(subjectFound)
 					//tru diem truoc
 					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, PointToMinus)
 					if (isMinusPoint === true) {
