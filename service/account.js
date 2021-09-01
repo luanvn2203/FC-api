@@ -123,7 +123,8 @@ async function findAccountByRefreshToken(token) {
 //Register account
 async function registerAccount(accountToRegister, protocol, host) {
 
-  const sql = ` INSERT INTO 
+  if (accountToRegister.params.roleId === 1) {
+    const sql = ` INSERT INTO 
   tbl_account(email,
     password,
     fullName,
@@ -137,48 +138,48 @@ async function registerAccount(accountToRegister, protocol, host) {
     verifyToken, 
     interestTopic) values(?,?,?,?,?,?,?,?,?,?,?,?)`;
 
-  //get current datetime
-  let current = new Date();
-  let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
-  let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
-  let dateTime = cDate + ' ' + cTime;
+    //get current datetime
+    let current = new Date();
+    let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+    let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+    let dateTime = cDate + ' ' + cTime;
 
 
-  //encrypt password
-  const saltRounds = 7;
-  const salt = bcrypt.genSaltSync(saltRounds);  // encrypt password
-  const encryptPassword = bcrypt.hashSync(accountToRegister.params.password, salt);
+    //encrypt password
+    const saltRounds = 7;
+    const salt = bcrypt.genSaltSync(saltRounds);  // encrypt password
+    const encryptPassword = bcrypt.hashSync(accountToRegister.params.password, salt);
 
-  //generate token
-  const verifyToken = uuidv4();
+    //generate token
+    const verifyToken = uuidv4();
 
-  //genegrate topic
-  const topicsId = accountToRegister.params.interestTopic
-  //generate values for insert
-  const params = [
-    `${accountToRegister.params.email}`,
-    `${encryptPassword}`,
-    `${accountToRegister.params.fullName}`,
-    `${accountToRegister.params.roleId}`,
-    `${1}`,
-    `${accountToRegister.params.phone}`,
-    `${accountToRegister.params.address}`,
-    `${accountToRegister.params.DOB}`,
-    `${dateTime}`,
-    `${accountToRegister.params.gender}`,
-    `${verifyToken}`,
-    `${JSON.stringify(topicsId)}`
-  ]
+    //genegrate topic
+    const topicsId = accountToRegister.params.interestTopic
+    //generate values for insert
+    const params = [
+      `${accountToRegister.params.email}`,
+      `${encryptPassword}`,
+      `${accountToRegister.params.fullName}`,
+      `${accountToRegister.params.roleId}`,
+      `${1}`,
+      `${accountToRegister.params.phone}`,
+      `${accountToRegister.params.address}`,
+      `${accountToRegister.params.DOB}`,
+      `${dateTime}`,
+      `${accountToRegister.params.gender}`,
+      `${verifyToken}`,
+      `${JSON.stringify(topicsId)}`
+    ]
 
-  //query
-  const result = await db.query(sql, params)
+    //query
+    const result = await db.query(sql, params)
 
-  if (result.affectedRows) {
+    if (result.affectedRows) {
 
-    //generate linkVerify
-    let linkVerify = `${protocol}://${host}/account/verify/${verifyToken}`;
-    let subject = "You has create an account on FC website, please verify";
-    let body = `
+      //generate linkVerify
+      let linkVerify = `${protocol}://${host}/account/verify/${verifyToken}`;
+      let subject = "You has create an account on FC website, please verify";
+      let body = `
     <h2>Bạn nhận được email này vì đã đăng ký tài khoản trên ứng dụng FC.</h2>
     <h3>Vui long click vào liên kết bên dưới để xác nhận kích hoạt tài khoản: </h3>
     <h3>
@@ -187,13 +188,87 @@ async function registerAccount(accountToRegister, protocol, host) {
     <h4>Vui lòng không reply. Trân trọng !</h4>
     `
 
-    //sendEmail
-    mailer.sendMail(accountToRegister.params.email, subject, body).catch(error => {
-      console.log(error.message)
-    })
-    return accountMessage.register_success;
+      //sendEmail
+      mailer.sendMail(accountToRegister.params.email, subject, body).catch(error => {
+        console.log(error.message)
+      })
+      return accountMessage.register_success;
+    } else {
+      return accountMessage.register_error;
+    }
+  } else if (accountToRegister.params.roleId === 3) {
+    const sql = ` INSERT INTO 
+    tbl_account(email,
+      password,
+      fullName,
+      roleId,
+      statusId,
+      phone,
+      address,
+      DOB,
+      createdDate,
+      gender,
+      verifyToken) values(?,?,?,?,?,?,?,?,?,?,?)`;
+
+    //get current datetime
+    let current = new Date();
+    let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
+    let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
+    let dateTime = cDate + ' ' + cTime;
+
+
+    //encrypt password
+    const saltRounds = 7;
+    const salt = bcrypt.genSaltSync(saltRounds);  // encrypt password
+    const encryptPassword = bcrypt.hashSync(accountToRegister.params.password, salt);
+
+    //generate token
+    const verifyToken = uuidv4();
+
+    //genegrate topic
+    const topicsId = accountToRegister.params.interestTopic
+    //generate values for insert
+    const params = [
+      `${accountToRegister.params.email}`,
+      `${encryptPassword}`,
+      `${accountToRegister.params.fullName}`,
+      `${accountToRegister.params.roleId}`,
+      `${1}`,
+      `${accountToRegister.params.phone}`,
+      `${accountToRegister.params.address}`,
+      `${accountToRegister.params.DOB}`,
+      `${dateTime}`,
+      `${accountToRegister.params.gender}`,
+      `${verifyToken}`
+    ]
+
+    //query
+    const result = await db.query(sql, params)
+
+    if (result.affectedRows) {
+
+      //generate linkVerify
+      let linkVerify = `${protocol}://${host}/account/verify/${verifyToken}`;
+      let subject = "You has create an account on FC website, please verify";
+      let body = `
+      <h2>Bạn nhận được email này vì đã đăng ký tài khoản trên ứng dụng FC.</h2>
+      <h3>Vui long click vào liên kết bên dưới để xác nhận kích hoạt tài khoản: </h3>
+      <h3>
+      Nhấn vào đây: <a href="${linkVerify}" target="_blank" >Click here</a>
+      </h3>
+      <h4>Vui lòng không reply. Trân trọng !</h4>
+      `
+
+      //sendEmail
+      mailer.sendMail(accountToRegister.params.email, subject, body).catch(error => {
+        console.log(error.message)
+      })
+      return accountMessage.register_success;
+    } else {
+      return accountMessage.register_error;
+    }
   } else {
-    return accountMessage.register_error;
+    //error reg
   }
 }
 

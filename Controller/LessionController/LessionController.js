@@ -116,6 +116,7 @@ module.exports = {
 						});
 					} else {
 						const listRequestFromMe = await lessionRequestService.getAllRequestByEmail(userEmail)
+						console.log(listRequestFromMe)
 						if (listRequestFromMe.length > 0) {
 							for (let index = 0; index < result.length; index++) {
 								for (let index2 = 0; index2 < listRequestFromMe.length; index2++) {
@@ -139,7 +140,12 @@ module.exports = {
 							}
 						} else {
 							for (let index3 = 0; index3 < result.length; index3++) {
-								result[index3].joinStatus = "Approve access"
+								if (result[index3].statusId === 2) {
+									result[index3].joinStatus = "Not join"
+
+								} else {
+									result[index3].joinStatus = "Approve access"
+								}
 							}
 						}
 						res.status(200).json({

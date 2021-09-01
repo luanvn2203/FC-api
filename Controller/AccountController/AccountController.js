@@ -164,21 +164,24 @@ module.exports = {
 	},
 	postRegister: async function (req, res, next) {
 		try {
-			const result = await accountService.registerAccount(
-				req.body,
-				req.protocol,
-				req.get("host")
-			);
-			if (result) {
-				res.status(200).json({
-					status: "Success",
-					message: result,
-				});
-			} else {
-				res.status(205).json({
-					status: "Failed",
-					message: "Register error",
-				});
+			const roleId = req.body.params.roleId
+			if (roleId === 1) {
+				const result = await accountService.registerAccount(
+					req.body,
+					req.protocol,
+					req.get("host")
+				);
+				if (result) {
+					res.status(200).json({
+						status: "Success",
+						message: result,
+					});
+				} else {
+					res.status(205).json({
+						status: "Failed",
+						message: "Register error",
+					});
+				}
 			}
 		} catch (error) {
 			if (error.message.includes("Duplicate entry")) {
