@@ -137,7 +137,7 @@ module.exports = {
 
 									}
 								}
-							} z
+							}
 						} else {
 							for (let index3 = 0; index3 < result.length; index3++) {
 								if (result[index3].statusId === 2) {
