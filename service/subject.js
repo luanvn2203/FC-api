@@ -425,6 +425,22 @@ async function getTotalFlashcardInSubject(subjectId) {
     }
 }
 
+async function getTotalJoinSubjectByAuthorId(authorId) {
+    try {
+        const sql = ` select  ((select count(id) from tbl_subject_relation_account where subjectAuthor = ?
+    )+(select count(spr.id) from tbl_subject_public_relationship spr, tbl_subject s 
+     where spr.subjectId = s.subjectId and s.accountId = ?)) as total  `;
+        const params = [
+            `${authorId}`,
+            `${authorId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 module.exports = {
     createNewSubject,
@@ -450,6 +466,7 @@ module.exports = {
     findSubjectByftQuestionContent,
     countLessonInsideSubjectById,
 
-    getTotalFlashcardInSubject
+    getTotalFlashcardInSubject,
 
+    getTotalJoinSubjectByAuthorId
 }

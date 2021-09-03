@@ -490,6 +490,42 @@ async function addDonorPointToDonor(account, donorPoint) {
   }
 }
 
+async function addAccumulatedPoint(accountId, point) {
+  try {
+    const sql = `Update tbl_account set accumulatedPoint = (accumulatedPoint + ?) where email = ? `
+    const params = [
+      `${point}`,
+      `${accountId}`
+    ]
+    const result = await db.query(sql, params)
+    if (result.affectedRows) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
+async function minusAccumulatedPoint(accountId, point) {
+  try {
+    const sql = `Update tbl_account set accumulatedPoint = (accumulatedPoint - ?) where email = ? `
+    const params = [
+      `${point}`,
+      `${accountId}`
+    ]
+    const result = await db.query(sql, params)
+    if (result.affectedRows) {
+      return true
+    } else {
+      return false
+    }
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   getAllUser,
   checkLogin,
@@ -508,4 +544,6 @@ module.exports = {
   minusPointToAccountByEmail,
   addDonorPointToDonor,
 
+  addAccumulatedPoint,
+  minusAccumulatedPoint
 }

@@ -15,13 +15,17 @@ const point_define = {
 }
 
 const PointRate = {
-    minRate: 0.8, // 0.1 - 0.6
-    mediumRate: 0.9, //0.6- 0.8
-    maxRate: 1 // 0.8 - 1
+    initialRate: 0.5,
+    middleRate: 1,
+    maxRate: 1.5,
+    one_level_rate: 0.1
 }
+const JoinTimesToIncreaseRateLevel = 30
 
 module.exports = {
     point_minus,
     point_add,
-    point_define
+    point_define,
+    JoinTimesToIncreaseRateLevel,
+    PointRate
 }

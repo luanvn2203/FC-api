@@ -5,7 +5,7 @@ const subjectRelationAccountService = require('../../service/subjectRelationAcco
 const accountService = require('../../service/account')
 const pointHistoryService = require('../../service/pointHistory')
 const Point = require('../../pointConfig')
-
+const lessionService = require('../../service/lession')
 module.exports = {
     sendViewSubjectRequest: async function (req, res, next) {
         try {
@@ -93,6 +93,9 @@ module.exports = {
                     const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, approvedStatus)
                     //update
                     if (isUpdateRequestStatus === true) {
+
+
+
                         const isApprovedRequest = await subjectRelationAccountService.saveRelationBetweenAccountAndSubject(
                             requestFound[0].subjectId,
                             requestFound[0].requestFrom,
@@ -100,25 +103,42 @@ module.exports = {
                             requestFound[0].id
                         )
                         if (isApprovedRequest !== -1) {
-                            //cong diem
-                            const isAddPoint = await accountService.addPointToAccountByEmail(author, 1)
-                            if (isAddPoint === true) {
-                                const author_approved_subject = 3;
-                                const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
-                                const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
-                                if (isSaveHistory !== -1) {
-                                    console.log("history saved")
+                            const totalLessonInSubject = await lessionService.countTotalLessionInASubject(requestFound[0].subjectId)
+                            const totalJoin = await subjectService.getTotalJoinSubjectByAuthorId(author)
+                            famousRate = Point.PointRate.initialRate + (Point.PointRate.one_level_rate * Math.trunc(totalJoin[0].total / Point.JoinTimesToIncreaseRateLevel))
+                            if (famousRate < 1) {
+                                //50%
+                                const pointAdd = totalLessonInSubject[0].total * Point.point_define.private_lesson * 0.5
+                                console.log(pointAdd)
+                                const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd)
+                                if (isAddPoint === true) {
+                                    const accumilatedPoint = totalLessonInSubject[0].total * Point.point_define.private_lesson - pointAdd
+                                    await accountService.addAccumulatedPoint(author, accumilatedPoint)
+                                    //save accumilative point
+                                    const author_approved_subject = 3;
+                                    const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
+                                    const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
+                                    if (isSaveHistory !== -1) {
+                                        console.log("history saved")
+                                    }
+                                    res.status(200).json({
+                                        status: "Success",
+                                        message: "Approved request successfully"
+                                    })
+                                } else {
+                                    res.status(202).json({
+                                        status: "Failed",
+                                        message: "Approved request successfully but add point failed"
+                                    })
                                 }
-                                res.status(200).json({
-                                    status: "Success",
-                                    message: "Approved request successfully"
-                                })
-                            } else {
-                                res.status(202).json({
-                                    status: "Failed",
-                                    message: "Approved request successfully but add point failed"
-                                })
+                            } else if (famousRate >= 1 && famousRate < 1.5) {
+                                //100%
+                            } else if (famousRate >= 1.5) {
+                                //150%
                             }
+
+                            //cong diem
+
 
                         } else {
                             res.status(202).json({
