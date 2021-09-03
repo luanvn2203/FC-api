@@ -133,8 +133,80 @@ module.exports = {
                                 }
                             } else if (famousRate >= 1 && famousRate < 1.5) {
                                 //100%
+                                const pointAdd = totalLessonInSubject[0].total * Point.point_define.private_lesson * 1
+                                console.log(pointAdd)
+                                const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd)
+                                if (isAddPoint === true) {
+                                    // const accumilatedPoint = totalLessonInSubject[0].total * Point.point_define.private_lesson - pointAdd
+                                    // await accountService.addAccumulatedPoint(author, accumilatedPoint)
+                                    //save accumilative point
+                                    const author_approved_subject = 3;
+                                    const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
+                                    const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
+                                    if (isSaveHistory !== -1) {
+                                        console.log("history saved")
+                                    }
+                                    res.status(200).json({
+                                        status: "Success",
+                                        message: "Approved request successfully"
+                                    })
+                                } else {
+                                    res.status(202).json({
+                                        status: "Failed",
+                                        message: "Approved request successfully but add point failed"
+                                    })
+                                }
                             } else if (famousRate >= 1.5) {
                                 //150%
+                                const accumulatedPoint = await accountService.getAccumulatedPoint(author)
+                                const pointAdd = totalLessonInSubject[0].total * Point.point_define.private_lesson * 1
+                                if (pointAdd * 1.5 - pointAdd >= accumulatedPoint) {
+                                    const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd * 1.5)
+                                    if (isAddPoint === true) {
+                                        const minus_point = pointAdd * 1.5 - pointAdd
+                                        await accountService.minusPointToAccountByEmail(author, minus_point)
+                                        // save accumilative point
+                                        const author_approved_subject = 3;
+                                        const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
+                                        const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
+                                        if (isSaveHistory !== -1) {
+                                            console.log("history saved")
+                                        }
+                                        res.status(200).json({
+                                            status: "Success",
+                                            message: "Approved request successfully"
+                                        })
+                                    } else {
+                                        res.status(202).json({
+                                            status: "Failed",
+                                            message: "Approved request successfully but add point failed"
+                                        })
+                                    }
+                                } else {
+                                    const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd + accumulatedPoint)
+                                    if (isAddPoint === true) {
+                                        await accountService.minusPointToAccountByEmail(author, accumulatedPoint)
+                                        // save accumilative point
+                                        const author_approved_subject = 3;
+                                        const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
+                                        const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
+                                        if (isSaveHistory !== -1) {
+                                            console.log("history saved")
+                                        }
+                                        res.status(200).json({
+                                            status: "Success",
+                                            message: "Approved request successfully"
+                                        })
+                                    } else {
+                                        res.status(202).json({
+                                            status: "Failed",
+                                            message: "Approved request successfully but add point failed"
+                                        })
+                                    }
+                                }
+
+
+
                             }
 
                             //cong diem

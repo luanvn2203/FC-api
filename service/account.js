@@ -526,6 +526,22 @@ async function minusAccumulatedPoint(accountId, point) {
   }
 }
 
+async function getAccumulatedPoint(accountId) {
+  try {
+    const sql = `select accumulatedPoint from tbl_account where email  = ?`
+    const params = [
+      `${accountId}`
+    ]
+    const result = await db.query(sql, params);
+    const data = helper.emptyOrRows(result)
+
+    return data
+
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   getAllUser,
   checkLogin,
@@ -544,6 +560,7 @@ module.exports = {
   minusPointToAccountByEmail,
   addDonorPointToDonor,
 
+  getAccumulatedPoint,
   addAccumulatedPoint,
   minusAccumulatedPoint
 }

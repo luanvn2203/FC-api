@@ -18,7 +18,8 @@ const PointRate = {
     initialRate: 0.5,
     middleRate: 1,
     maxRate: 1.5,
-    one_level_rate: 0.1
+    one_level_rate: 0.1,
+    max_rate_minus_accumulative_point: 0.5
 }
 const JoinTimesToIncreaseRateLevel = 30
 
