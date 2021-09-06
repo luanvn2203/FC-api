@@ -24,7 +24,8 @@ module.exports = {
         UPDATE_SUBJECT_STATUS_FAILED_WITH_WRONG_STATUS: 'Cannot update to this status',
 
         DELETE_SUBJECT_BY_AUTHOR_SUCCESS: 'Delete subject successfully',
-        DELETE_SUBJECT_BY_AUTHOR_FAILED_WITH_NO_PERMISSION: 'Delete failed, you dont has permission to delete this subject'
+        DELETE_SUBJECT_BY_AUTHOR_FAILED_WITH_NO_PERMISSION: 'Delete failed, you dont has permission to delete this subject',
+        DELETE_SUBJECT_BY_AUTHOR_FAILED_WITH_SUBJECT_IN_USE: 'Subject is learning by someone, cannot delete right now'
     }
 
 }

@@ -262,6 +262,23 @@ async function countTotalPublicLessionInASubject(subjectId) {
     }
 }
 
+async function isLessionIsLearning(lessionId) {
+    try {
+        const sql = `select lessionId from tbl_lession where
+        lessionId = (select distinct lessionId from tbl_lession_public_relationship where lessionId  = ?) 
+        or lessionId = (select distinct lessionId from tbl_lession_relation_account where lessionId  = ? )`
+        const params = [
+            `${lessionId}`,
+            `${lessionId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     getAllLession,
     getLessionByLessionId,
@@ -276,5 +293,6 @@ module.exports = {
     increaseViewByClickByLessionId,
     // findByFullTextFlashcard,
     countTotalLessionInASubject,
-    countTotalPublicLessionInASubject
+    countTotalPublicLessionInASubject,
+    isLessionIsLearning
 }

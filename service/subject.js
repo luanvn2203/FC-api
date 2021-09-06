@@ -442,6 +442,22 @@ async function getTotalJoinSubjectByAuthorId(authorId) {
     }
 }
 
+async function isSubjectLearningBySomeone(subjectId) {
+    try {
+        const sql = `select subjectId from tbl_subject where subjectId = (select  subjectId from tbl_subject_relation_account where subjectId = ? )
+        or subjectId = (select subjectId from tbl_subject_public_relationship where subjectId = ?)`;
+        const params = [
+            `${subjectId}`,
+            `${subjectId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     createNewSubject,
     getAllSubjectByTopicId,
@@ -468,5 +484,7 @@ module.exports = {
 
     getTotalFlashcardInSubject,
 
-    getTotalJoinSubjectByAuthorId
+    getTotalJoinSubjectByAuthorId,
+
+    isSubjectLearningBySomeone
 }

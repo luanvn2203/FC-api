@@ -253,23 +253,37 @@ module.exports = {
 		try {
 			const deleteStatus = 3;
 			const userEmail = req.userEmail;
-			const deleteResult = await lessionService.updateLessionStatus(
-				req.body.params.lessionId,
-				deleteStatus,
-				userEmail
-			);
-			if (deleteResult === true) {
-				res.status(200).json({
-					status: "Success",
-					message: "Delete lesson successfully",
-				});
+			const lessionId = req.body.params.lessionId
+			const isLessonIsLearning = await lessionService.isLessionIsLearning(lessionId)
+			if (isLessonIsLearning.length === 0) {
+
+				const deleteResult = await lessionService.updateLessionStatus(
+					req.body.params.lessionId,
+					deleteStatus,
+					userEmail
+				);
+				if (deleteResult === true) {
+					res.status(200).json({
+						status: "Success",
+						message: "Delete lesson successfully",
+					});
+				} else {
+					res.status(202).json({
+						status: "Failed",
+						message:
+							"Delete failed, you dont have permission to delete this lesson",
+					});
+				}
 			} else {
 				res.status(202).json({
 					status: "Failed",
 					message:
-						"Delete failed, you dont have permission to delete this lesson",
+						"Delete failed, lesson is learning by someone",
 				});
 			}
+
+
+
 		} catch (error) {
 			console.log(error);
 		}

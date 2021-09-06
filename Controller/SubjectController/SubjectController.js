@@ -274,23 +274,35 @@ module.exports = {
 		try {
 			const userEmail = req.userEmail;
 			const deleteStatus = 3;
-			const deleteResult = await subjectService.updateSubjectStatus(
-				req.body.params.subjectId,
-				deleteStatus,
-				userEmail
-			);
-			if (deleteResult === true) {
-				res.status(200).json({
-					status: responseStatus.SUCCESS,
-					message: responseMessage.DELETE_SUBJECT_BY_AUTHOR_SUCCESS,
-				});
+			const isSubjectLearningBySomeone = await subjectService.isSubjectLearningBySomeone(subjectId)
+			if (isSubjectLearningBySomeone.length === 0) {
+				const deleteResult = await subjectService.updateSubjectStatus(
+					req.body.params.subjectId,
+					deleteStatus,
+					userEmail
+				);
+				if (deleteResult === true) {
+					res.status(200).json({
+						status: responseStatus.SUCCESS,
+						message: responseMessage.DELETE_SUBJECT_BY_AUTHOR_SUCCESS,
+					});
+				} else {
+					res.status(202).json({
+						status: responseStatus.FAILED,
+						message:
+							responseMessage.DELETE_SUBJECT_BY_AUTHOR_FAILED_WITH_NO_PERMISSION
+					});
+				}
 			} else {
 				res.status(202).json({
 					status: responseStatus.FAILED,
 					message:
-						responseMessage.DELETE_SUBJECT_BY_AUTHOR_FAILED_WITH_NO_PERMISSION
+						responseMessage.DELETE_SUBJECT_BY_AUTHOR_FAILED_WITH_SUBJECT_IN_USE
 				});
 			}
+
+
+
 		} catch (error) {
 			console.log(error);
 		}
@@ -360,7 +372,7 @@ module.exports = {
 					console.log(result[count])
 					console.log(result[count].accountId, userEmail)
 					if (result[count].accountId === userEmail) {
-						result[count].joinStatus = 'Joined'
+						result[count].joinStatus = 'Join'
 					}
 					if (result[count].statusId === 1) {
 						const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
@@ -377,7 +389,25 @@ module.exports = {
 
 					}
 				}
+				const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
+				for (let index3 = 0; index3 < result.length; index3++) {
+					result[index3].joinStatus = "Not join"
+					for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
+						if (result[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
+							result[index3].joinStatus = "Join"
+						}
+					}
+				}
+				for (let count = 0; count < result.length; count++) {
+					console.log(result[count].accountId, userEmail)
+					if (result[count].accountId === userEmail) {
+						result[count].joinStatus = 'Join'
+					}
+					const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(result[count].subjectId)
+					let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
+					result[count].point_require = PointToMinus
 
+				}
 
 
 				const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
@@ -389,7 +419,7 @@ module.exports = {
 								if (listPrivateRequestSubject[index2].statusId === 1) {
 									result[index].joinStatus = "Waiting author approve"
 								} else if (listPrivateRequestSubject[index2].statusId === 2) {
-									result[index].joinStatus = "Author Approved Access"
+									result[index].joinStatus = "Join"
 								} else {
 									result[index].joinStatus = "Author Denine Access"
 								}
@@ -400,14 +430,7 @@ module.exports = {
 						}
 					}
 				}
-				const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
-				for (let index3 = 0; index3 < result.length; index3++) {
-					for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
-						if (result[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
-							result[index3].joinStatus = "Joined"
-						}
-					}
-				}
+
 				res.status(200).json({
 					status: responseStatus.SUCCESS,
 					searchResult: result,
@@ -554,6 +577,7 @@ module.exports = {
 			const subjectId = req.body.params.subjectId;
 			const learingInProgressStatus = 1;
 			// find relation truoc
+
 			const isExistedRelation = await subjectPublicRelationshipService.getRelationByAccountIdAndSubjectId(signInAccount.email, subjectId)
 			if (isExistedRelation.length > 0) {
 				res.status(202).json({
@@ -564,10 +588,10 @@ module.exports = {
 
 				const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(subjectId)
 				let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
-
+				console.log(signInAccount.point, PointToMinus)
 				if (signInAccount.point > PointToMinus) {
+					console.log("ahihi")
 					const subjectFound = await subjectService.getSubjectById(subjectId)
-					console.log(subjectFound)
 					//tru diem truoc
 					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, PointToMinus)
 					if (isMinusPoint === true) {
@@ -595,10 +619,9 @@ module.exports = {
 				} else {
 					res.status(202).json({
 						status: "Failed",
-						message: "No point left, require 3 point to view this content"
+						message: "Not enough point to join this subject"
 					})
 				}
-
 			}
 
 
