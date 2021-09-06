@@ -368,12 +368,16 @@ module.exports = {
 			const searchValue = req.body.params.searchValue
 			const result = await subjectService.findSubjectByNameAndDes(searchValue)
 			if (result.length > 0) {
+				const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
+				const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
+
 				for (let count = 0; count < result.length; count++) {
-					console.log(result[count])
-					console.log(result[count].accountId, userEmail)
-					if (result[count].accountId === userEmail) {
-						result[count].joinStatus = 'Join'
+					for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
+						if (result[count].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
+							result[count].joinStatus = "Join"
+						}
 					}
+
 					if (result[count].statusId === 1) {
 						const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
 						console.log(totalLessonInSubject[0].total)
@@ -386,50 +390,66 @@ module.exports = {
 						let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
 						console.log(PointToMinus)
 						result[count].point_require = PointToMinus
-
 					}
-				}
-				const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
-				for (let index3 = 0; index3 < result.length; index3++) {
-					result[index3].joinStatus = "Not join"
-					for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
-						if (result[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
-							result[index3].joinStatus = "Join"
+					for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
+						if (result[count].subjectId === listPrivateRequestSubject[index2].subjectId) {
+							if (listPrivateRequestSubject[index2].statusId === 1) {
+								result[count].joinStatus = "Waiting author approve"
+							} else if (listPrivateRequestSubject[index2].statusId === 2) {
+								result[count].joinStatus = "Join"
+							} else {
+								result[count].joinStatus = "Author Denine Access"
+							}
+
+						} else {
+							result[count].joinStatus = 'Not join'
 						}
 					}
-				}
-				for (let count = 0; count < result.length; count++) {
-					console.log(result[count].accountId, userEmail)
 					if (result[count].accountId === userEmail) {
 						result[count].joinStatus = 'Join'
 					}
-					const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(result[count].subjectId)
-					let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
-					result[count].point_require = PointToMinus
-
 				}
+				// const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
+				// for (let index3 = 0; index3 < result.length; index3++) {
+				// 	result[index3].joinStatus = "Not join"
+				// 	for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
+				// 		if (result[index3].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
+				// 			result[index3].joinStatus = "Join"
+				// 		}
+				// 	}
+				// }
+				// for (let count = 0; count < result.length; count++) {
+				// 	console.log(result[count].accountId, userEmail)
+				// 	if (result[count].accountId === userEmail) {
+				// 		result[count].joinStatus = 'Join'
+				// 	}
+				// 	const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(result[count].subjectId)
+				// 	let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
+				// 	result[count].point_require = PointToMinus
+
+				// }
 
 
-				const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
-				if (listPrivateRequestSubject.length > 0) {
-					for (let index = 0; index < result.length; index++) {
-						for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
-							if (result[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
-								// result[index].joinStatus = listPrivateRequestSubject[index2].statusId
-								if (listPrivateRequestSubject[index2].statusId === 1) {
-									result[index].joinStatus = "Waiting author approve"
-								} else if (listPrivateRequestSubject[index2].statusId === 2) {
-									result[index].joinStatus = "Join"
-								} else {
-									result[index].joinStatus = "Author Denine Access"
-								}
+				// const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
+				// if (listPrivateRequestSubject.length > 0) {
+				// 	for (let index = 0; index < result.length; index++) {
+				// for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
+				// 	if (result[index].subjectId === listPrivateRequestSubject[index2].subjectId) {
+				// 		// result[index].joinStatus = listPrivateRequestSubject[index2].statusId
+				// 		if (listPrivateRequestSubject[index2].statusId === 1) {
+				// 			result[index].joinStatus = "Waiting author approve"
+				// 		} else if (listPrivateRequestSubject[index2].statusId === 2) {
+				// 			result[index].joinStatus = "Join"
+				// 		} else {
+				// 			result[index].joinStatus = "Author Denine Access"
+				// 		}
 
-							} else {
-								result[index].joinStatus = 'Not join'
-							}
-						}
-					}
-				}
+				// 	} else {
+				// 		result[index].joinStatus = 'Not join'
+				// 	}
+				// }
+				// 	}
+				// }
 
 				res.status(200).json({
 					status: responseStatus.SUCCESS,
