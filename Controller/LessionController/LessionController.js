@@ -200,30 +200,83 @@ module.exports = {
 	createNewLessionBySubjectId: async function (req, res, next) {
 		try {
 			const creator = req.userEmail;
-			const listExistedLession =
-				await lessionService.findLessionByNameAndSubjectId(req.body);
-			if (!listExistedLession.length > 0) {
-				const result = await lessionService.createNewLessionBySubjectId(
-					req.body,
-					creator
-				);
-				if (result === true) {
-					res.status(200).json({
-						status: "Success",
-						message: "Create lesson successfully",
-					});
+			const subjectId = req.body.params.subjectId
+			const lessionStatus = req.body.params.statusId
+			const subjectFound = await subjectService.getSubjectById(subjectId)
+			if (subjectFound.length > 0) {
+				if (subjectFound[0].statusId === 1) {
+
+					const listExistedLession =
+						await lessionService.findLessionByNameAndSubjectId(req.body);
+					if (!listExistedLession.length > 0) {
+						const result = await lessionService.createNewLessionBySubjectId(
+							req.body,
+							creator
+						);
+						if (result === true) {
+							res.status(200).json({
+								status: "Success",
+								message: "Create lesson successfully",
+							});
+						} else {
+							res.status(201).json({
+								status: "Failed",
+								message: "Create lesson failed",
+							});
+						}
+					} else {
+						res.status(200).json({
+							status: "Failed",
+							message: "Lesson is Existed in you subject",
+						});
+					}
+				} else if (subjectFound[0].statusId === 2) {
+					if (lessionStatus === subjectFound[0].statusId) {
+						const listExistedLession =
+							await lessionService.findLessionByNameAndSubjectId(req.body);
+						if (!listExistedLession.length > 0) {
+							const result = await lessionService.createNewLessionBySubjectId(
+								req.body,
+								creator
+							);
+							if (result === true) {
+								res.status(200).json({
+									status: "Success",
+									message: "Create lesson successfully",
+								});
+							} else {
+								res.status(201).json({
+									status: "Failed",
+									message: "Create lesson failed",
+								});
+							}
+						} else {
+							res.status(200).json({
+								status: "Failed",
+								message: "Lesson is Existed in you subject",
+							});
+						}
+					} else {
+						res.status(200).json({
+							status: "Failed",
+							message: "In a private subject cannot contain public lesson, try again with private status of lesson !",
+						});
+					}
 				} else {
-					res.status(201).json({
+					res.status(200).json({
 						status: "Failed",
-						message: "Create lesson failed",
+						message: "Error 237 lesson controller",
 					});
 				}
+
+
 			} else {
 				res.status(200).json({
 					status: "Failed",
-					message: "Lesson is Existed in you subject",
+					message: "Not found subjectId",
 				});
 			}
+
 		} catch (error) {
 			console.log(error);
 		}
