@@ -93,9 +93,6 @@ module.exports = {
                     const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, approvedStatus)
                     //update
                     if (isUpdateRequestStatus === true) {
-
-
-
                         const isApprovedRequest = await subjectRelationAccountService.saveRelationBetweenAccountAndSubject(
                             requestFound[0].subjectId,
                             requestFound[0].requestFrom,

@@ -67,8 +67,8 @@ async function getTopicByIdReuse(topicId) {
 async function createNewTopic(topicParams, student) {
     try {
         const sql = `Insert into 
-        tbl_topic(topicName, accountId, topicDescription, createdDate, statusId) 
-        values(?,?,?,?,?)`;
+        tbl_topic(topicName, accountId, topicDescription, createdDate) 
+        values(?,?,?,?)`;
         const topic = topicParams.params;
 
         let current = new Date();
@@ -81,7 +81,6 @@ async function createNewTopic(topicParams, student) {
             `${student}`,
             `${topic.topicDescription.trim()}`,
             `${dateTime}`,
-            `${topic.statusId}`,
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
