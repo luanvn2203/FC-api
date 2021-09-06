@@ -372,25 +372,25 @@ module.exports = {
 				const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
 
 				for (let count = 0; count < result.length; count++) {
-					for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
-						if (result[count].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
-							result[count].joinStatus = "Join"
-						}
-					}
-
 					if (result[count].statusId === 1) {
 						const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
-						console.log(totalLessonInSubject[0].total)
 						let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
-						console.log(PointToMinus)
 						result[count].point_require = PointToMinus
 					} else if (result[count].statusId === 2) {
 						const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
-						console.log(totalLessonInSubject[0].total)
 						let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
-						console.log(PointToMinus)
 						result[count].point_require = PointToMinus
 					}
+					result[count].joinStatus = "Not join"
+
+					if (result[count].accountId === userEmail) {
+						result[count].joinStatus = "Join"
+					}
+
+					if (listPublicSubjectEmailJoined.find((item) => item.subjectId === result[count].subjectId) !== undefined) {
+						result[count].joinStatus = "Join"
+					}
+
 					for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
 						if (result[count].subjectId === listPrivateRequestSubject[index2].subjectId) {
 							if (listPrivateRequestSubject[index2].statusId === 1) {
@@ -401,14 +401,52 @@ module.exports = {
 								result[count].joinStatus = "Author Denine Access"
 							}
 
-						} else {
-							result[count].joinStatus = 'Not join'
 						}
 					}
-					if (result[count].accountId === userEmail) {
-						result[count].joinStatus = 'Join'
-					}
+
 				}
+
+
+
+				// for (let count = 0; count < result.length; count++) {
+				// 	for (let index4 = 0; index4 < listPublicSubjectEmailJoined.length; index4++) {
+				// 		if (result[count].subjectId === listPublicSubjectEmailJoined[index4].subjectId) {
+				// 			result[count].joinStatus = "Join"
+				// 		} else {
+				// 			result[count].joinStatus = "Not join"
+				// 		}
+				// 	}
+				// 	if (result[count].statusId === 1) {
+				// 		const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
+				// 		console.log(totalLessonInSubject[0].total)
+				// 		let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+				// 		console.log(PointToMinus)
+				// 		result[count].point_require = PointToMinus
+				// 	} else if (result[count].statusId === 2) {
+				// 		const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
+				// 		console.log(totalLessonInSubject[0].total)
+				// 		let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+				// 		console.log(PointToMinus)
+				// 		result[count].point_require = PointToMinus
+				// 	}
+				// for (let index2 = 0; index2 < listPrivateRequestSubject.length; index2++) {
+				// 	if (result[count].subjectId === listPrivateRequestSubject[index2].subjectId) {
+				// 		if (listPrivateRequestSubject[index2].statusId === 1) {
+				// 			result[count].joinStatus = "Waiting author approve"
+				// 		} else if (listPrivateRequestSubject[index2].statusId === 2) {
+				// 			result[count].joinStatus = "Join"
+				// 		} else {
+				// 			result[count].joinStatus = "Author Denine Access"
+				// 		}
+
+				// 	} else {
+				// 		result[count].joinStatus = 'Not join'
+				// 	}
+				// }
+				// 	if (result[count].accountId === userEmail) {
+				// 		result[count].joinStatus = 'Join'
+				// 	}
+				// }
 				// const listPublicSubjectEmailJoined = await subjectPublicRelationshipService.getPublicSubjectUserHaveJoinedByEmail(userEmail)
 				// for (let index3 = 0; index3 < result.length; index3++) {
 				// 	result[index3].joinStatus = "Not join"
