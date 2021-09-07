@@ -106,7 +106,7 @@ module.exports = {
 				if (result.length > 0) {
 					if (subjectFound[0].accountId === userEmail) {
 						for (let count = 0; count < result.length; count++) {
-							result[count].joinStatus = "Joined"
+							result[count].joinStatus = "Join"
 						}
 						res.status(200).json({
 							status: "Success",
