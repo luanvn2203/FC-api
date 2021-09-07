@@ -443,9 +443,10 @@ async function getTotalJoinSubjectByAuthorId(authorId) {
 }
 
 async function isSubjectLearningBySomeone(subjectId) {
+    console.log(subjectId)
     try {
-        const sql = `select subjectId from tbl_subject where subjectId = (select  subjectId from tbl_subject_relation_account where subjectId = ? )
-        or subjectId = (select subjectId from tbl_subject_public_relationship where subjectId = ?)`;
+        const sql = `select subjectId from tbl_subject where subjectId in (select  subjectId from tbl_subject_relation_account where subjectId = ? )
+        or subjectId in (select subjectId from tbl_subject_public_relationship where subjectId = ?)`;
         const params = [
             `${subjectId}`,
             `${subjectId}`

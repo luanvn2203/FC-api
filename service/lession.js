@@ -265,8 +265,8 @@ async function countTotalPublicLessionInASubject(subjectId) {
 async function isLessionIsLearning(lessionId) {
     try {
         const sql = `select lessionId from tbl_lession where
-        lessionId = (select distinct lessionId from tbl_lession_public_relationship where lessionId  = ?) 
-        or lessionId = (select distinct lessionId from tbl_lession_relation_account where lessionId  = ? )`
+        lessionId in (select distinct lessionId from tbl_lession_public_relationship where lessionId  = ?) 
+        or lessionId in (select distinct lessionId from tbl_lession_relation_account where lessionId  = ? )`
         const params = [
             `${lessionId}`,
             `${lessionId}`

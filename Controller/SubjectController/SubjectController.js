@@ -274,7 +274,8 @@ module.exports = {
 		try {
 			const userEmail = req.userEmail;
 			const deleteStatus = 3;
-			const isSubjectLearningBySomeone = await subjectService.isSubjectLearningBySomeone(subjectId)
+			const isSubjectLearningBySomeone = await subjectService.isSubjectLearningBySomeone(req.body.params.subjectId)
+			console.log(isSubjectLearningBySomeone)
 			if (isSubjectLearningBySomeone.length === 0) {
 				const deleteResult = await subjectService.updateSubjectStatus(
 					req.body.params.subjectId,
