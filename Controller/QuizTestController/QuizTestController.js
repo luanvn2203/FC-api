@@ -14,7 +14,7 @@ module.exports = {
             let isFinalQuiz = 0;
             const questionArr = req.body.params.questionArr;
 
-            if (questionArr.length > 10) {
+            if (questionArr.length >= 10) {
                 const lessionArr = req.body.params.lessionArr;
                 if (lessionArr.length > 1) {
                     isFinalQuiz = 1
