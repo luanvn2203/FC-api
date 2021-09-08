@@ -284,19 +284,65 @@ module.exports = {
 
 	UpdateLessionByID: async function (req, res, next) {
 		try {
-			const result = await lessionService.UpdateLessionByID(req.body);
-			console.log(result);
-			if (result === true) {
-				return res.status(200).json({
-					status: "Success",
-					message: "Update lesson successfully",
-				});
+			const lessonFound = await lessionService.getLessionByLessionId(req.body.params.lessionId)
+			if (lessonFound.length > 0) {
+				const subjectFound = await subjectService.getSubjectById(lessonFound[0].subjectId)
+				if (subjectFound.length > 0) {
+					const subjectStatus = subjectFound[0].statusId
+					const paramsStatus = req.body.params.statusId
+
+					if (subjectStatus === 1) {
+						const result = await lessionService.UpdateLessionByID(req.body);
+						if (result === true) {
+							return res.status(200).json({
+								status: "Success",
+								message: "Update lesson successfully",
+							});
+						} else {
+							return res.status(205).json({
+								status: "Failed",
+								message: "Update lesson failed",
+							});
+						}
+					} else if (subjectStatus === 2) {
+						if (paramsStatus === 2) {
+							const result = await lessionService.UpdateLessionByID(req.body);
+							console.log(result);
+							if (result === true) {
+								return res.status(200).json({
+									status: "Success",
+									message: "Update lesson successfully",
+								});
+							} else {
+								return res.status(205).json({
+									status: "Failed",
+									message: "Update lesson failed",
+								});
+							}
+						} else {
+							return res.status(205).json({
+								status: "Failed",
+								message: "Private subject cannot contain public lesson, try again with private status",
+							});
+						}
+					} else {
+						return res.status(202).json({
+							error: "error 310 lesson controller"
+						})
+					}
+				} else {
+					return res.status(205).json({
+						status: "Failed",
+						message: "Not found subject ID , 296 lesson controller",
+					});
+				}
 			} else {
 				return res.status(205).json({
 					status: "Failed",
-					message: "Update lesson failed",
+					message: "Not found lesson ID",
 				});
 			}
+
 		} catch (error) {
 			console.log(error.message);
 		}
