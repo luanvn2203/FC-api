@@ -123,7 +123,7 @@ async function findAccountByRefreshToken(token) {
 //Register account
 async function registerAccount(accountToRegister, protocol, host) {
 
-  if (accountToRegister.params.roleId === 1) {
+  if (accountToRegister.params.roleId === 1 || accountToRegister.params.roleId === '1') {
     const sql = ` INSERT INTO 
   tbl_account(email,
     password,
@@ -196,7 +196,7 @@ async function registerAccount(accountToRegister, protocol, host) {
     } else {
       return accountMessage.register_error;
     }
-  } else if (accountToRegister.params.roleId === 3) {
+  } else if (accountToRegister.params.roleId === 3 || accountToRegister.params.roleId === '3') {
     const sql = ` INSERT INTO 
     tbl_account(email,
       password,
@@ -269,6 +269,7 @@ async function registerAccount(accountToRegister, protocol, host) {
     }
   } else {
     //error reg
+    return false
   }
 }
 

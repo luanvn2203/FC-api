@@ -164,7 +164,7 @@ module.exports = {
 	},
 	postRegister: async function (req, res, next) {
 		try {
-
+			console.log(req.body.params)
 			const result = await accountService.registerAccount(
 				req.body,
 				req.protocol,
