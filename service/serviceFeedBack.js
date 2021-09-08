@@ -45,7 +45,20 @@ async function findFeedbackByAccountIdAndServiceRelationAccountId(accountId, rel
     }
 }
 
+async function viewAllFeedbackForAdmin() {
+    try {
+        const sql = `Select id, donorServiceRelationAccountId, accountId, point, content, dateOfFeedback 
+        from tbl_service_feedback order by dateOfFeedback desc  `
+        const result = await db.query(sql)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     saveFeedBack,
-    findFeedbackByAccountIdAndServiceRelationAccountId
+    findFeedbackByAccountIdAndServiceRelationAccountId,
+    viewAllFeedbackForAdmin
 }

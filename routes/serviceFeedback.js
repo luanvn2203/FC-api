@@ -7,4 +7,6 @@ const verifyToken = require('../middleware/auth');
 
 router.post('/save', verifyToken, serviceFeedBack.saveFeedback)
 
+router.get('/admin-view', verifyToken, serviceFeedBack.viewFeedbackForAdminRole)
+
 module.exports = router;

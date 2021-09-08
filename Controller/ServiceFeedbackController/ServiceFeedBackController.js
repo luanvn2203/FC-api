@@ -55,5 +55,38 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+
+    viewFeedbackForAdminRole: async function (req, res, next) {
+        try {
+            const signInAccount = req.signInAccount
+            if (signInAccount.roleId === 2) {
+                const result = await serviceFeedbackService.viewAllFeedbackForAdmin()
+                if (result.length > 0) {
+                    res.status(200).json({
+                        status: "Success",
+                        listFeedback: result,
+                        total: result.length
+
+                    })
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        listFeedback: result,
+                        total: result.length
+                    })
+                }
+
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "No permission"
+                })
+            }
+
+
+        } catch (error) {
+            console.log(error)
+        }
     }
 }
