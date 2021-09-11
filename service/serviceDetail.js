@@ -1,7 +1,7 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function saveServiceDetail(serviceId, serviceContent, startDate, endDate, quantity) {
+async function saveServiceDetail(serviceId, serviceContent, startDate, endDate, quantity, isConfirmed) {
     try {
         const sql = `INSERT INTO tbl_service_detail( serviceId, serviceContent, startDate, endDate, quantity)
     values(?,?,?,?,?)`;
@@ -10,7 +10,7 @@ async function saveServiceDetail(serviceId, serviceContent, startDate, endDate, 
             `${serviceContent}`,
             `${startDate}`,
             `${endDate}`,
-            `${quantity}`,
+            `${quantity}`
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {
@@ -129,7 +129,7 @@ async function getAllAvailableService() {
     try {
         const sql = `select sd.id, sd.serviceId, ds.serviceName, ds.serviceTypeId , serviceInformation, sum(sd.quantity) as quantity, sd.startDate ,sd.endDate
         from tbl_service_detail sd, tbl_donor_service ds
-        where sd.serviceId = ds.id and  sd.statusId = 1  group by sd.serviceId,sd.startDate ,sd.endDate `
+        where sd.serviceId = ds.id and  sd.statusId = 1 and ds.isConfirmed = 1 group by sd.serviceId,sd.startDate ,sd.endDate `
         const result = await db.query(sql)
         const data = helper.emptyOrRows(result)
         return data

@@ -14,4 +14,8 @@ router.post('/delete', verifyToken, donorServiceController.deleteService)
 
 router.get('/all-by-me', verifyToken, donorServiceController.getAllServiceByMe)
 
+router.post('/admin-confirm', verifyToken, donorServiceController.confirmByAdmin)
+
+router.get('/view-all', verifyToken, donorServiceController.getAllForAdminView)
+
 module.exports = router;

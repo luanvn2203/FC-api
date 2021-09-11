@@ -2,7 +2,8 @@
 const { sign } = require('jsonwebtoken');
 const donorServiceService = require('../../service/donorServiceService')
 const serviceDetailService = require('../../service/serviceDetail')
-const uuidv4 = require('uuid')
+const uuidv4 = require('uuid');
+const { db } = require('../../config');
 module.exports = {
     createService: async function (req, res, next) {
         try {
@@ -24,7 +25,8 @@ module.exports = {
                         serviceTypeId,
                         serviceName,
                         serviceInformation,
-                        quantity
+                        quantity,
+                        0
                     );
                     console.log(isCreateService)
                     if (isCreateService !== -1 && isCreateService >= 0) {
@@ -78,7 +80,8 @@ module.exports = {
                         serviceTypeId,
                         serviceName,
                         serviceInformation,
-                        quantity
+                        quantity,
+                        1
                     );
                     console.log(isCreateService)
                     if (isCreateService !== -1 && isCreateService >= 0) {
@@ -250,6 +253,75 @@ module.exports = {
                 res.status(202).json({
                     status: "Failed",
                     message: "You don't have permission to create service, please update to donor role"
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    confirmByAdmin: async function (req, res, next) {
+        try {
+            const signInAccount = req.signInAccount
+            if (signInAccount.roleId === 2) {
+                const isConfirm = req.body.params.isConfirm
+                const serviceId = req.body.params.serviceId
+                console.log(isConfirm)
+                if (isConfirm === true || isConfirm === false) {
+                    const result = await donorServiceService.confirmByAdmin(serviceId, isConfirm)
+                    if (result === true) {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Change confirmation successfully"
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Confirm failed with 276 donorservicecontroller"
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Wrong confirmation status"
+                    })
+                }
+
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "No permission"
+                })
+            }
+
+
+
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    getAllForAdminView: async function (req, res, next) {
+        try {
+            const signInAccount = req.signInAccount
+            if (signInAccount.roleId === 2) {
+                const result = await donorServiceService.getAllServiceOrderByDate()
+                if (result.length > 0) {
+                    res.status(200).json({
+                        status: "Success",
+                        listService: result,
+                        total: result.length
+                    })
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        listService: result,
+                        total: result.length
+                    })
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "No permission"
                 })
             }
         } catch (error) {

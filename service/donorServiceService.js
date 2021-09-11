@@ -1,22 +1,23 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function createNewService(donorId, serviceTypeId, serviceName, serviceInformation, quantity) {
+async function createNewService(donorId, serviceTypeId, serviceName, serviceInformation, quantity, isConfirmed) {
     try {
         let current = new Date();
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
 
-        const sql = `INSERT INTO tbl_donor_service(donorId, serviceTypeId,serviceName, serviceInformation, createdDate, quantity)
-         values(?,?,?,?,?,?)`;
+        const sql = `INSERT INTO tbl_donor_service(donorId, serviceTypeId,serviceName, serviceInformation, createdDate, quantity,isConfirmed)
+         values(?,?,?,?,?,?,?)`;
         const params = [
             `${donorId}`,
             `${serviceTypeId}`,
             `${serviceName}`,
             `${serviceInformation}`,
             `${dateTime}`,
-            `${quantity}`
+            `${quantity}`,
+            `${isConfirmed}`
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
@@ -31,17 +32,15 @@ async function createNewService(donorId, serviceTypeId, serviceName, serviceInfo
 
 async function updateServiceInformation(serviceInfo) {
     try {
+        console.log(serviceInfo)
         const sql = `Update tbl_donor_service set 
             serviceName = ?, 
-            serviceTypeId = ?, 
-            serviceInformation = ?, 
-            quantity = ?
+            serviceInformation = ? 
             where id = ?`;
+
         const params = [
             `${serviceInfo.serviceName}`,
-            `${serviceInfo.serviceTypeId}`,
             `${serviceInfo.serviceInformation}`,
-            `${serviceInfo.quantity}`,
             `${serviceInfo.serviceId}`,
         ]
         const result = await db.query(sql, params);
@@ -122,11 +121,51 @@ async function getAllServiceByEmail(donorEmail) {
     }
 }
 
+async function confirmByAdmin(serviceId, isConfirmed) {
+    try {
+        let value = 0
+        if (isConfirmed === false) {
+            value = 0
+        } else {
+            value = 1
+        }
+
+        const sql = `update tbl_donor_service set isConfirmed = ? where id = ? `
+        const params = [
+            `${value}`,
+            `${serviceId}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function getAllServiceOrderByDate() {
+    try {
+        const sql = `SELECT id, donorId, serviceName, serviceTypeId, serviceInformation, createdDate, quantity, statusId, isConfirmed 
+        FROM tbl_donor_service order by createdDate desc`
+        const result = await db.query(sql)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 
 module.exports = {
     createNewService,
     updateServiceInformation,
     getServiceById,
     updateServiceStatus,
-    getAllServiceByEmail
+    getAllServiceByEmail,
+    confirmByAdmin,
+    getAllServiceOrderByDate
 }
