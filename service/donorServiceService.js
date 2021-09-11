@@ -52,7 +52,7 @@ async function updateServiceInformation(serviceInfo) {
 
     } catch (error) {
         console.log(error)
-    } ry
+    }
 }
 
 async function getServiceById(serviceId) {
