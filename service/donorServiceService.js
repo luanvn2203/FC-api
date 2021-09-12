@@ -121,7 +121,7 @@ async function getAllServiceByEmail(donorEmail) {
     }
 }
 
-async function confirmByAdmin(serviceId, isConfirmed) {
+async function confirmByAdmin(serviceId, isConfirmed, quantity) {
     try {
         let value = 0
         if (isConfirmed === false) {
@@ -130,9 +130,10 @@ async function confirmByAdmin(serviceId, isConfirmed) {
             value = 1
         }
 
-        const sql = `update tbl_donor_service set isConfirmed = ? where id = ? `
+        const sql = `update tbl_donor_service set isConfirmed = ? , quantity = ? where id = ? `
         const params = [
             `${value}`,
+            `${quantity}`,
             `${serviceId}`
         ]
         const result = await db.query(sql, params)

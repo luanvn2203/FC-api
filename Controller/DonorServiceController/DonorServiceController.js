@@ -266,26 +266,48 @@ module.exports = {
             if (signInAccount.roleId === 2) {
                 const isConfirm = req.body.params.isConfirm
                 const serviceId = req.body.params.serviceId
-                console.log(isConfirm)
-                if (isConfirm === true || isConfirm === false) {
-                    const result = await donorServiceService.confirmByAdmin(serviceId, isConfirm)
-                    if (result === true) {
-                        res.status(202).json({
-                            status: "Failed",
-                            message: "Change confirmation successfully"
-                        })
+                const quantity = req.body.params.quantity
+
+                const serviceFound = await donorServiceService.getServiceById(serviceId)
+                if (serviceFound.length > 0) {
+                    if (quantity <= serviceFound[0].quantity) {
+                        if (isConfirm === true || isConfirm === false) {
+                            const result = await donorServiceService.confirmByAdmin(serviceId, isConfirm, quantity)
+                            if (result === true) {
+                                res.status(202).json({
+                                    status: "Failed",
+                                    message: "Change confirmation successfully"
+                                })
+                            } else {
+                                res.status(202).json({
+                                    status: "Failed",
+                                    message: "Confirm failed with 276 donorservicecontroller"
+                                })
+                            }
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Wrong confirmation status or quantity"
+                            })
+                        }
                     } else {
                         res.status(202).json({
                             status: "Failed",
-                            message: "Confirm failed with 276 donorservicecontroller"
+                            message: "Wrong quantity or confirmation status"
                         })
                     }
+
+
+
+
                 } else {
                     res.status(202).json({
                         status: "Failed",
-                        message: "Wrong confirmation status"
+                        message: "ServiceID not found"
                     })
                 }
+
+
 
             } else {
                 res.status(202).json({
