@@ -1,10 +1,10 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function createAds(title, content, imageLink, startDate, endDate, donorId) {
+async function createAds(title, content, imageLink, startDate, endDate, donorId, target_url) {
     try {
-        const sql = `INSERT INTO tbl_advertisement( title, content, imageLink, startDate, endDate, donorId) 
-    value(?,?,?,?,?,?)`;
+        const sql = `INSERT INTO tbl_advertisement( title, content, imageLink, startDate, endDate, donorId,target_url) 
+    value(?,?,?,?,?,?,?)`;
         const params = [
             `${title}`,
             `${content}`,
@@ -12,6 +12,7 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId)
             `${startDate}`,
             `${endDate}`,
             `${donorId}`,
+            `${target_url}`
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {
@@ -26,7 +27,7 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId)
 
 async function getAdvertiseById(advertiseId) {
     try {
-        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId from tbl_advertisement where id = ? and statusId != 5`;
+        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url from tbl_advertisement where id = ? and statusId != 5`;
         const params = [
             `${advertiseId}`,
         ]
@@ -38,14 +39,15 @@ async function getAdvertiseById(advertiseId) {
     }
 }
 
-async function updateAdvertise(id, title, content, imageLink, startDate, endDate) {
+async function updateAdvertise(id, title, content, imageLink, startDate, endDate, target_url) {
     try {
         const sql = `UPDATE tbl_advertisement set 
                     title = ? ,
                     content = ?,
                     imageLink = ?,
                     startDate = ?,
-                    endDate = ?
+                    endDate = ?,
+                    target_url = ?
                     where id = ?`;
         const params = [
             `${title}`,
@@ -53,7 +55,9 @@ async function updateAdvertise(id, title, content, imageLink, startDate, endDate
             `${imageLink}`,
             `${startDate}`,
             `${endDate}`,
+            `${target_url}`,
             `${id}`,
+
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {
@@ -87,7 +91,7 @@ async function updateAdvertiseStatus(advertiseId, status) {
 async function getAllAdvertiseByEmail(email) {
     try {
 
-        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, ass.status  as statusName
+        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url ass.status  as statusName
         from tbl_advertisement a , tbl_ads_status ass
         where a.statusId = ass.id and a.donorId = ? and a.statusId != 5`;
         const params = [
@@ -104,7 +108,7 @@ async function getAllAdvertiseByEmail(email) {
 async function getAllAdvertiseByAdmin() {
     try {
 
-        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, ass.status  as statusName
+        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url ass.status  as statusName
         from tbl_advertisement a , tbl_ads_status ass
         where a.statusId = ass.id and a.statusId != 5`;
         const result = await db.query(sql)

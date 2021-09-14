@@ -12,8 +12,8 @@ module.exports = {
                 const imageLink = req.body.params.imageLink
                 const startDate = req.body.params.startDate
                 const endDate = req.body.params.endDate
-
-                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email)
+                const target_url = req.body.params.targetUrl
+                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url)
                 if (isCreateAds === true) {
                     res.status(200).json({
                         status: "Success",
@@ -45,12 +45,12 @@ module.exports = {
                 const imageLink = req.body.params.imageLink
                 const startDate = req.body.params.startDate
                 const endDate = req.body.params.endDate
-
+                const target_url = req.body.params.targetUrl
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
                 if (advertiseFound.length > 0) {
                     if (advertiseFound[0].donorId === signInAccount.email) {
 
-                        const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate)
+                        const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate, target_url)
                         if (isUpdateAdvertise === true) {
                             res.status(200).json({
                                 status: "Success",

@@ -8,6 +8,7 @@ const lessionRequestService = require('../../service/lessionRequestService')
 const lessionRelationAccountService = require('../../service/lessionRelationAccount')
 const pointHistoryService = require('../../service/pointHistory')
 const Point = require('../../pointConfig')
+const mailer = require('../../mailer')
 
 module.exports = {
     sendViewLessionRequest: async function (req, res, next) {
@@ -16,12 +17,29 @@ module.exports = {
             const lessionId = req.body.params.lessionId;
             const lessionFound = await lessionService.getLessionByLessionId(lessionId)
             if (lessionFound.length > 0) {
+                const subjectFound = await subjectService.getSubjectById(lessionFound[0].subjectId)
+
                 const waittingStatus = 1;
                 if (lessionFound[0].accountId !== requestedAccount) {
                     const isExistedRequest = await lessionRequestService.checkDuplicateRequest(lessionFound[0].lessionId, requestedAccount, lessionFound[0].accountId)
                     if (!isExistedRequest.length > 0) {
                         const result = await lessionRequestService.saveRequest(requestedAccount, lessionFound[0].accountId, lessionId, waittingStatus, lessionFound[0].subjectId)
                         if (result === true) {
+                            //send mail
+                            let subject = `You has new request from FC system`;
+                            let body = `
+                            <p>Hi there,</p>
+                            <p>${requestedAccount} has send you a request to view the lesson <b> ${lessionFound[0].lessionName} </b> in subject <b>${subjectFound[0].subjectName} </b> </h2>
+                            <p>You can visit the website to do the action with the request</h3>
+                            <hr/>
+                            <p>Do not reply this email. Thank you !</h4>
+                             `
+                            //sendEmail
+                            await mailer.sendMail(subjectFound[0].accountId, subject, body).catch(error => {
+                                console.log(error.message)
+                            })
+
+
                             res.status(200).json({
                                 status: "Success",
                                 message: "Send request successfully, waiting for author approvement"
@@ -86,6 +104,7 @@ module.exports = {
         const requestId = req.body.params.requestId;
         const requestFound = await lessionRequestService.getRequestDetailById(requestId);
         if (requestFound.length > 0) {
+            const lessionFound = await lessionService.getLessionByLessionId(requestFound[0].lessionId)
             if (requestFound[0].statusId === 1) {
                 if (author === requestFound[0].requestTo) {
                     const approvedStatus = 2;
@@ -110,6 +129,22 @@ module.exports = {
                                 if (isSaveHistory !== -1) {
                                     console.log("history saved")
                                 }
+
+                                //send mail
+                                let subject = `Your request has approved by author in FC system`;
+                                let body = `
+                            <p>Hi there,</p>
+                            <p>The author has approved your request to view the lesson <b>${lessionFound[0].lessionName}</b></h2>
+                            <p>You can visit the website for learning now! </h3>
+                            <hr/>
+                            <p>Do not reply this email. Thank you !</h4>
+                            `
+                                //sendEmail
+                                await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                    console.log(error.message)
+                                })
+
+
                                 res.status(200).json({
                                     status: "Success",
                                     message: "Approved request successfully"

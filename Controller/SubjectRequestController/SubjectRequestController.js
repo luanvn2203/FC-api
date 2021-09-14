@@ -6,6 +6,7 @@ const accountService = require('../../service/account')
 const pointHistoryService = require('../../service/pointHistory')
 const Point = require('../../pointConfig')
 const lessionService = require('../../service/lession')
+const mailer = require('../../mailer')
 module.exports = {
     sendViewSubjectRequest: async function (req, res, next) {
         try {
@@ -21,6 +22,19 @@ module.exports = {
                     if (!isExistedRequest.length > 0) {
                         const result = await subjectRequestService.saveRequest(requestedAccount, subjectFound[0].accountId, subjectId, waittingStatus)
                         if (result !== -1) {
+                            //send mail
+                            let subject = `You has new request from FC system`;
+                            let body = `
+                            <p>Hi there,</p>
+                            <p>${requestedAccount} has send you a request to join the subject <b> ${subjectFound[0].subjectName} </b></h2>
+                            <p>You can visit the website to do the action with the request</h3>
+                            <hr/>
+                            <p>Do not reply this email. Thank you !</h4>
+                            `
+                            //sendEmail
+                            await mailer.sendMail(subjectFound[0].accountId, subject, body).catch(error => {
+                                console.log(error.message)
+                            })
                             res.status(200).json({
                                 status: "Success",
                                 message: "Send request successfully, waiting for author approvement"
@@ -88,6 +102,7 @@ module.exports = {
         const requestFound = await subjectRequestService.getRequestDetailById(requestId);
         if (requestFound.length > 0) {
             if (requestFound[0].statusId === 1) {
+                const subjectFound = await subjectService.getSubjectById(requestFound[0].subjectId)
                 if (author === requestFound[0].requestTo) {
                     const approvedStatus = 2;
                     const isUpdateRequestStatus = await subjectRequestService.updateRequestStatus(requestId, approvedStatus)
@@ -118,6 +133,21 @@ module.exports = {
                                     if (isSaveHistory !== -1) {
                                         console.log("history saved")
                                     }
+                                    //send mail
+                                    let subject = `Your request has approved by author in FC system`;
+                                    let body = `
+                                        <p>Hi there,</p>
+                                        <p>The author has approved your request to view the subject <b>${subjectFound[0].subjectName}</b></h2>
+                                        <p>You can visit the website for learning now! </h3>
+                                        <hr/>
+                                        <p>Do not reply this email. Thank you !</h4>
+                                        `
+                                    //sendEmail
+                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                        console.log(error.message)
+                                    })
+
+
                                     res.status(200).json({
                                         status: "Success",
                                         message: "Approved request successfully"
