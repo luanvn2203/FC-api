@@ -257,6 +257,21 @@ async function increaseViewByClickByFlashcardId(flashcardId) {
     }
 }
 
+async function findFLashcardByFullTextNameAndDes(searchValue) {
+    try {
+        const sql = `select distinct flashcardId, flashcardName, statusId, dateOfCreate, accountId, lessionId, flashcardContent, numOfView from tbl_flashcards where MATCH (flashcardName,flashcardContent) 
+        AGAINST (?) and statusId = 1 `;
+        const params = [
+            `${searchValue}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     createFlashcard,
     findFlashcardByName,
@@ -271,5 +286,7 @@ module.exports = {
     getFlashcardByArrayLessionIdAndFilteredInfo,
     getPublicFlashcardByLessionId,
     findFlashcardByFullTextFlashcard,
-    increaseViewByClickByFlashcardId
+    increaseViewByClickByFlashcardId,
+
+    findFLashcardByFullTextNameAndDes
 }
