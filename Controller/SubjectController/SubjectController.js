@@ -659,8 +659,8 @@ module.exports = {
 				const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(subjectId)
 				let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
 				console.log(signInAccount.point, PointToMinus)
+				console.log(PointToMinus)
 				if (signInAccount.point > PointToMinus) {
-					console.log("ahihi")
 					const subjectFound = await subjectService.getSubjectById(subjectId)
 					//tru diem truoc
 					const isMinusPoint = await accountService.minusPointToAccountByEmail(signInAccount.email, PointToMinus)
@@ -815,8 +815,8 @@ const convertSubject = async (result, userEmail) => {
 	const listPrivateRequestSubject = await subjectRequestService.getAllRequestSendFromEmail(userEmail)
 	for (let count = 0; count < result.length; count++) {
 		if (result[count].statusId === 1) {
-			const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
-			let PointToMinus = totalLessonInSubject[0].total * Point.point_define.private_lesson
+			const totalLessonInSubject = await lessionService.countTotalPublicLessionInASubject(result[count].subjectId)
+			let PointToMinus = totalLessonInSubject[0].total * Point.point_define.public_lesson
 			result[count].point_require = PointToMinus
 		} else if (result[count].statusId === 2) {
 			const totalLessonInSubject = await lessionService.countTotalLessionInASubject(result[count].subjectId)
