@@ -7,8 +7,8 @@ async function createNewSubject(subjectParams, student) {
         // console.log(subjectParams);
         // console.log(student);
         const sql = `insert into 
-        tbl_subject(subjectName, accountId, topicId, subjectDescription, createdDate, statusId, numOfView)
-         value(?,?,?,?,?,?,?)`;
+        tbl_subject(subjectName, accountId, topicId, subjectDescription, createdDate, statusId, numOfView,imageUrl)
+         value(?,?,?,?,?,?,?,?)`;
 
         const subject = subjectParams.params;
         console.log(subject)
@@ -24,7 +24,8 @@ async function createNewSubject(subjectParams, student) {
             `${subject.subjectDescription.trim()}`,
             `${dateTime}`,
             `${subject.statusId}`,
-            `${0}`
+            `${0}`,
+            `${subject.imageUrl}`
         ]
 
         const result = await db.query(sql, params);
@@ -40,7 +41,7 @@ async function createNewSubject(subjectParams, student) {
 
 async function getAllSubjectByTopicId(topicId) {
     try {
-        const sql = 'select subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId from tbl_subject where topicId = ? order by createdDate desc';
+        const sql = 'select subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId,imageUrl from tbl_subject where topicId = ? order by createdDate desc';
         const params = [`${topicId}`]
         const rows = await db.query(sql, params);
         const result = helper.emptyOrRows(rows);
@@ -60,6 +61,7 @@ async function getAllSubjectInListTopicId(IdArray) {
          topicId, 
          subjectDescription, 
          createdDate, 
+         imageUrl,
          statusId FROM tbl_subject 
          where topicId in (${IdArray}) order by createdDate desc`
 
@@ -75,12 +77,14 @@ async function getAllSubjectInListTopicId(IdArray) {
 async function updateSubject(subjectParams) {
     const subject = subjectParams.params;
     try {
-        const sql = `update tbl_subject set subjectName = ?, subjectDescription = ?, statusId = ? where subjectId =?`;
+        const sql = `update tbl_subject set subjectName = ?, subjectDescription = ?, statusId = ? ,imageUrl = ? where subjectId =?`;
         const params = [
             `${subject.subjectName}`,
             `${subject.subjectDescription}`,
             `${subject.statusId}`,
-            `${subject.subjectId}`
+            `${subject.imageUrl}`,
+            `${subject.subjectId}`,
+
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
@@ -105,6 +109,7 @@ async function getTop5SubjectByTopicId(paramsId, status) {
          s.topicId, 
          s.subjectDescription,
          s.statusId,
+         s.imageUrl,
          s.numOfView
          FROM tbl_subject s,
           tbl_account a where s.accountId = a.email 
@@ -131,6 +136,7 @@ async function findSubjectBySubjectNameAndUserAccount(subjectParams, student) {
     topicId, 
     subjectDescription, 
     createdDate, 
+    imageUrl,
     statusId FROM tbl_subject 
     where accountId = ? and subjectName = ? and topicId = ?`
         const params = [
@@ -153,6 +159,7 @@ async function getSubjectBySignedInEmail(email) {
     topicId, 
     subjectDescription, 
     createdDate, 
+    imageUrl,
     statusId FROM tbl_subject 
     where accountId = ? and statusId != 3 order by createdDate desc`;
         const params = [
@@ -174,6 +181,7 @@ async function getSubjectByEmail(email) {
     topicId, 
     subjectDescription, 
     createdDate, 
+    imageUrl,
     statusId FROM tbl_subject 
     where accountId = ? order by createdDate desc `;
         const params = [
@@ -218,6 +226,7 @@ async function getSubjectByTopicId(paramsId) {
          s.topicId, 
          s.subjectDescription,
          s.statusId,
+         s.imageUrl,
          s.createdDate
          FROM tbl_subject s,
           tbl_account a where s.accountId = a.email 
@@ -243,6 +252,7 @@ async function findSubjectByNameAndDes(searchValue) {
         s.topicId,
         s.subjectDescription,
         s.createdDate,
+        s.imageUrl,
         s.statusId,
         a.fullName as author
             FROM tbl_subject s, tbl_account a WHERE s.accountId = a.email and 
@@ -269,6 +279,7 @@ async function findSubjectByLessionNameAndDes(searchValue) {
               s.subjectDescription,
                 s.createdDate,
                   s.statusId,
+                  s.imageUrl,
                    a.fullName as author
         from tbl_subject s, tbl_account a where s.accountId = a.email and subjectId in (SELECT distinct subjectId FROM tbl_lession 
         WHERE MATCH (lessionName,lessionDescription) AGAINST (? WITH QUERY EXPANSION ) and s.statusId != 3)`;
@@ -291,6 +302,7 @@ async function findSubjectByftFlashcardName(searchValue) {
         s.topicId,  
         s.subjectDescription,  
         s.createdDate,  
+        s.imageUrl,
         s.statusId, 
         a.fullName as author
         from tbl_subject s, tbl_account a where s.accountId = a.email and subjectId 
@@ -324,7 +336,7 @@ async function findSubjectByftQuestionContent(searchValue) {
 }
 async function getSubjecDetailById(subjectId) {
     try {
-        const sql = `SELECT subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId  
+        const sql = `SELECT subjectId, subjectName, accountId, topicId, subjectDescription, createdDate, statusId  ,imageUrl
     from tbl_subject
     where subjectId = ?`;
         const params = [
@@ -358,7 +370,7 @@ async function increaseViewByClickBySubjectId(subjectId) {
 async function getSubjectById(subjectId) {
     try {
         const sql = `select s.subjectId,
-        s.subjectName, s.accountId, s.topicId, s.subjectDescription,
+        s.subjectName, s.accountId, s.topicId, s.subjectDescription, s.imageUrl,
          s.createdDate, s.statusId, s.numOfView, a.fullName from tbl_subject s, tbl_account a
          where s.accountId = a.email and s.subjectId = ? and s.statusId != 3`;
         const params = [
@@ -378,6 +390,7 @@ async function getSubjectUserLearning(accountId) {
         subjectName, 
         accountId, 
         topicId, 
+        imageUrl,
         subjectDescription
         from tbl_subject
         where subjectId in (SELECT distinct subjectId  FROM tbl_subject_public_relationship where accountId = ?)
