@@ -91,7 +91,7 @@ async function updateAdvertiseStatus(advertiseId, status) {
 async function getAllAdvertiseByEmail(email) {
     try {
 
-        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url ass.status  as statusName
+        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url , ass.status  as statusName
         from tbl_advertisement a , tbl_ads_status ass
         where a.statusId = ass.id and a.donorId = ? and a.statusId != 5`;
         const params = [

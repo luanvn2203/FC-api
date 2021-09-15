@@ -117,7 +117,7 @@ module.exports = {
                         if (isApprovedRequest !== -1) {
                             const totalLessonInSubject = await lessionService.countTotalLessionInASubject(requestFound[0].subjectId)
                             const totalJoin = await subjectService.getTotalJoinSubjectByAuthorId(author)
-                            famousRate = Point.PointRate.initialRate + (Point.PointRate.one_level_rate * Math.trunc(totalJoin[0].total / Point.JoinTimesToIncreaseRateLevel))
+                            const famousRate = Point.PointRate.initialRate + (Point.PointRate.one_level_rate * Math.trunc(totalJoin[0].total / Point.JoinTimesToIncreaseRateLevel))
                             if (famousRate < 1) {
                                 //50%
                                 const pointAdd = totalLessonInSubject[0].total * Point.point_define.private_lesson * 0.5
@@ -129,7 +129,7 @@ module.exports = {
                                     //save accumilative point
                                     const author_approved_subject = 3;
                                     const description = `${author} approved request with ID : ${requestFound[0].subjectId} from ${requestFound[0].requestFrom} `
-                                    const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_subject, author_approved_subject, description)
+                                    const isSaveHistory = pointHistoryService.savePointHistory(author, pointAdd, author_approved_subject, description)
                                     if (isSaveHistory !== -1) {
                                         console.log("history saved")
                                     }

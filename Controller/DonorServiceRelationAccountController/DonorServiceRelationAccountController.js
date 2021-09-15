@@ -80,7 +80,7 @@ module.exports = {
                                     if (errorObject.length === 0) {
                                         res.status(200).json({
                                             status: "Success",
-                                            message: "Exchange successfully"
+                                            message: "Exchange successfully, gift information is send to you email address, please checking your email"
                                         })
 
                                         //send mail
@@ -90,6 +90,7 @@ module.exports = {
                                         })
                                         let subject = "You has exchanges gift FC website";
                                         let body = `
+                                        <h2>Hi there, </h2>
                                         <h2>You receive this email by exchange gift on the flashcard system.</h2>
                                         <h3>Here is your gift information: ${infor} </h3>
                                         <h4>Vui lòng không reply. Trân trọng !</h4>

@@ -120,41 +120,121 @@ module.exports = {
                             requestFound[0].id
                         )
                         if (isApprovedRequest !== -1) {
-                            //cong diem
-                            const isAddPoint = await accountService.addPointToAccountByEmail(author, Point.point_add.author_approved_lession)
-                            if (isAddPoint === true) {
-                                const author_approved_lession = 4;
-                                const description = `${author} approved request with ID : ${requestFound[0].lessionId} from ${requestFound[0].requestFrom} `
-                                const isSaveHistory = pointHistoryService.savePointHistory(author, Point.point_add.author_approved_lession, author_approved_lession, description)
-                                if (isSaveHistory !== -1) {
-                                    console.log("history saved")
+
+                            const totalJoin = await subjectService.getTotalJoinSubjectByAuthorId(author)
+                            const famousRate = Point.PointRate.initialRate + (Point.PointRate.one_level_rate * Math.trunc(totalJoin[0].total / Point.JoinTimesToIncreaseRateLevel))
+                            if (famousRate < 1) {
+                                const pointAdd = Point.point_define.private_lesson * 0.5
+                                const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd)
+                                if (isAddPoint === true) {
+                                    const author_approved_lession = 4;
+                                    const description = `${author} approved request with ID : ${requestFound[0].lessionId} from ${requestFound[0].requestFrom} `
+                                    const isSaveHistory = pointHistoryService.savePointHistory(author, pointAdd, author_approved_lession, description)
+                                    if (isSaveHistory !== -1) {
+                                        console.log("history saved")
+                                    }
+
+                                    //send mail
+                                    let subject = `Your request has approved by author in FC system`;
+                                    let body = `
+                                <p>Hi there,</p>
+                                <p>The author has approved your request to view the lesson <b>${lessionFound[0].lessionName}</b></h2>
+                                <p>You can visit the website for learning now! </h3>
+                                <hr/>
+                                <p>Do not reply this email. Thank you !</h4>
+                                `
+                                    //sendEmail
+                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                        console.log(error.message)
+                                    })
+
+
+                                    res.status(200).json({
+                                        status: "Success",
+                                        message: "Approved request successfully"
+                                    })
+                                } else {
+                                    res.status(202).json({
+                                        status: "Failed",
+                                        message: "Approved request successfully but add point failed"
+                                    })
                                 }
+                            } else if (famousRate >= 1 && famousRate < 1.5) {
+                                const pointAdd = Point.point_define.private_lesson * 1
+                                const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd)
+                                if (isAddPoint === true) {
+                                    const author_approved_lession = 4;
+                                    const description = `${author} approved request with ID : ${requestFound[0].lessionId} from ${requestFound[0].requestFrom} `
+                                    const isSaveHistory = pointHistoryService.savePointHistory(author, pointAdd, author_approved_lession, description)
+                                    if (isSaveHistory !== -1) {
+                                        console.log("history saved")
+                                    }
 
-                                //send mail
-                                let subject = `Your request has approved by author in FC system`;
-                                let body = `
-                            <p>Hi there,</p>
-                            <p>The author has approved your request to view the lesson <b>${lessionFound[0].lessionName}</b></h2>
-                            <p>You can visit the website for learning now! </h3>
-                            <hr/>
-                            <p>Do not reply this email. Thank you !</h4>
-                            `
-                                //sendEmail
-                                await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
-                                    console.log(error.message)
-                                })
+                                    //send mail
+                                    let subject = `Your request has approved by author in FC system`;
+                                    let body = `
+                                <p>Hi there,</p>
+                                <p>The author has approved your request to view the lesson <b>${lessionFound[0].lessionName}</b></h2>
+                                <p>You can visit the website for learning now! </h3>
+                                <hr/>
+                                <p>Do not reply this email. Thank you !</h4>
+                                `
+                                    //sendEmail
+                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                        console.log(error.message)
+                                    })
 
 
-                                res.status(200).json({
-                                    status: "Success",
-                                    message: "Approved request successfully"
-                                })
-                            } else {
-                                res.status(202).json({
-                                    status: "Failed",
-                                    message: "Approved request successfully but add point failed"
-                                })
+                                    res.status(200).json({
+                                        status: "Success",
+                                        message: "Approved request successfully"
+                                    })
+                                } else {
+                                    res.status(202).json({
+                                        status: "Failed",
+                                        message: "Approved request successfully but add point failed"
+                                    })
+                                }
+                            } else if (famousRate >= 1.5) {
+                                const pointAdd = Point.point_define.private_lesson * 1.5
+                                const isAddPoint = await accountService.addPointToAccountByEmail(author, pointAdd)
+                                if (isAddPoint === true) {
+                                    const author_approved_lession = 4;
+                                    const description = `${author} approved request with ID : ${requestFound[0].lessionId} from ${requestFound[0].requestFrom} `
+                                    const isSaveHistory = pointHistoryService.savePointHistory(author, pointAdd, author_approved_lession, description)
+                                    if (isSaveHistory !== -1) {
+                                        console.log("history saved")
+                                    }
+
+                                    //send mail
+                                    let subject = `Your request has approved by author in FC system`;
+                                    let body = `
+                                <p>Hi there,</p>
+                                <p>The author has approved your request to view the lesson <b>${lessionFound[0].lessionName}</b></h2>
+                                <p>You can visit the website for learning now! </h3>
+                                <hr/>
+                                <p>Do not reply this email. Thank you !</h4>
+                                `
+                                    //sendEmail
+                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                        console.log(error.message)
+                                    })
+
+
+                                    res.status(200).json({
+                                        status: "Success",
+                                        message: "Approved request successfully"
+                                    })
+                                } else {
+                                    res.status(202).json({
+                                        status: "Failed",
+                                        message: "Approved request successfully but add point failed"
+                                    })
+                                }
                             }
+
+                            //cong diem
+
 
                         } else {
                             res.status(202).json({
