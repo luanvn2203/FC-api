@@ -189,7 +189,6 @@ module.exports = {
 							}
 						}
 						for (let count = 0; count < listSubjectFound.length; count++) {
-							console.log(listSubjectFound[count].accountId, userEmail)
 							if (listSubjectFound[count].accountId === userEmail) {
 								listSubjectFound[count].joinStatus = 'Join'
 							}

@@ -129,7 +129,7 @@ async function getListHistoryPerQuizTest(email, quiztestId) {
 async function getListSubjectIdMemberTake(userEmail) {
     try {
         const sql = `select distinct s.subjectId, s.subjectName from tbl_quiz_history qh, tbl_quiztest qt , tbl_subject s
-        where qh.quiztestId = qt.id and qt.subjectId = s.subjectId  and qh.accountID = 'luanvnse63360@gmail.com' group by s.subjectId`
+        where qh.quiztestId = qt.id and qt.subjectId = s.subjectId  and qh.accountID = ? group by s.subjectId`
         const params = [
             `${userEmail}`
         ]

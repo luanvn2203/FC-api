@@ -109,6 +109,7 @@ module.exports = {
             const userEmail = req.userEmail
             const listSubjectIdMemberTake = await quizHistoryService.getListSubjectIdMemberTake(userEmail)
             // const listQuizTestIdMemberTake = await quizHistoryService.getListQuizTestMemberTakeByEmail(userEmail)
+            console.log(listSubjectIdMemberTake)
             if (listSubjectIdMemberTake.length > 0) {
                 let listSubject = []
                 for (let i = 0; i < listSubjectIdMemberTake.length; i++) {
@@ -150,6 +151,12 @@ module.exports = {
                 // })
 
                 res.json(listSubject)
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    listHistory: listSubjectIdMemberTake,
+                    total: listSubjectIdMemberTake.length
+                })
             }
 
 

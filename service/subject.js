@@ -384,7 +384,6 @@ async function getSubjectById(subjectId) {
     }
 }
 async function getSubjectUserLearning(accountId) {
-    console.log(accountId)
     try {
         const sql = `select subjectId, 
         subjectName, 

@@ -58,7 +58,6 @@ module.exports = {
         try {
             // const resData = [];
             const subjectId = req.body.params.subjectId;
-            console.log(subjectId)
             const subjectDetail = await subjectService.getSubjecDetailById(subjectId);
             if (subjectDetail.length > 0) {
 
@@ -305,6 +304,8 @@ module.exports = {
                 for (let index = 0; index < listLessionIdMemberLearning.length; index++) {
                     listId.push(listLessionIdMemberLearning[index].lessionId)
                 }
+                console.log(listId, JSON.parse(quizTestFound[0].lessionId_arr))
+
                 if (checker(listId, JSON.parse(quizTestFound[0].lessionId_arr)) === true) {
                     res.status(200).json({
                         status: "Success",
