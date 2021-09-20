@@ -118,6 +118,13 @@ module.exports = {
 						const listRequestFromMe = await lessionRequestService.getAllRequestByEmail(userEmail)
 						if (listRequestFromMe.length > 0) {
 							for (let index = 0; index < result.length; index++) {
+								const checkComplete = await lessionService.checkComplete(result[index].lessionId, userEmail)
+								if (checkComplete.length > 0) {
+									result[index].isComplete = true
+								} else {
+									result[index].isComplete = false
+								}
+
 								for (let index2 = 0; index2 < listRequestFromMe.length; index2++) {
 									if (result[index].lessionId === listRequestFromMe[index2].lessionId) {
 										if (listRequestFromMe[index2].statusId === 1) {

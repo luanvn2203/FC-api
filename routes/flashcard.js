@@ -14,7 +14,7 @@ router.post('/get-flashcard-by-flashcardid', flashcardController.getFlashcardByF
 
 // router.post('/get-flashcard-by-accountid', verifyToken, flashcardController.getFlashcardByAcountId)
 
-router.post('/get-flashcard-by-lessionid', flashcardController.getFlashcardByLessionId)
+router.post('/get-flashcard-by-lessionid', verifyToken, flashcardController.getFlashcardByLessionId)
 
 router.put('/update-flashcard-by-flashcardid', flashcardController.UpdateFlashcardByID)
 

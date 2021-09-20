@@ -272,6 +272,23 @@ async function findFLashcardByFullTextNameAndDes(searchValue) {
     }
 }
 
+async function checkComplete(flashcardId, accountId) {
+    try {
+        const sql = `select id from tbl_learning_flashcard where accountId= ? and flashcardId = ?`
+
+        const params = [
+            `${accountId}`,
+            `${flashcardId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+
+}
+
 module.exports = {
     createFlashcard,
     findFlashcardByName,
@@ -288,5 +305,6 @@ module.exports = {
     findFlashcardByFullTextFlashcard,
     increaseViewByClickByFlashcardId,
 
-    findFLashcardByFullTextNameAndDes
+    findFLashcardByFullTextNameAndDes,
+    checkComplete,
 }

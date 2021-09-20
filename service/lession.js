@@ -279,6 +279,22 @@ async function isLessionIsLearning(lessionId) {
     }
 }
 
+async function checkComplete(lessonId, accountId) {
+    try {
+        const sql = `select id from tbl_lession_public_relationship where accountId  = ? and lessionId = ?`
+        const params = [
+            `${accountId}`,
+            `${lessonId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 module.exports = {
     getAllLession,
     getLessionByLessionId,
@@ -294,5 +310,6 @@ module.exports = {
     // findByFullTextFlashcard,
     countTotalLessionInASubject,
     countTotalPublicLessionInASubject,
-    isLessionIsLearning
+    isLessionIsLearning,
+    checkComplete,
 }

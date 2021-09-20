@@ -130,7 +130,9 @@ module.exports = {
 	},
 
 	getFlashcardByLessionId: async function (req, res, next) {
+
 		try {
+			const userEmail = req.userEmail
 			const lessionId = req.body.params.lessionId;
 			const result = await flashcardService.getFlashcardByLessionId(lessionId);
 			//result la 1 cai mang flashcard, trong do co id => for de lay cai id truyen vao ham getTotalQuestionByFlashcardId voi moi flash card trong mang
@@ -141,18 +143,36 @@ module.exports = {
 						result[i].flashcardId
 					);
 
-					const resObj = {
-						flashcardId: result[i].flashcardId,
-						flashcardName: result[i].flashcardName,
-						flashcardContent: result[i].flashcardContent,
-						statusId: result[i].statusId,
-						dateOfCreate: result[i].dateOfCreate,
-						accountId: result[i].accountId,
-						author: result[i].author,
-						lessionId: result[i].lessionId,
-						totalQuestion: totalfc[0].totalQuestion,
-					};
-					resData.push(resObj);
+					const isComplete = await flashcardService.checkComplete(result[i].flashcardId, userEmail)
+					if (isComplete.length > 0) {
+						const resObj = {
+							flashcardId: result[i].flashcardId,
+							flashcardName: result[i].flashcardName,
+							flashcardContent: result[i].flashcardContent,
+							statusId: result[i].statusId,
+							dateOfCreate: result[i].dateOfCreate,
+							accountId: result[i].accountId,
+							author: result[i].author,
+							lessionId: result[i].lessionId,
+							totalQuestion: totalfc[0].totalQuestion,
+							isComplete: true
+						};
+						resData.push(resObj);
+					} else {
+						const resObj = {
+							flashcardId: result[i].flashcardId,
+							flashcardName: result[i].flashcardName,
+							flashcardContent: result[i].flashcardContent,
+							statusId: result[i].statusId,
+							dateOfCreate: result[i].dateOfCreate,
+							accountId: result[i].accountId,
+							author: result[i].author,
+							lessionId: result[i].lessionId,
+							totalQuestion: totalfc[0].totalQuestion,
+							isComplete: false
+						};
+						resData.push(resObj);
+					}
 				}
 
 				if (resData.length > 0) {
