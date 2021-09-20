@@ -12,7 +12,7 @@ module.exports = {
                 const imageLink = req.body.params.imageLink
                 const startDate = req.body.params.startDate
                 const endDate = req.body.params.endDate
-                const target_url = req.body.params.targetUrl
+                const target_url = req.body.params.target_url
                 const expected_using_point = req.body.params.expected_using_point
                 const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url, expected_using_point)
                 if (isCreateAds === true) {
@@ -46,7 +46,7 @@ module.exports = {
                 const imageLink = req.body.params.imageLink
                 const startDate = req.body.params.startDate
                 const endDate = req.body.params.endDate
-                const target_url = req.body.params.targetUrl
+                const target_url = req.body.params.target_url
                 const expected_using_point = req.body.params.expected_using_point
                 console.log(expected_using_point)
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
