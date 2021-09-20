@@ -70,7 +70,9 @@ module.exports = {
 					DOB: account.DOB,
 					gender: account.gender,
 					interestTopic: account.interestTopic,
-					point: account.point
+					point: account.point,
+					donorPoint: account.donorPoint,
+					accumulatedPoint: account.accumulatedPoint,
 				};
 
 				if (account.statusId != 1) {
@@ -164,7 +166,6 @@ module.exports = {
 	},
 	postRegister: async function (req, res, next) {
 		try {
-			console.log(req.body.params)
 			const result = await accountService.registerAccount(
 				req.body,
 				req.protocol,

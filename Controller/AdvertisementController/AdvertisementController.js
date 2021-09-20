@@ -13,7 +13,8 @@ module.exports = {
                 const startDate = req.body.params.startDate
                 const endDate = req.body.params.endDate
                 const target_url = req.body.params.targetUrl
-                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url)
+                const expected_using_point = req.body.params.expected_using_point
+                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url, expected_using_point)
                 if (isCreateAds === true) {
                     res.status(200).json({
                         status: "Success",
@@ -46,11 +47,13 @@ module.exports = {
                 const startDate = req.body.params.startDate
                 const endDate = req.body.params.endDate
                 const target_url = req.body.params.targetUrl
+                const expected_using_point = req.body.params.expected_using_point
+
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
                 if (advertiseFound.length > 0) {
                     if (advertiseFound[0].donorId === signInAccount.email) {
 
-                        const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate, target_url)
+                        const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate, target_url, expected_using_point)
                         if (isUpdateAdvertise === true) {
                             res.status(200).json({
                                 status: "Success",
@@ -186,6 +189,14 @@ module.exports = {
                     message: "You don't have permission"
                 })
             }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+
+    approveRunningAdsByAdmin: async function (req, res, next) {
+        try {
+
         } catch (error) {
             console.log(error)
         }

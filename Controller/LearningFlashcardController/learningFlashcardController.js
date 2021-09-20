@@ -21,7 +21,6 @@ module.exports = {
                     if (isSave === true) {
                         const listFlashcardFound = await flashcardService.getFlashcardByLessionId(flashcardFound[0].lessionId)
                         const listFlashcardLearning = await learningFlashcardService.getAllRelationByLessionId(userEmail, flashcardFound[0].lessionId)
-                        console.log(listFlashcardFound)
                         if (listFlashcardFound.length === listFlashcardLearning.length) {
                             await lessionPublicRelationshipService.saveRelationShip(userEmail, flashcardFound[0].lessionId, lessionFound[0].subjectId)
                         }

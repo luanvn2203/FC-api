@@ -5,7 +5,6 @@ module.exports = {
     addNewQuestionToFlashCard: async function (req, res, next) {
         try {
             const result = await questionService.addNewQuestionToFlashCard(req.body);
-            console.log(result);
             if (result !== false && result !== undefined) {
                 res.status(200).json({
                     status: "Success",
@@ -190,12 +189,10 @@ module.exports = {
                 for (let optFindex = 0; optFindex < listOptionFound.length; optFindex++) {
                     listOptionFoundId.push(listOptionFound[optFindex].optionId)
                 }
-                console.log(listOptionFoundId) // list lay tu database
             }
             for (let optPindex = 0; optPindex < options.length; optPindex++) {
                 listOptionParamsId.push(options[optPindex].optionId)
             }
-            console.log(listOptionParamsId) // list tu params
             if (listOptionFoundId.length > listOptionParamsId.length) {
                 const idOptionForDelete = listOptionFoundId.filter((item, index) => item !== listOptionParamsId[index])
                 // tim duoc thang bi xoa. => xoa di

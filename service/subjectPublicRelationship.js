@@ -28,9 +28,6 @@ async function savePublicRelationship(accountId, subjectId, learningStatus) {
 
 async function getRelationByAccountIdAndSubjectId(accountId, subjectId) {
     try {
-        console.log(accountId)
-        console.log(subjectId)
-
         const sql = `select id, accountId, subjectId, joinDate, learningStatus from tbl_subject_public_relationship 
         where accountId = ? and subjectId  = ?`
         const params = [

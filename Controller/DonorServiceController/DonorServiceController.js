@@ -4,6 +4,9 @@ const donorServiceService = require('../../service/donorServiceService')
 const serviceDetailService = require('../../service/serviceDetail')
 const uuidv4 = require('uuid');
 const { db } = require('../../config');
+const accountService = require('../../service/account')
+
+
 module.exports = {
     createService: async function (req, res, next) {
         try {
@@ -28,7 +31,6 @@ module.exports = {
                         quantity,
                         0
                     );
-                    console.log(isCreateService)
                     if (isCreateService !== -1 && isCreateService >= 0) {
                         // const ErrorObj = []
                         // for 
@@ -44,7 +46,7 @@ module.exports = {
                         if (isSaveDetail === true) {
                             res.status(200).json({
                                 status: "Success",
-                                message: "Create service successfully",
+                                message: `Create service successfully, You will get ${quantity * 50} donor point ưhen the admin confirms receiving the service from you`,
                             })
                         } else {
                             res.status(202).json({
@@ -83,7 +85,6 @@ module.exports = {
                         quantity,
                         1
                     );
-                    console.log(isCreateService)
                     if (isCreateService !== -1 && isCreateService >= 0) {
                         // save detail
                         const ErrorObj = []
@@ -104,9 +105,11 @@ module.exports = {
                             }
                         }
                         if (ErrorObj.length === 0) {
+                            //ađ donorpoint
+                            await accountService.addDonorPointToDonor(signInAccount.email, quantity * 25)
                             res.status(200).json({
                                 status: "Success",
-                                message: "Create service successfully",
+                                message: `Create service successfully, you receive ${quantity * 25} donor point.`,
                             })
                         } else {
                             const deleteService = donorServiceService.updateServiceStatus(isCreateService, 3)
@@ -274,8 +277,21 @@ module.exports = {
                         if (isConfirm === true || isConfirm === false) {
                             const result = await donorServiceService.confirmByAdmin(serviceId, isConfirm, quantity)
                             if (result === true) {
+                                await accountService.addDonorPointToDonor(serviceFound[0].donorId, serviceFound[0].quantity)
+                                let subject = "Admin confirm you service on FC website";
+                                let body = `
+                                        <h2>Dear donor, </h2>
+                                        <h2>The service ${serviceFound[0].serviceName} was confirmed by admin.</h2>
+                                        <h3>So that, you got ${serviceFound[0].quantity * 50} donor point right now.</h3>
+                                        <h3>You can proceed to create advertisement request on FC system. Thanks for your service!</h3>
+                                        <h4>Do not reply this email. Thank you !</h4>
+                                        `
+                                //sendEmail
+                                mailer.sendMail(serviceFound[0].donorId, subject, body).catch(error => {
+                                    console.log(error)
+                                })
                                 res.status(202).json({
-                                    status: "Failed",
+                                    status: "Success",
                                     message: "Change confirmation successfully"
                                 })
                             } else {

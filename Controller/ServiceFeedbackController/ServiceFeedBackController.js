@@ -12,7 +12,6 @@ module.exports = {
             const content = req.body.params.content
             //chua check author relation
             const relationFound = await donorServiceRelationAccountService.getRelationByid(donorServiceRelationAccountId)
-            console.log(relationFound)
             if (relationFound.length > 0) {
                 if (relationFound[0].accountId === userEmail) {
                     // tim trong feedback

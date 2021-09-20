@@ -14,7 +14,6 @@ module.exports = {
             const isAdminSend = req.body.params.isAdminSend
             if (listServiceDetail.length > 0) {
                 const accountFound = await accountService.findAccountByEmail(receiverEmail)
-                console.log(accountFound)
                 if (accountFound.length > 0) {
 
                     if (accountFound[0].point >= totalPoint) {

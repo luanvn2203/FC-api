@@ -116,7 +116,6 @@ module.exports = {
 						});
 					} else {
 						const listRequestFromMe = await lessionRequestService.getAllRequestByEmail(userEmail)
-						console.log(listRequestFromMe)
 						if (listRequestFromMe.length > 0) {
 							for (let index = 0; index < result.length; index++) {
 								for (let index2 = 0; index2 < listRequestFromMe.length; index2++) {
@@ -447,7 +446,6 @@ module.exports = {
 								const flashcard_inside = [];
 								for (let fc_index = 0; fc_index < flashcardFound.length; fc_index++) {
 									// console.log(flashcardFound[fc_index].lessionId, lessionFound[le_index].lessionId)
-									console.log(flashcardFound[fc_index].lessionId, lessionFound[le_index].lessionId)
 									if (flashcardFound[fc_index].lessionId === lessionFound[le_index].lessionId) {
 										flashcard_inside.push(flashcardFound[fc_index])
 									}

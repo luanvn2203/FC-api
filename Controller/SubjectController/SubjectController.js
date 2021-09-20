@@ -741,6 +741,7 @@ module.exports = {
 			let resData = null
 			const privateSubjectRecentLearning = await subjectRelationAccountService.getRecentLearningPrivateSubject(userEmail)
 			const publicSubjectRecentLearning = await subjectPublicRelationShipService.getRecentLearningPublicSubject(userEmail)
+			console.log(publicSubjectRecentLearning)
 			resData = privateSubjectRecentLearning.concat(publicSubjectRecentLearning)
 			resData.sort((a, b) => (new Date(b.joinDate)) - (new Date(a.joinDate)));
 

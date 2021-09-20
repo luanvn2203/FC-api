@@ -340,7 +340,6 @@ module.exports = {
             const userEmail = req.userEmail;
             const requestId = req.body.params.requestId;
             const requestFound = await lessionRequestService.getRequestDetailById(requestId)
-            console.log(requestFound)
             if (requestFound.length > 0) {
                 if (requestFound[0].requestFrom === userEmail) {
                     // update status
