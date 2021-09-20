@@ -196,9 +196,77 @@ module.exports = {
 
     approveRunningAdsByAdmin: async function (req, res, next) {
         try {
+            const signInAccount = req.signInAccount
+            const advertiseId = req.body.params.advertiseId
+            if (signInAccount.roleId === 2) {
+                const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
+                if (advertiseFound.length > 0) {
+                    if (advertiseFound[0].statusId === 1) {
+                        const runningStatus = 2;
+                        const changeStatus = await advertisementService.updateAdvertiseStatus(advertiseId, runningStatus)
+                        if (changeStatus === true) {
+                            res.status(202).json({
+                                status: "Success",
+                                message: "Run the advertise successfully."
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Run the advertise failed"
+                            })
+                        }
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Add is running or expired, please check again"
+                        })
+                    }
+                }
+
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "No permission"
+                })
+            }
+
 
         } catch (error) {
             console.log(error)
         }
+    },
+
+    getAdvertiseForCurrentRendering: async function (req, res, next) {
+        try {
+            const runningAdsFound = await advertisementService.adsForRendering()
+            if (runningAdsFound.length > 0) {
+                if (runningAdsFound[0].expected_using_point > 0) {
+                    await advertisementService.updateExpectedPoint(runningAdsFound[0].id, 1, true)
+                    if (runningAdsFound[0].expected_using_point === 1) {
+                        const stoppedStatus = 3;
+                        await advertisementService.updateAdvertiseStatus(runningAdsFound[0].id, stoppedStatus)
+                    }
+                    res.status(200).json({
+                        status: "Success",
+                        advertiseInfo: runningAdsFound[0]
+                    })
+                } else {
+                    const stoppedStatus = 3;
+                    await advertisementService.updateAdvertiseStatus(runningAdsFound[0].id, stoppedStatus)
+                    res.status(200).json({
+                        status: "Failed",
+                        message: " No available advertise now."
+                    })
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: " No available advertise now."
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
+
 }

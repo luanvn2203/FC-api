@@ -16,6 +16,9 @@ router.get('/all-me', verifyToken, advertisementController.getAllAdvertiseByMe)
 
 router.get('/all-admin', verifyToken, advertisementController.getAllAdvertiseForAdminManagement)
 
+router.post('/run-ads', verifyToken, advertisementController.approveRunningAdsByAdmin)
+
+router.get('/get-current-ads', advertisementController.getAdvertiseForCurrentRendering)
 
 
 module.exports = router;

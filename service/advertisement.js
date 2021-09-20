@@ -143,6 +143,24 @@ async function updateExpectedPoint(id, point, isMinus) {
     }
 }
 
+async function adsForRendering() {
+    try {
+        const sql = `select id, title, content, imageLink, startDate, endDate, donorId, statusId, target_url, expected_using_point from tbl_advertisement
+        where statusId = 2 
+        and endDate > current_timestamp
+        and startDate < current_timestamp
+        and expected_using_point > 0
+        order by rand() limit 1`;
+        const result = await db.query(sql)
+        const data = helper.emptyOrRows(result)
+        return data
+
+
+    } catch (error) {
+        console.log(error)
+    }
+}
+
 module.exports = {
     createAds,
     getAdvertiseById,
@@ -151,5 +169,6 @@ module.exports = {
     getAllAdvertiseByEmail,
     getAllAdvertiseByAdmin,
 
-    updateExpectedPoint
+    updateExpectedPoint,
+    adsForRendering
 }
