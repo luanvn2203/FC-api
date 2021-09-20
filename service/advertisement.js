@@ -13,7 +13,7 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId,
             `${endDate}`,
             `${donorId}`,
             `${target_url}`,
-            `${expected_using_point}`
+            expected_using_point
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {
@@ -58,8 +58,8 @@ async function updateAdvertise(id, title, content, imageLink, startDate, endDate
             `${startDate}`,
             `${endDate}`,
             `${target_url}`,
-            `${expected_using_point}`
-                `${id}`,
+            expected_using_point,
+            `${id}`,
 
         ]
         const result = await db.query(sql, params)

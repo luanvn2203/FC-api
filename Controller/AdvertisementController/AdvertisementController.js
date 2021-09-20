@@ -48,11 +48,10 @@ module.exports = {
                 const endDate = req.body.params.endDate
                 const target_url = req.body.params.targetUrl
                 const expected_using_point = req.body.params.expected_using_point
-
+                console.log(expected_using_point)
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
                 if (advertiseFound.length > 0) {
                     if (advertiseFound[0].donorId === signInAccount.email) {
-
                         const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate, target_url, expected_using_point)
                         if (isUpdateAdvertise === true) {
                             res.status(200).json({
