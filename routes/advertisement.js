@@ -20,5 +20,6 @@ router.post('/run-ads', verifyToken, advertisementController.approveRunningAdsBy
 
 router.get('/get-current-ads', advertisementController.getAdvertiseForCurrentRendering)
 
+router.post('/admin-remove', verifyToken, advertisementController.removeAdsByAdmin)
 
 module.exports = router;

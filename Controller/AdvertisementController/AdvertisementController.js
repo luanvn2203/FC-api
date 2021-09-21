@@ -95,7 +95,7 @@ module.exports = {
             signInAccount = req.signInAccount
             if (signInAccount.roleId === 3) {
                 const advertiseId = req.body.params.advertiseId
-                const deleteStatus = 5
+                const deleteStatus = 4
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
                 if (advertiseFound.length > 0) {
                     if (advertiseFound[0].donorId === signInAccount.email) {
@@ -261,6 +261,35 @@ module.exports = {
                 res.status(202).json({
                     status: "Failed",
                     message: " No available advertise now."
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    removeAdsByAdmin: async function (req, res, next) {
+        try {
+            const signInAccount = req.signInAccount
+            if (signInAccount.roleId === 2) {
+                const advertiseId = req.body.params.advertiseId
+                console.log(advertiseId)
+                const isDelete = await advertisementService.updateAdvertiseStatus(advertiseId, 4)
+                console.log(isDelete)
+                if (isDelete === true) {
+                    res.status(200).json({
+                        status: "Success",
+                        message: "Delete successfully"
+                    })
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Delete failed"
+                    })
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "No permission"
                 })
             }
         } catch (error) {

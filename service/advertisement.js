@@ -28,7 +28,7 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId,
 
 async function getAdvertiseById(advertiseId) {
     try {
-        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url from tbl_advertisement where id = ? and statusId != 5`;
+        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url from tbl_advertisement where id = ? and statusId != 4`;
         const params = [
             `${advertiseId}`,
         ]
@@ -96,7 +96,7 @@ async function getAllAdvertiseByEmail(email) {
 
         const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url , a.expected_using_point , ass.status  as statusName
         from tbl_advertisement a , tbl_ads_status ass
-        where a.statusId = ass.id and a.donorId = ? and a.statusId != 5`;
+        where a.statusId = ass.id and a.donorId = ? and a.statusId != 4`;
         const params = [
             `${email}`
         ]
