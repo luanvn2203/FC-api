@@ -150,7 +150,10 @@ module.exports = {
                 //     })
                 // })
 
-                res.json(listSubject)
+                res.status(200).json({
+                    status: "Success",
+                    listHistory: listSubject
+                })
             } else {
                 res.status(202).json({
                     status: "Failed",
