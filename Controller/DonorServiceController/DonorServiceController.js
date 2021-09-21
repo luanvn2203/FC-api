@@ -4,7 +4,8 @@ const donorServiceService = require('../../service/donorServiceService')
 const serviceDetailService = require('../../service/serviceDetail')
 const uuidv4 = require('uuid');
 const { db } = require('../../config');
-const accountService = require('../../service/account')
+const accountService = require('../../service/account');
+const mailer = require('../../mailer');
 
 
 module.exports = {

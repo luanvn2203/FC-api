@@ -473,10 +473,11 @@ async function minusPointToAccountByEmail(account, point) {
 }
 
 async function addDonorPointToDonor(account, donorPoint) {
+  console.log(account, donorPoint)
   try {
-    const sql = `update tbl_account set donorPoint = (point + ?) where email = ?`;
+    const sql = `update tbl_account set donorPoint = (donorPoint + ?) where email = ?`;
     const params = [
-      point,
+      donorPoint,
       `${account}`
     ]
     const result = await db.query(sql, params);
