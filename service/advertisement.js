@@ -1,10 +1,10 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function createAds(title, content, imageLink, startDate, endDate, donorId, target_url, expected_using_point) {
+async function createAds(title, content, imageLink, startDate, endDate, donorId, target_url, expected_using_point, time_rendering) {
     try {
-        const sql = `INSERT INTO tbl_advertisement( title, content, imageLink, startDate, endDate, donorId,target_url,expected_using_point) 
-    value(?,?,?,?,?,?,?,?)`;
+        const sql = `INSERT INTO tbl_advertisement( title, content, imageLink, startDate, endDate, donorId,target_url,expected_using_point,time_rendering) 
+    value(?,?,?,?,?,?,?,?,?)`;
         const params = [
             `${title}`,
             `${content}`,
@@ -13,7 +13,8 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId,
             `${endDate}`,
             `${donorId}`,
             `${target_url}`,
-            expected_using_point
+            expected_using_point,
+            time_rendering
         ]
         const result = await db.query(sql, params)
         if (result.affectedRows) {
@@ -40,7 +41,7 @@ async function getAdvertiseById(advertiseId) {
     }
 }
 
-async function updateAdvertise(id, title, content, imageLink, startDate, endDate, target_url, expected_using_point) {
+async function updateAdvertise(id, title, content, imageLink, startDate, endDate, target_url, expected_using_point, time_rendering) {
     try {
         const sql = `UPDATE tbl_advertisement set 
                     title = ? ,
@@ -49,7 +50,8 @@ async function updateAdvertise(id, title, content, imageLink, startDate, endDate
                     startDate = ?,
                     endDate = ?,
                     target_url = ?,
-                    expected_using_point = ?
+                    expected_using_point = ?,
+                    time_rendering = ?
                     where id = ?`;
         const params = [
             `${title}`,
@@ -59,6 +61,7 @@ async function updateAdvertise(id, title, content, imageLink, startDate, endDate
             `${endDate}`,
             `${target_url}`,
             expected_using_point,
+            time_rendering,
             `${id}`,
 
         ]
@@ -145,17 +148,38 @@ async function updateExpectedPoint(id, point, isMinus) {
 
 async function adsForRendering() {
     try {
-        const sql = `select id, title, content, imageLink, startDate, endDate, donorId, statusId, target_url, expected_using_point from tbl_advertisement
+        const sql = `select id, title, content, imageLink, startDate, endDate, donorId, statusId, target_url, expected_using_point, time_rendering from tbl_advertisement
         where statusId = 2 
         and endDate > current_timestamp
         and startDate < current_timestamp
-        and expected_using_point > 0
+        and time_rendering > 0
         order by rand() limit 1`;
         const result = await db.query(sql)
         const data = helper.emptyOrRows(result)
         return data
 
 
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+async function updateTimeRendering(id, point, isMinus) {
+    try {
+        let sql = `Update tbl_advertisement set time_rendering = (time_rendering - ?) where id  = ? `
+        if (isMinus === false) {
+            sql = `Update tbl_advertisement set time_rendering = (time_rendering + ?) where id  = ?`
+        }
+        const params = [
+            `${point}`,
+            `${id}`
+        ]
+        const result = await db.query(sql, params)
+        if (result.affectedRows) {
+            return true
+        } else {
+            return false
+        }
     } catch (error) {
         console.log(error)
     }
@@ -170,5 +194,6 @@ module.exports = {
     getAllAdvertiseByAdmin,
 
     updateExpectedPoint,
-    adsForRendering
+    adsForRendering,
+    updateTimeRendering
 }

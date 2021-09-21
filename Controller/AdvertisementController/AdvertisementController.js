@@ -14,7 +14,8 @@ module.exports = {
                 const endDate = req.body.params.endDate
                 const target_url = req.body.params.target_url
                 const expected_using_point = req.body.params.expected_using_point
-                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url, expected_using_point * 5)
+                const time_rendering = expected_using_point * 10
+                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url, expected_using_point, time_rendering)
                 if (isCreateAds === true) {
                     res.status(200).json({
                         status: "Success",
@@ -48,11 +49,13 @@ module.exports = {
                 const endDate = req.body.params.endDate
                 const target_url = req.body.params.target_url
                 const expected_using_point = req.body.params.expected_using_point
+                const time_rendering = expected_using_point * 10
+
                 console.log(expected_using_point)
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
                 if (advertiseFound.length > 0) {
                     if (advertiseFound[0].donorId === signInAccount.email) {
-                        const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate, target_url, expected_using_point)
+                        const isUpdateAdvertise = await advertisementService.updateAdvertise(advertiseId, title, content, imageLink, startDate, endDate, target_url, expected_using_point, time_rendering)
                         if (isUpdateAdvertise === true) {
                             res.status(200).json({
                                 status: "Success",
@@ -245,9 +248,9 @@ module.exports = {
         try {
             const runningAdsFound = await advertisementService.adsForRendering()
             if (runningAdsFound.length > 0) {
-                if (runningAdsFound[0].expected_using_point > 0) {
-                    await advertisementService.updateExpectedPoint(runningAdsFound[0].id, 1, true)
-                    if (runningAdsFound[0].expected_using_point === 1) {
+                if (runningAdsFound[0].time_rendering > 0) {
+                    await advertisementService.updateTimeRendering(runningAdsFound[0].id, 1, true)
+                    if (runningAdsFound[0].time_rendering === 1) {
                         const stoppedStatus = 3;
                         await advertisementService.updateAdvertiseStatus(runningAdsFound[0].id, stoppedStatus)
                     }
