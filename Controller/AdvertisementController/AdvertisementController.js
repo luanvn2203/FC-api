@@ -272,24 +272,33 @@ module.exports = {
             const signInAccount = req.signInAccount
             if (signInAccount.roleId === 2) {
                 const advertiseId = req.body.params.advertiseId
-                console.log(advertiseId)
-                const isDelete = await advertisementService.updateAdvertiseStatus(advertiseId, 4)
-                console.log(isDelete)
-                if (isDelete === true) {
-                    res.status(200).json({
-                        status: "Success",
-                        message: "Delete successfully"
-                    })
+                const adsFound = await advertisementService.getAdvertiseById(advertiseId)
+                console.log(adsFound)
+                if (adsFound.length > 0) {
+                    console.log(advertiseId)
+                    const isDelete = await advertisementService.updateAdvertiseStatus(advertiseId, 4)
+                    console.log(isDelete)
+                    if (isDelete === true) {
+                        res.status(200).json({
+                            status: "Success",
+                            message: "Delete successfully"
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Delete failed"
+                        })
+                    }
                 } else {
                     res.status(202).json({
                         status: "Failed",
-                        message: "Delete failed"
+                        message: "Not found ads"
                     })
                 }
             } else {
                 res.status(202).json({
                     status: "Failed",
-                    message: "No permission"
+                    message: "Delete failed, No permisson"
                 })
             }
         } catch (error) {
