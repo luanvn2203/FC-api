@@ -197,6 +197,7 @@ module.exports = {
         try {
             const signInAccount = req.signInAccount
             const advertiseId = req.body.params.advertiseId
+            console.log(advertiseId)
             if (signInAccount.roleId === 2) {
                 const advertiseFound = await advertisementService.getAdvertiseById(advertiseId)
                 if (advertiseFound.length > 0) {
@@ -220,6 +221,11 @@ module.exports = {
                             message: "Add is running or expired, please check again"
                         })
                     }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Not found ads"
+                    })
                 }
 
             } else {

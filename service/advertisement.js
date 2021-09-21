@@ -28,7 +28,7 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId,
 
 async function getAdvertiseById(advertiseId) {
     try {
-        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url from tbl_advertisement where id = ? and statusId != 4`;
+        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url,statusId from tbl_advertisement where id = ? and statusId != 4`;
         const params = [
             `${advertiseId}`,
         ]
