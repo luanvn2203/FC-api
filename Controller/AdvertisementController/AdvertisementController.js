@@ -313,6 +313,50 @@ module.exports = {
         } catch (error) {
             console.log(error)
         }
+    },
+
+    stopAdvertiseByAdmin: async function (req, res, next) {
+        try {
+            const signInAccount = req.signInAccount
+            if (signInAccount.roleId === 2) {
+                const advertiseId = req.body.params.advertiseId
+                const adsFound = await advertisementService.getAdvertiseById(advertiseId)
+                console.log(adsFound)
+                if (adsFound.length > 0) {
+                    if (adsFound[0].statusId === 2) {
+                        const isStopped = await advertisementService.updateAdvertiseStatus(advertiseId, 3)
+                        if (isStopped === true) {
+                            res.status(200).json({
+                                status: "Success",
+                                message: "Update successfully"
+                            })
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Update failed"
+                            })
+                        }
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Update failed, Advertise is not running yet or stopped before"
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Not found ads"
+                    })
+                }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Update failed, No permisson"
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
     }
 
 }
