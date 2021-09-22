@@ -386,7 +386,7 @@ module.exports = {
                                     console.log(error)
                                 })
                                 res.status(200).json({
-                                    status: "Failed",
+                                    status: "Success",
                                     message: `Refund successfully, add ${pointToRefund} to donor: ${adsFound[0].donorId}`
                                 })
                             } else {
