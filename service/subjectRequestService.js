@@ -107,8 +107,11 @@ async function checkDuplicateRequest(subjectId, from, to) {
 
 async function getAllRequestSendFromEmail(email) {
     try {
-        const sql = `select sr.id, sr.requestFrom, sr.requestTo, sr.subjectId,s.subjectName, sr.statusId , sr.requestedAt
-        from tbl_subject_request sr, tbl_subject s where sr.subjectId = s.subjectId and sr.requestFrom =?`
+        const sql = `select sr.id, sr.requestFrom, sr.requestTo, sr.subjectId,s.subjectName, sr.statusId, rq.statusName , sr.requestedAt
+        from tbl_subject_request sr , tbl_subject s , tbl_request_status rq
+        where sr.subjectId = s.subjectId 
+        and sr.statusId = rq.id 
+        and sr.requestFrom = ?`
         const params = [
             `${email}`
         ]
