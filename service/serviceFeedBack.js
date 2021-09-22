@@ -47,8 +47,19 @@ async function findFeedbackByAccountIdAndServiceRelationAccountId(accountId, rel
 
 async function viewAllFeedbackForAdmin() {
     try {
-        const sql = `Select id, donorServiceRelationAccountId, accountId, point, content, dateOfFeedback 
-        from tbl_service_feedback order by dateOfFeedback desc  `
+        const sql = `select sf.id, ds.serviceName,
+        ds.serviceInformation,  sf.accountId,  sf.point,  sf.content,  sf.dateOfFeedback,
+        sd.serviceContent,
+        dra.quantity,
+        ds.donorId
+        from tbl_service_feedback sf, 
+        tbl_donorservice_relation_account dra, 
+        tbl_service_detail sd,
+        tbl_donor_service ds
+        where sf.donorServiceRelationAccountId = dra.id 
+        and dra.serviceDetailId = sd.id
+        and ds.id = sd.serviceId
+        order by sf.dateOfFeedback desc`
         const result = await db.query(sql)
         const data = helper.emptyOrRows(result)
         return data
@@ -57,8 +68,37 @@ async function viewAllFeedbackForAdmin() {
     }
 }
 
+async function viewAllMyServiceFeedback(donorId) {
+    try {
+        const sql = `select sf.id, ds.serviceName,
+        ds.serviceInformation,  sf.accountId,  sf.point,  sf.content,  sf.dateOfFeedback,
+        sd.serviceContent,
+        dra.quantity,
+        ds.donorId
+        from tbl_service_feedback sf, 
+        tbl_donorservice_relation_account dra, 
+        tbl_service_detail sd,
+        tbl_donor_service ds
+        where sf.donorServiceRelationAccountId = dra.id 
+        and dra.serviceDetailId = sd.id
+        and ds.id = sd.serviceId
+        and ds.donorId = ?
+        order by sf.dateOfFeedback desc`
+        const params = [
+            `${donorId}`
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error)
+    }
+}
+
+
 module.exports = {
     saveFeedBack,
     findFeedbackByAccountIdAndServiceRelationAccountId,
-    viewAllFeedbackForAdmin
+    viewAllFeedbackForAdmin,
+    viewAllMyServiceFeedback
 }
