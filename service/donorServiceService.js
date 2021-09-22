@@ -1,15 +1,14 @@
 const db = require('./db');
 const helper = require('../helper');
 
-async function createNewService(donorId, serviceTypeId, serviceName, serviceInformation, quantity, isConfirmed) {
+async function createNewService(donorId, serviceTypeId, serviceName, serviceInformation, quantity, isConfirmed, image) {
     try {
         let current = new Date();
         let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
         let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
         let dateTime = cDate + ' ' + cTime;
-
-        const sql = `INSERT INTO tbl_donor_service(donorId, serviceTypeId,serviceName, serviceInformation, createdDate, quantity,isConfirmed)
-         values(?,?,?,?,?,?,?)`;
+        const sql = `INSERT INTO tbl_donor_service(donorId, serviceTypeId,serviceName, serviceInformation, createdDate, quantity, isConfirmed, image_link)
+         values(?,?,?,?,?,?,?,?)`;
         const params = [
             `${donorId}`,
             `${serviceTypeId}`,
@@ -17,7 +16,8 @@ async function createNewService(donorId, serviceTypeId, serviceName, serviceInfo
             `${serviceInformation}`,
             `${dateTime}`,
             `${quantity}`,
-            `${isConfirmed}`
+            `${isConfirmed}`,
+            `${image}`
         ]
         const result = await db.query(sql, params);
         if (result.affectedRows) {
@@ -35,12 +35,14 @@ async function updateServiceInformation(serviceInfo) {
         console.log(serviceInfo)
         const sql = `Update tbl_donor_service set 
             serviceName = ?, 
-            serviceInformation = ? 
+            serviceInformation = ?,
+            image_link = ?
             where id = ?`;
 
         const params = [
             `${serviceInfo.serviceName}`,
             `${serviceInfo.serviceInformation}`,
+            `${serviceInfo.image_link}`,
             `${serviceInfo.serviceId}`,
         ]
         const result = await db.query(sql, params);
@@ -105,6 +107,7 @@ async function getAllServiceByEmail(donorEmail) {
         ds.serviceInformation, 
         ds.createdDate,
         ds.quantity, 
+        ds.image_link,
         ds.statusId,
         a.fullName
         from tbl_donor_service ds, tbl_account a
@@ -150,7 +153,7 @@ async function confirmByAdmin(serviceId, isConfirmed, quantity) {
 
 async function getAllServiceOrderByDate() {
     try {
-        const sql = `SELECT id, donorId, serviceName, serviceTypeId, serviceInformation, createdDate, quantity, statusId, isConfirmed 
+        const sql = `SELECT id, donorId, serviceName, serviceTypeId, serviceInformation, createdDate, quantity,image_link, statusId, isConfirmed 
         FROM tbl_donor_service order by createdDate desc`
         const result = await db.query(sql)
         const data = helper.emptyOrRows(result)

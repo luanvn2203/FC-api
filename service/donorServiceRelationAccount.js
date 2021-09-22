@@ -44,7 +44,7 @@ async function viewHistoryReceiveService(email) {
     try {
         const sql = `Select dra.id, 
         dra.dateOfReceived,dra.quantity,dra.isFeedback, sd.serviceContent, sd.startDate, sd.endDate,
-        ds.serviceName,  ds.serviceInformation,
+        ds.serviceName,  ds.serviceInformation, ds.image_link,
         st.typeName as serviceTypeName
         from tbl_donorservice_relation_account dra ,
         tbl_service_detail sd,

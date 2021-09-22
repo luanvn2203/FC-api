@@ -17,21 +17,16 @@ module.exports = {
                 const serviceName = req.body.params.serviceName
                 const serviceInformation = req.body.params.serviceInformation
                 const quantity = req.body.params.quantity
+                const image = req.body.params.image_link
                 const detail = req.body.params.detail
+
                 if (serviceTypeId === 3) {
                     // hien vat
                     let current = new Date();
                     let cDate = current.getFullYear() + '-' + (current.getMonth() + 1) + '-' + current.getDate();
                     let cTime = current.getHours() + ":" + current.getMinutes() + ":" + current.getSeconds();
                     let dateTime = cDate + ' ' + cTime;
-                    const isCreateService = await donorServiceService.createNewService(
-                        signInAccount.email,
-                        serviceTypeId,
-                        serviceName,
-                        serviceInformation,
-                        quantity,
-                        0
-                    );
+                    const isCreateService = await donorServiceService.createNewService(signInAccount.email, serviceTypeId, serviceName, serviceInformation, quantity, 0, image);
                     if (isCreateService !== -1 && isCreateService >= 0) {
                         // const ErrorObj = []
                         // for 
@@ -84,7 +79,8 @@ module.exports = {
                         serviceName,
                         serviceInformation,
                         quantity,
-                        1
+                        1,
+                        image
                     );
                     if (isCreateService !== -1 && isCreateService >= 0) {
                         // save detail
@@ -143,6 +139,7 @@ module.exports = {
         try {
             const serviceInfor = req.body.params;
             signInAccount = req.signInAccount
+
             if (signInAccount.roleId === 3) {
                 const serviceFound = await donorServiceService.getServiceById(serviceInfor.serviceId)
                 if (serviceFound.length > 0) {

@@ -127,7 +127,7 @@ async function updateServiceDetailQuantity(serviceDetailId, quantity) {
 
 async function getAllAvailableService() {
     try {
-        const sql = `select sd.id, sd.serviceId, ds.serviceName, ds.serviceTypeId , serviceInformation, sum(sd.quantity) as quantity, sd.startDate ,sd.endDate
+        const sql = `select sd.id, sd.serviceId, ds.serviceName, ds.serviceTypeId,ds.image_link , serviceInformation, sum(sd.quantity) as quantity, sd.startDate ,sd.endDate
         from tbl_service_detail sd, tbl_donor_service ds
         where sd.serviceId = ds.id and  sd.statusId = 1 and ds.isConfirmed = 1 group by sd.serviceId,sd.startDate ,sd.endDate `
         const result = await db.query(sql)

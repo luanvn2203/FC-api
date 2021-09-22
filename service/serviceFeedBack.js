@@ -51,14 +51,18 @@ async function viewAllFeedbackForAdmin() {
         ds.serviceInformation,  sf.accountId,  sf.point,  sf.content,  sf.dateOfFeedback,
         sd.serviceContent,
         dra.quantity,
-        ds.donorId
+        ds.donorId,
+        ds.serviceTypeId,
+        st.typeName
         from tbl_service_feedback sf, 
         tbl_donorservice_relation_account dra, 
         tbl_service_detail sd,
-        tbl_donor_service ds
+        tbl_donor_service ds,
+        tbl_service_type st
         where sf.donorServiceRelationAccountId = dra.id 
         and dra.serviceDetailId = sd.id
         and ds.id = sd.serviceId
+        and ds.serviceTypeId = st.id
         order by sf.dateOfFeedback desc`
         const result = await db.query(sql)
         const data = helper.emptyOrRows(result)
@@ -74,14 +78,18 @@ async function viewAllMyServiceFeedback(donorId) {
         ds.serviceInformation,  sf.accountId,  sf.point,  sf.content,  sf.dateOfFeedback,
         sd.serviceContent,
         dra.quantity,
-        ds.donorId
+        ds.donorId,
+        ds.serviceTypeId,
+        st.typeName
         from tbl_service_feedback sf, 
         tbl_donorservice_relation_account dra, 
         tbl_service_detail sd,
-        tbl_donor_service ds
+        tbl_donor_service ds,
+        tbl_service_type st
         where sf.donorServiceRelationAccountId = dra.id 
         and dra.serviceDetailId = sd.id
         and ds.id = sd.serviceId
+        and ds.serviceTypeId = st.id
         and ds.donorId = ?
         order by sf.dateOfFeedback desc`
         const params = [
