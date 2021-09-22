@@ -29,7 +29,7 @@ async function createAds(title, content, imageLink, startDate, endDate, donorId,
 
 async function getAdvertiseById(advertiseId) {
     try {
-        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url,statusId from tbl_advertisement where id = ? and statusId != 4`;
+        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url,statusId, expected_using_point,time_rendering from tbl_advertisement where id = ? and statusId != 4`;
         const params = [
             `${advertiseId}`,
         ]
@@ -185,6 +185,22 @@ async function updateTimeRendering(id, point, isMinus) {
     }
 }
 
+async function getRunningAdsWithExpiredEndDate(advertiseId) {
+    try {
+        const sql = `SELECT id, title, content, imageLink, startDate, endDate, donorId,target_url,statusId,
+        expected_using_point,time_rendering from tbl_advertisement where id = 1 and statusId != 4 
+        and endDate < current_timestamp`;
+        const params = [
+            `${advertiseId}`,
+        ]
+        const result = await db.query(sql, params)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error.message)
+    }
+}
+
 module.exports = {
     createAds,
     getAdvertiseById,
@@ -195,5 +211,6 @@ module.exports = {
 
     updateExpectedPoint,
     adsForRendering,
-    updateTimeRendering
+    updateTimeRendering,
+    getRunningAdsWithExpiredEndDate,
 }

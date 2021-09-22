@@ -1,6 +1,7 @@
 
 const advertisementService = require('../../service/advertisement')
-
+const accountService = require('../../service/account')
+const mailer = require('../../mailer')
 module.exports = {
     createNewAdvertise: async function (req, res, next) {
         try {
@@ -348,6 +349,72 @@ module.exports = {
                         message: "Not found ads"
                     })
                 }
+            } else {
+                res.status(202).json({
+                    status: "Failed",
+                    message: "Update failed, No permisson"
+                })
+            }
+        } catch (error) {
+            console.log(error)
+        }
+    },
+    refundDonorPoint: async function (req, res, next) {
+        try {
+            const advertiseId = req.body.params.advertiseId
+            const signInAccount = req.signInAccount
+            if (signInAccount.roleId === 2) {
+                const adsFound = await advertisementService.getRunningAdsWithExpiredEndDate(advertiseId)
+                if (adsFound.length > 0) {
+                    if (adsFound[0].time_rendering >= 5 && adsFound[0].statusId === 2) {
+                        const pointToRefund = Math.trunc(adsFound[0].time_rendering / 5)
+                        const isAddPoint = await accountService.addDonorPointToDonor(adsFound[0].donorId, pointToRefund)
+                        if (isAddPoint === true) {
+                            const isUpdateAdsStatus = await advertisementService.updateAdvertiseStatus(advertiseId, 3)
+                            const isUpdateTimeRendering = await advertisementService.updateTimeRendering(advertiseId, adsFound[0].time_rendering, true)
+                            if (isUpdateAdsStatus == true && isUpdateTimeRendering === true) {
+                                let subject = "Refund donor point in FC system";
+                                let body = `
+                                        <p>Dear donor, </p>
+                                        <p>The advertise <b>${adsFound[0].title}</b> has expired but it looks like it hasn't used up all the points you want.</p>
+                                        <p>So that, you receive <b>${pointToRefund}</b> point in "DONOR POINT REFUND SYSTEM" base on donor point left.</p>
+                                        <p>You can request new advertise at the next time with you own point. Thanks for your attention!</p>
+                                        <p>Do not reply this email. Thank you !</p>
+                                        `
+                                //sendEmail
+                                mailer.sendMail(adsFound[0].donorId, subject, body).catch(error => {
+                                    console.log(error)
+                                })
+                                res.status(200).json({
+                                    status: "Failed",
+                                    message: `Refund successfully, add ${pointToRefund} to donor: ${adsFound[0].donorId}`
+                                })
+                            } else {
+                                res.status(202).json({
+                                    status: "Failed",
+                                    message: "Refund failed, 379, adsController"
+                                })
+                            }
+                        } else {
+                            res.status(202).json({
+                                status: "Failed",
+                                message: "Refund failed"
+                            })
+                        }
+
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Rendering time is left than 5(time) or ads is stopped before"
+                        })
+                    }
+                } else {
+                    res.status(202).json({
+                        status: "Failed",
+                        message: "Not found advertise or advertise is not suitable for refund"
+                    })
+                }
+
             } else {
                 res.status(202).json({
                     status: "Failed",

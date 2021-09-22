@@ -24,4 +24,6 @@ router.post('/admin-remove', verifyToken, advertisementController.removeAdsByAdm
 
 router.post('/admin-stop', verifyToken, advertisementController.stopAdvertiseByAdmin)
 
+router.post('/admin-refund', verifyToken, advertisementController.refundDonorPoint)
+
 module.exports = router;
