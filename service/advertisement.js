@@ -114,7 +114,7 @@ async function getAllAdvertiseByEmail(email) {
 async function getAllAdvertiseByAdmin() {
     try {
 
-        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url, a.expected_using_point,a.statusId, ass.status  as statusName
+        const sql = `SELECT a.id, a.title, a.content, a.imageLink, a.startDate, a.endDate, a.donorId, a.target_url, a.expected_using_point, a.time_rendering, a.statusId, ass.status  as statusName
         from tbl_advertisement a , tbl_ads_status ass
         where a.statusId = ass.id and a.statusId != 4`;
         const result = await db.query(sql)
