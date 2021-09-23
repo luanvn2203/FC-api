@@ -51,6 +51,7 @@ async function getRecentLearningPublicSubject(email) {
         s.subjectDescription,
         s.createdDate,
         s.statusId,
+        s.imageUrl,
         s.numOfView ,
         rs.joinDate
        from tbl_subject s ,

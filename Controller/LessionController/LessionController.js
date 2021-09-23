@@ -104,6 +104,15 @@ module.exports = {
 			if (subjectFound.length > 0) {
 				const result = await lessionService.getLessionBySubjectId(subjectId);
 				if (result.length > 0) {
+					for (let index = 0; index < result.length; index++) {
+						const checkComplete = await lessionService.checkComplete(result[index].lessionId, userEmail)
+						if (checkComplete.length > 0) {
+							result[index].isComplete = true
+						} else {
+							result[index].isComplete = false
+						}
+
+					}
 					if (subjectFound[0].accountId === userEmail) {
 						for (let count = 0; count < result.length; count++) {
 							result[count].joinStatus = "Join"
