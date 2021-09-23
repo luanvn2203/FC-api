@@ -200,7 +200,7 @@ module.exports = {
 					}
 					let topicAndSubjectInside = {
 						topicDetail: listTopicFound[i],
-						listSubjects: listSubjectFound,
+						listSubjects: listSubjectFound.filter(item => item.point_require > 0),
 					};
 					resData.push(topicAndSubjectInside);
 				}
