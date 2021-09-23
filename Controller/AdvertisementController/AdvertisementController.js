@@ -329,18 +329,18 @@ module.exports = {
                         if (isStopped === true) {
                             res.status(200).json({
                                 status: "Success",
-                                message: "Update successfully"
+                                message: "Stop advertise successfully"
                             })
                         } else {
                             res.status(202).json({
                                 status: "Failed",
-                                message: "Update failed"
+                                message: "Stop failed"
                             })
                         }
                     } else {
                         res.status(202).json({
                             status: "Failed",
-                            message: "Update failed, Advertise is not running yet or stopped before"
+                            message: "Stop failed, Advertise is not running yet or stopped before"
                         })
                     }
                 } else {
