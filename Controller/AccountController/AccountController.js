@@ -207,7 +207,7 @@ module.exports = {
 				//ve sau chinh thanh link
 				const isUpdate = accountService.updateAccountStatus(result[0].email, 2);
 				if (isUpdate) {
-					let redirectLink = `${req.protocol}://localhost:3000/login`;
+					let redirectLink = `${req.protocol}://taqq.xyz/login`;
 					res.writeHead(200, { "Content-Type": "text/html" });
 					res.write(`<h1>Active accounnt successfully !</h1>
                 Login now? <a href=${redirectLink} > LOGIN </a>`);
