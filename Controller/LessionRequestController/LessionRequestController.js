@@ -35,7 +35,7 @@ module.exports = {
                             <p>Do not reply this email. Thank you !</h4>
                              `
                             //sendEmail
-                            await mailer.sendMail(subjectFound[0].accountId, subject, body).catch(error => {
+                            mailer.sendMail(subjectFound[0].accountId, subject, body).catch(error => {
                                 console.log(error.message)
                             })
 
@@ -144,7 +144,7 @@ module.exports = {
                                 <p>Do not reply this email. Thank you !</h4>
                                 `
                                     //sendEmail
-                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                    mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
                                         console.log(error.message)
                                     })
 
@@ -180,7 +180,7 @@ module.exports = {
                                 <p>Do not reply this email. Thank you !</h4>
                                 `
                                     //sendEmail
-                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                    mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
                                         console.log(error.message)
                                     })
 
@@ -216,7 +216,7 @@ module.exports = {
                                 <p>Do not reply this email. Thank you !</h4>
                                 `
                                     //sendEmail
-                                    await mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
+                                    mailer.sendMail(requestFound[0].requestFrom, subject, body).catch(error => {
                                         console.log(error.message)
                                     })
 
