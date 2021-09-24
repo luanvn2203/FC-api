@@ -109,6 +109,7 @@ async function getAllServiceByEmail(donorEmail) {
         ds.quantity, 
         ds.image_link,
         ds.statusId,
+        ds.isConfirmed,
         a.fullName
         from tbl_donor_service ds, tbl_account a
         where ds.donorId = a.email and ds.donorId = ? and ds.statusId != 3 

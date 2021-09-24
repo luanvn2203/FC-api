@@ -237,6 +237,12 @@ module.exports = {
                     for (let index = 0; index < listServiceFound.length; index++) {
                         const serviceDetailFound = await serviceDetailService.getAllDetailByServiceId(listServiceFound[index].id)
                         listServiceFound[index].detail = serviceDetailFound
+
+                        if (listServiceFound[index].isConfirmed === 0) {
+                            listServiceFound[index].isConfirmed = false
+                        } else {
+                            listServiceFound[index].isConfirmed = true
+                        }
                     }
                     res.status(200).json({
                         status: "Success",
@@ -253,7 +259,7 @@ module.exports = {
             } else {
                 res.status(202).json({
                     status: "Failed",
-                    message: "You don't have permission to create service, please update to donor role"
+                    message: "You don't have permission"
                 })
             }
         } catch (error) {
