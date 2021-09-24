@@ -200,7 +200,17 @@ async function getRunningAdsWithExpiredEndDate(advertiseId) {
         console.log(error.message)
     }
 }
-
+async function getExpireAdsWithStatusWaiting() {
+    try {
+        const sql = `select id, donorId,title, statusId, target_url, expected_using_point, time_rendering 
+        from tbl_advertisement where statusId = 1 and endDate < current_timestamp()`;
+        const result = await db.query(sql)
+        const data = helper.emptyOrRows(result)
+        return data
+    } catch (error) {
+        console.log(error.message)
+    }
+}
 module.exports = {
     createAds,
     getAdvertiseById,
@@ -213,4 +223,5 @@ module.exports = {
     adsForRendering,
     updateTimeRendering,
     getRunningAdsWithExpiredEndDate,
+    getExpireAdsWithStatusWaiting,
 }

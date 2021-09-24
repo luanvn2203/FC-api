@@ -7,25 +7,32 @@ module.exports = {
         try {
             const signInAccount = req.signInAccount
             if (signInAccount.roleId === 3) {
-
-                const title = req.body.params.title
-                const content = req.body.params.content
-                const imageLink = req.body.params.imageLink
-                const startDate = req.body.params.startDate
-                const endDate = req.body.params.endDate
-                const target_url = req.body.params.target_url
-                const expected_using_point = req.body.params.expected_using_point
-                const time_rendering = expected_using_point * 10
-                const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url, expected_using_point, time_rendering)
-                if (isCreateAds === true) {
-                    res.status(200).json({
-                        status: "Success",
-                        message: "Create advertise successfully"
-                    })
+                if (signInAccount.donorPoint >= expected_using_point) {
+                    const title = req.body.params.title
+                    const content = req.body.params.content
+                    const imageLink = req.body.params.imageLink
+                    const startDate = req.body.params.startDate
+                    const endDate = req.body.params.endDate
+                    const target_url = req.body.params.target_url
+                    const expected_using_point = req.body.params.expected_using_point
+                    const time_rendering = expected_using_point * 10
+                    const isCreateAds = await advertisementService.createAds(title, content, imageLink, startDate, endDate, signInAccount.email, target_url, expected_using_point, time_rendering)
+                    if (isCreateAds === true) {
+                        await accountService.minusDonorPoint(signInAccount.email, expected_using_point)
+                        res.status(200).json({
+                            status: "Success",
+                            message: "Create advertise successfully"
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            message: "Create advertise Failed"
+                        })
+                    }
                 } else {
                     res.status(202).json({
                         status: "Failed",
-                        message: "Create advertise Failed"
+                        message: "Not enough donor point"
                     })
                 }
             } else {
@@ -255,6 +262,10 @@ module.exports = {
                         const stoppedStatus = 3;
                         await advertisementService.updateAdvertiseStatus(runningAdsFound[0].id, stoppedStatus)
                     }
+
+                    //auto refund
+                    await refundExpiredWaitingAds()
+
                     res.status(200).json({
                         status: "Success",
                         advertiseInfo: runningAdsFound[0]
@@ -268,6 +279,7 @@ module.exports = {
                     })
                 }
             } else {
+                await refundExpiredWaitingAds()
                 res.status(202).json({
                     status: "Failed",
                     message: " No available advertise now."
@@ -366,8 +378,8 @@ module.exports = {
             if (signInAccount.roleId === 2) {
                 const adsFound = await advertisementService.getRunningAdsWithExpiredEndDate(advertiseId)
                 if (adsFound.length > 0) {
-                    if (adsFound[0].time_rendering >= 5 && adsFound[0].statusId === 2) {
-                        const pointToRefund = Math.trunc(adsFound[0].time_rendering / 5)
+                    if (adsFound[0].time_rendering >= 10 && adsFound[0].statusId === 2) {
+                        const pointToRefund = Math.trunc(adsFound[0].time_rendering / 10)
                         const isAddPoint = await accountService.addDonorPointToDonor(adsFound[0].donorId, pointToRefund)
                         if (isAddPoint === true) {
                             const isUpdateAdsStatus = await advertisementService.updateAdvertiseStatus(advertiseId, 3)
@@ -426,4 +438,50 @@ module.exports = {
         }
     }
 
+}
+const refundExpiredWaitingAds = async () => {
+    try {
+        const adsFound = await advertisementService.getExpireAdsWithStatusWaiting()
+        if (adsFound.length > 0) {
+            for (let index = 0; index < adsFound.length; index++) {
+                if (adsFound[index].time_rendering >= 5 && adsFound[index].statusId === 1) {
+                    const pointToRefund = Math.trunc(adsFound[index].time_rendering / 10)
+                    const isAddPoint = await accountService.addDonorPointToDonor(adsFound[index].donorId, pointToRefund)
+                    if (isAddPoint === true) {
+                        const isUpdateAdsStatus = await advertisementService.updateAdvertiseStatus(adsFound[index].id, 3)
+                        const isUpdateTimeRendering = await advertisementService.updateTimeRendering(adsFound[index].id, adsFound[index].time_rendering, true)
+                        if (isUpdateAdsStatus == true && isUpdateTimeRendering === true) {
+                            let subject = "Refund donor point in FC system";
+                            let body = `
+                                    <p>Dear donor, </p>
+                                    <p>The advertise <b>${adsFound[index].title}</b> has expired but it looks like it hasn't used up all the points you want.</p>
+                                    <p>So that, you receive <b>${pointToRefund}</b> point in "DONOR POINT REFUND SYSTEM" base on donor point left.</p>
+                                    <p>You can request new advertise at the next time with you own point. Thanks for your attention!</p>
+                                    <p>Do not reply this email. Thank you !</p>
+                                    `
+                            //sendEmail
+                            mailer.sendMail(adsFound[index].donorId, subject, body).catch(error => {
+                                console.log(error)
+                            })
+                            console.log(`Refund success ${adsFound[index].donorId} + ${pointToRefund}`)
+                        } else {
+                            console.log('refund failed 468 adsController')
+                        }
+                    } else {
+                        console.log('refund failed 471 adsController')
+                    }
+
+                } else {
+                    console.log('refund failed 475 adsController')
+                }
+
+            }
+        } else return
+
+
+
+
+    } catch (error) {
+        console.log(error)
+    }
 }
