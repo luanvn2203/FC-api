@@ -295,49 +295,53 @@ module.exports = {
         try {
             const flashcardObject = []
             const lessionArr = req.body.params.lessionArr
-            const listFlascardFound = await flashcardService.getFlashcardByArrayLessionIdAndFilteredInfo(lessionArr);
-            if (listFlascardFound.length > 0) {
-                for (let i = 0; i < listFlascardFound.length; i++) {
-                    const questionArr = []
-                    const questions = await questionService.getQuestionsByFlashcardIdAndFilteredInfor(listFlascardFound[i].flashcardId)
-                    if (questions.length > 0) {
-                        for (let j = 0; j < questions.length; j++) {
-                            const options = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(questions[j])
+            if (lessionArr.length > 0) {
+                const listFlascardFound = await flashcardService.getFlashcardByArrayLessionIdAndFilteredInfo(lessionArr);
+                if (listFlascardFound.length > 0) {
+                    for (let i = 0; i < listFlascardFound.length; i++) {
+                        const questionArr = []
+                        const questions = await questionService.getQuestionsByFlashcardIdAndFilteredInfor(listFlascardFound[i].flashcardId)
+                        if (questions.length > 0) {
+                            for (let j = 0; j < questions.length; j++) {
+                                const options = await optionDetailService.getOptionsByQuestionIdAndFilteredInfo(questions[j])
 
-                            const questionInfor = {
-                                question: questions[j],
-                                options: options
+                                const questionInfor = {
+                                    question: questions[j],
+                                    options: options
+                                }
+                                questionArr.push(questionInfor)
                             }
-                            questionArr.push(questionInfor)
+                            flashcardObject.push({
+                                flashcard: listFlascardFound[i],
+                                questions: questionArr, // mang nhieu cau hoi
+                                total_question: questions.length
+                            })
                         }
-                        flashcardObject.push({
-                            flashcard: listFlascardFound[i],
-                            questions: questionArr, // mang nhieu cau hoi
-                            total_question: questions.length
+                    }
+
+                    if (flashcardObject.length > 0) {
+                        res.status(200).json({
+                            status: "Success",
+                            flashcardObj: flashcardObject,
+                            total_flashcard: flashcardObject.length,
+                            total_lession: lessionArr.length
+                        })
+                    } else {
+                        res.status(202).json({
+                            status: "Failed",
+                            flashcardObj: {},
+                            total_flashcard: 0,
+                            total_lession: lessionArr.length
                         })
                     }
-                }
-
-                if (flashcardObject.length > 0) {
-                    res.status(200).json({
-                        status: "Success",
-                        flashcardObj: flashcardObject,
-                        total_flashcard: flashcardObject.length,
-                        total_lession: lessionArr.length
-                    })
                 } else {
                     res.status(202).json({
                         status: "Failed",
-                        flashcardObj: {},
-                        total_flashcard: 0,
-                        total_lession: lessionArr.length
+                        message: "Not found flashcard or question for this Lession Id"
                     })
                 }
             } else {
-                res.status(202).json({
-                    status: "Failed",
-                    message: "Not found flashcard or question for this Lession Id"
-                })
+                console.log('ahihi bug cmnr')
             }
 
         } catch (error) {
