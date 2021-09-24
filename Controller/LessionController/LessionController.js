@@ -167,6 +167,7 @@ module.exports = {
 							status: "Success",
 							message: "Get lesson successfully",
 							lession: result,
+							subjectStatus: subjectFound[0].statusId,
 							total: result.length,
 						});
 
@@ -181,6 +182,12 @@ module.exports = {
 						total: 0,
 					});
 				}
+			} else {
+				res.status(201).json({
+					status: "Failed",
+					message: "Not found subject",
+
+				});
 			}
 
 		} catch (error) {
