@@ -295,7 +295,7 @@ module.exports = {
         try {
             const flashcardObject = []
             const lessionArr = req.body.params.lessionArr
-            if (lessionArr.length > 0) {
+            if (lessionArr !== 'undefine' && lessionArr.length > 0) {
                 const listFlascardFound = await flashcardService.getFlashcardByArrayLessionIdAndFilteredInfo(lessionArr);
                 if (listFlascardFound.length > 0) {
                     for (let i = 0; i < listFlascardFound.length; i++) {
